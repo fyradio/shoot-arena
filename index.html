@@ -409,7 +409,7 @@ button,.tops,.arenas,#app{touch-action:manipulation}
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.10.1</div>
+  <div class="ver">v1.10.2</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -640,16 +640,16 @@ function useSpecial(T,O){
     if(fx==='roll'){T.sp={kind:'strike',t:0,O};startStrike(T)}
     else if(near){
       const f=(fx==='quake'?21:15)*(1-d/(fx==='quake'?8:6));
-      if(fx==='pinch'){O.vx-=dx/d*8;O.vz-=dz/d*8;O.s-=0.07}
-      else{O.vx+=dx/d*f;O.vz+=dz/d*f;O.s-=0.05}
-      if(fx==='ice'){O.vx*=0.35;O.vz*=0.35;O.s-=0.05}
-      if(fx==='flame')O.s-=0.1;
+      if(fx==='pinch'){O.vx-=dx/d*8;O.vz-=dz/d*8;O.s-=0.07*(T.def.type==='atk'?0.5:1)}
+      else{O.vx+=dx/d*f;O.vz+=dz/d*f;O.s-=0.05*(T.def.type==='atk'?0.5:1)}
+      if(fx==='ice'){O.vx*=0.35;O.vz*=0.35;O.s-=0.05*(T.def.type==='atk'?0.5:1)}
+      if(fx==='flame')O.s-=0.1*(T.def.type==='atk'?0.5:1);
       emit('repel',{T,O})}
     if(fx==='holy'){T.s=Math.min(1.05,T.s+0.12);T.burst=Math.min(1,T.burst+0.06)}
   }else{
     const fx=T.def.fx;T.s=Math.min(1.05,T.s+(fx==='dragon'?0.2:0.28));T.moon=4;T.storm=fx==='eye'||fx==='swirl'?5:4;
     if(fx==='hover'||fx==='petal')T.shell=fx==='hover'?3:1.5;
-    if(fx==='song'&&O.state==='spin')O.s-=0.05;
+    if(fx==='song'&&O.state==='spin')O.s-=0.05*(T.def.type==='atk'?0.5:1);
     if(fx==='snow'&&O.state==='spin'){O.vx*=0.5;O.vz*=0.5}
     if(fx==='dragon'&&O.state==='spin'){T.sp={kind:'strike',t:0,O};startStrike(T)}
   }
@@ -712,7 +712,7 @@ function stepPhysics(A,B,h){
     }
     if(T.s<=0.05){T.s=0.05;T.state='down';emit('down',{T})}
   }
-  for(const [T,O] of [[A,B],[B,A]])if(T.storm>0&&T.state==='spin'&&O.state==='spin'&&Math.hypot(O.x-T.x,O.z-T.z)<3.6)O.s-=0.05*h;
+  for(const [T,O] of [[A,B],[B,A]])if(T.storm>0&&T.state==='spin'&&O.state==='spin'&&Math.hypot(O.x-T.x,O.z-T.z)<3.6)O.s-=0.05*h*(T.def.type==='atk'?0.5:1);
   collide(A,B,h);
 }
 function collide(A,B,h){
@@ -727,6 +727,7 @@ function collide(A,B,h){
   const vnA=A.vx*nx+A.vz*nz,vnB=B.vx*nx+B.vz*nz,closing=Math.max(0,vnA-vnB);
   const stA=A.sp&&A.sp.kind==='strike',stB=B.sp&&B.sp.kind==='strike';
   const impact=closing+1.6*(A.s+B.s)+(A.dash>0?6:0)+(B.dash>0?6:0)+(stA?10:0)+(stB?10:0);
+  const spA=!!(A.sp||A.chain),spB=!!(B.sp||B.chain);
   if(stA||stB){A.sp=stA?null:A.sp;B.sp=stB?null:B.sp;emit('strikeHit',{x:(A.x+B.x)/2,z:(A.z+B.z)/2,T:stA?A:B})}
   if(vnA>0){A.vx-=vnA*nx*0.85;A.vz-=vnA*nz*0.85}
   if(vnB<0){B.vx-=vnB*nx*0.85;B.vz-=vnB*nz*0.85}
@@ -738,12 +739,12 @@ function collide(A,B,h){
   A.vx+=-nx*pA+tx*pA*0.3;A.vz+=-nz*pA+tz*pA*0.3;
   B.vx+=nx*pB-tx*pB*0.3;B.vz+=nz*pB-tz*pB*0.3;
   A.dash=0;B.dash=0;
-  A.s-=impact*0.005*atkB*advB/(defA*Math.sqrt(A.m))*gA*(SPD[B.def.type]||1);B.s-=impact*0.005*atkA*advA/(defB*Math.sqrt(B.m))*gB*(SPD[A.def.type]||1);
+  A.s-=impact*0.005*atkB*advB/(defA*Math.sqrt(A.m))*gA*(SPD[B.def.type]||1)*(B.def.type==='atk'&&spB?0.5:1);B.s-=impact*0.005*atkA*advA/(defB*Math.sqrt(B.m))*gB*(SPD[A.def.type]||1)*(A.def.type==='atk'&&spA?0.5:1);
   if(impact>9){
     A.burst-=(impact-9)*0.012*atkB*advB/defA*(1.4-Math.min(1,A.s)*0.6)*(A.shell>0?0.3:1)*bB.br*bA.brIn*gA*(BRK[A.def.type]||1)*DURM*((A.sp||A.chain)?0.5:1);
     B.burst-=(impact-9)*0.012*atkA*advA/defB*(1.4-Math.min(1,B.s)*0.6)*(B.shell>0?0.3:1)*bA.br*bB.brIn*gB*(BRK[B.def.type]||1)*DURM*((B.sp||B.chain)?0.5:1);
   }
-  if(bA.k==='thunder')B.s-=0.04;if(bB.k==='thunder')A.s-=0.04;if(bA.k==='ice')B.s-=impact*0.003;if(bB.k==='ice')A.s-=impact*0.003;
+  if(bA.k==='thunder')B.s-=0.04*(A.def.type==='atk'?0.5:1);if(bB.k==='thunder')A.s-=0.04*(B.def.type==='atk'?0.5:1);if(bA.k==='ice')B.s-=impact*0.003;if(bB.k==='ice')A.s-=impact*0.003;
   A.charge=Math.min(1,A.charge+impact*0.009*chgMul(A));B.charge=Math.min(1,B.charge+impact*0.009*chgMul(B));
   emit('hit',{A,B,bA:bA.k,bB:bB.k,impact,x:(A.x+B.x)/2,z:(A.z+B.z)/2});
   if(A.burst<=0){A.burst=0;A.state='burst';emit('burst',{T:A})}
