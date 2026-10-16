@@ -30,6 +30,8 @@ html,body{height:100%;background:var(--night);color:var(--ink);overflow:hidden;f
 
 /* scoreboards */
 .pane{position:absolute;left:0;right:0;display:grid;gap:6px;pointer-events:none;max-width:620px;margin:0 auto}
+.tbadge{position:absolute;pointer-events:none;padding:6px 12px;border-radius:999px;font-weight:900;font-size:14px;letter-spacing:.06em;border:2px solid var(--line);background:rgba(10,15,31,.72);backdrop-filter:blur(4px);white-space:nowrap}
+.tbadge small{font-size:11px;font-weight:700;margin-left:6px;opacity:.9}
 .pane.rival{top:0;padding-top:calc(env(safe-area-inset-top,0px) + 10px)}
 .pane.you{bottom:0;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 36px);padding-right:calc(max(16px,env(safe-area-inset-right,0px)) + 100px)}
 .who{display:flex;align-items:center;gap:8px;min-width:0}
@@ -241,6 +243,8 @@ button,.tops,.arenas,#app{touch-action:manipulation}
       <div class="who"><canvas id="eFace" width="72" height="72"></canvas><b id="eName">—</b><span class="chip" id="eType">—</span><div class="pips" id="ePips"></div></div>
       <div class="bars"><span>轉速</span><div class="bar spinbar" id="eSpin"><i></i></div><span>耐撞</span><div class="bar armorbar" id="eArm"><i></i></div><span>必殺</span><div class="bar chgbar" id="eChg"><i></i></div></div>
     </div>
+    <div class="tbadge" id="tbE" style="top:calc(env(safe-area-inset-top,0px) + 118px);right:12px"></div>
+    <div class="tbadge" id="tbP" style="bottom:calc(env(safe-area-inset-bottom,0px) + 118px);left:12px"></div>
     <div class="pane you gut">
       <div class="who"><canvas id="pFace" width="72" height="72"></canvas><b id="pName">—</b><span class="chip" id="pType">—</span><div class="pips" id="pPips"></div></div>
       <div class="bars"><span>轉速</span><div class="bar spinbar" id="pSpin"><i></i></div><span>耐撞</span><div class="bar armorbar" id="pArm"><i></i></div><span>必殺</span><div class="bar chgbar" id="pChg"><i></i></div></div>
@@ -409,7 +413,7 @@ button,.tops,.arenas,#app{touch-action:manipulation}
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.12</div>
+  <div class="ver">v1.13</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -569,10 +573,11 @@ function withBoost(def){
 const BEATS={atk:'sta',sta:'def',def:'atk'};
 let emit=()=>{};
 function bowlH(r){return 0.03*r*r}
-let BXS=4.5;const BX={atk:3.5,bal:1,sta:4,def:1};
-const SPD={atk:1,bal:1.2,sta:1,def:1},INIT={atk:1.1,bal:1,sta:1.02,def:0.86};
-const durMod=d=>Math.max(0.35,1/((1+0.06*(d.wt-5))*(1+0.05*(d.def-5))*(1+0.08*(d.sta-5))));;
-const MAXC=6,DURM=1/3,DECM={atk:1.2,bal:1,sta:0.75,def:0.7};
+let BXS=4.5;const BX={atk:7.5,bal:1,sta:4,def:1};
+const SPD={atk:1,bal:1.2,sta:1.35,def:1},INIT={atk:1.1,bal:1,sta:1.02,def:0.8};
+const TUNE={"p_red":0.912,"p_blue":1.193,"p_yellow":0.935,"p_green":0.845,"p_white":1.076,"p_black":0.811,"s_lyra":0.978,"s_aquila":0.992,"s_cassio":1.008,"s_orion":0.984,"s_ursa":1.145,"s_cygnus":1.099,"n_kage":1.011,"n_kaze":1.1,"n_hi":0.975,"n_mizu":0.983,"n_tsuchi":0.857,"n_rai":0.984,"phoenix":1.114,"tri_arrow":0.973,"b_seiryu":0.911,"b_byakko":0.936,"b_suzaku":1.03,"b_genbu":0.802,"m_ares":1.05,"m_titan":0.901,"m_raven":0.913,"m_raijin":1.157,"m_aegis":1.001,"m_zero":0.924,"g_aries":1.153,"g_taurus":0.841,"g_gemini":1.015,"g_leo":0.947,"g_scorpio":1.042,"g_sagitt":0.952,"d_red":1.055,"d_azure":0.883,"d_gold":0.854,"d_black":0.894,"d_white":0.924,"d_king":0.799,"k_masamune":0.923,"k_muramasa":1.153,"k_kiku":1.12,"k_onimaru":0.937,"k_monohoshi":1.006,"k_douji":0.889};
+const durMod=d=>Math.max(0.3,1/((1+0.06*(d.wt-5))*(1+0.05*(d.def-5))*(1+0.08*(d.sta-5)))/(TUNE[d.id]||1));;
+const MAXC=6,DURM=1/3,DECM={atk:1.2,bal:1,sta:0.78,def:0.74};
 const CHG={atk:1.3,bal:1,sta:0.85,def:0.8},BRK={def:1,bal:0.9,sta:1/1.5,atk:1.25};
 let npcChgX=1,duelX=1,passX=1;
 const chgMul=T=>(CHG[T.def.type]||1)*(T.side==='E'?npcChgX:1)*duelX,spGuard=T=>T.def.type==='atk'&&(T.sp||T.chain)?0.35:T.def.type==='def'?0.8:1;
@@ -701,7 +706,7 @@ function stepPhysics(A,B,h){
     const sp=Math.hypot(T.vx,T.vz),cap=T.sp&&T.sp.kind==='path'?46:T.dash>0?24:T.onTrack>0?17:MAXV;if(sp>cap){T.vx*=cap/sp;T.vz*=cap/sp}
     T.x+=T.vx*h;T.z+=T.vz*h;
     let decay=0.014*(1.1-T.def.def*0.012)*(1.12-T.def.wt*0.025)*(1+0.05*(T.def.atk-5))+0.006*T.s+sm*0.006
-    decay*=DECM[T.def.type]||1;
+    decay*=(DECM[T.def.type]||1)/(TUNE[T.def.id]||1);
     if(T.moon>0)decay*=0.4;
     T.s-=decay*h;T.charge=Math.min(1,T.charge+0.0175*h*chgMul(T)*passX);
     const bc=bestCircle(T.x,T.z),bdx=T.x-bc[0],bdz=T.z-bc[1],bdd=Math.hypot(bdx,bdz)||1e-6,LIM=bc[2]-0.6;
@@ -1526,7 +1531,11 @@ emit=(type,d)=>{
 const pop=$('pop');let popTimer=0;
 function popText(t,sub){pop.innerHTML='';pop.textContent=t;if(sub){const s=document.createElement('small');s.textContent=sub;pop.appendChild(s)}pop.classList.remove('show');void pop.offsetWidth;pop.classList.add('show')}
 function pipsHTML(n){let h='';for(let i=0;i<4;i++)h+=`<i class="${i<n?'on':''}"></i>`;return h}
-function hudNames(){$('pName').textContent=pName;$('pType').textContent=P.def.name+'・'+P.def.typeName;$('eName').textContent=eName;$('eType').textContent=E.def.name+'・'+E.def.typeName;drawPortrait($('pFace'),pAv);drawPortrait($('eFace'),eAv,true);$('spName').textContent=P.def.special;hudScore()}
+const TB={atk:['⚔','攻擊型','#ff5a4a'],def:['🛡','防禦型','#4aa8ff'],sta:['⛰','耐久型','#46d17c'],bal:['⚖','平衡型','#ffd23d']};
+function typeBadges(){
+  const f=(T,O,el)=>{const b=TB[T.def.type]||TB.bal,w=BEATS[T.def.type]===O.def.type,l=BEATS[O.def.type]===T.def.type;el.innerHTML=`${b[0]} ${b[1]}<small>${w?'▲ 剋對手':l?'▼ 被剋':''}</small>`;el.style.borderColor=b[2];el.style.color=b[2]};
+  f(E,P,$('tbE'));f(P,E,$('tbP'))}
+function hudNames(){typeBadges();$('pName').textContent=pName;$('pType').textContent=P.def.name+'・'+P.def.typeName;$('eName').textContent=eName;$('eType').textContent=E.def.name+'・'+E.def.typeName;drawPortrait($('pFace'),pAv);drawPortrait($('eFace'),eAv,true);$('spName').textContent=P.def.special;hudScore()}
 function hudScore(){$('pPips').innerHTML=pipsHTML(score.P);$('ePips').innerHTML=pipsHTML(score.E)}
 function bar(el,v){const i=el.firstElementChild;const w=Math.max(0,Math.min(1,v))*100;i.style.width=w+'%';el.classList.toggle('low',v<0.25)}
 const spBtn=$('sp');
