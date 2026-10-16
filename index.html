@@ -43,6 +43,9 @@ html,body{height:100%;background:var(--night);color:var(--ink);overflow:hidden;f
 .bar{height:9px;background:var(--well);border:1px solid var(--line);border-radius:2px;overflow:hidden}
 .bar i{display:block;height:100%;width:100%;transition:width .12s linear}
 .spinbar i{background:linear-gradient(90deg,#2a9fff,#9ff3ff)}
+.chgbar i{background:linear-gradient(90deg,#b04bff,#ff7ad9)}
+.bar.chgbar.low i{background:linear-gradient(90deg,#b04bff,#ff7ad9)}
+.chgbar.full i{background:#fff27a;box-shadow:0 0 8px #ffe36b}
 .armorbar i{background:linear-gradient(90deg,#ff8a2a,#ffe36b)}
 .bar.low i{background:#ff4b4b}
 
@@ -221,6 +224,12 @@ h1{margin:0;font-weight:900;font-size:clamp(40px,12vw,62px);line-height:1;letter
 canvas.ico{width:44px;height:44px;flex:none}
 .ver{position:absolute;left:max(10px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 8px);font-size:10px;color:var(--dim);pointer-events:none;opacity:.7}
 @media (prefers-reduced-motion:reduce){#sp.ready{animation:none}}
+*{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+input,textarea{-webkit-user-select:text;user-select:text}
+::selection{background:transparent}
+button,.tops,.arenas,#app{touch-action:manipulation}
+#shop .inner{zoom:1.2}
+#practice #p1Panel{display:grid;gap:8px}
 </style>
 
 <div id="app">
@@ -230,11 +239,11 @@ canvas.ico{width:44px;height:44px;flex:none}
   <div id="hud" hidden>
     <div class="pane rival gut">
       <div class="who"><canvas id="eFace" width="72" height="72"></canvas><b id="eName">—</b><span class="chip" id="eType">—</span><div class="pips" id="ePips"></div></div>
-      <div class="bars"><span>轉速</span><div class="bar spinbar" id="eSpin"><i></i></div><span>耐撞</span><div class="bar armorbar" id="eArm"><i></i></div></div>
+      <div class="bars"><span>轉速</span><div class="bar spinbar" id="eSpin"><i></i></div><span>耐撞</span><div class="bar armorbar" id="eArm"><i></i></div><span>必殺</span><div class="bar chgbar" id="eChg"><i></i></div></div>
     </div>
     <div class="pane you gut">
       <div class="who"><canvas id="pFace" width="72" height="72"></canvas><b id="pName">—</b><span class="chip" id="pType">—</span><div class="pips" id="pPips"></div></div>
-      <div class="bars"><span>轉速</span><div class="bar spinbar" id="pSpin"><i></i></div><span>耐撞</span><div class="bar armorbar" id="pArm"><i></i></div></div>
+      <div class="bars"><span>轉速</span><div class="bar spinbar" id="pSpin"><i></i></div><span>耐撞</span><div class="bar armorbar" id="pArm"><i></i></div><span>必殺</span><div class="bar chgbar" id="pChg"><i></i></div></div>
     </div>
   </div>
 
@@ -246,21 +255,31 @@ canvas.ico{width:44px;height:44px;flex:none}
 
   <section id="menu" class="sheet gut">
     <div class="inner">
-      <div class="eyebrow" style="display:flex;align-items:center">v1.4.2 試玩<span id="coinLbl" style="margin-left:12px;color:var(--ink)">商店幣 0</span><button class="mini" id="musicBtn" type="button" aria-pressed="true">音樂：開</button></div>
+      <div class="eyebrow" style="display:flex;align-items:center">v1.5 試玩<span id="coinLbl" style="margin-left:12px;color:var(--ink)">商店幣 0</span><button class="mini" id="musicBtn" type="button" aria-pressed="true">音樂：開</button></div>
       <h1>旋風小鬥士</h1>
-      <p class="lead">捏好你的鬥士、選陀螺和戰鬥盤，往下拉發射。對戰時手指在畫面上拖可以推著陀螺跑，必殺鈕亮了就按。戰鬥盤會浮出特殊軌道，衝上去會高速撞向中心，還會出現道具；四周的牆會慢慢降下。先拿 4 分贏。</p>
-      <div class="fighter"><canvas id="pFaceMenu" width="144" height="144"></canvas><div><b id="pNameLbl">小鬥士</b><span>你的鬥士</span></div><button class="btn small" id="editBtn" type="button">捏臉</button></div>
-      <div class="secHead"><b>陀螺</b><span id="topCount">40 顆</span></div>
-      <div class="filters" id="filters"></div>
-      <div class="tops" id="pick"></div>
-      <div class="card" id="detail" aria-pressed="true" aria-live="polite"></div>
-      <div class="secHead"><b>戰鬥盤</b><span id="arenaName">星藍競技場</span><button class="mini" id="arenaRand" type="button">隨機</button></div>
-      <div class="arenas" id="arenas"></div>
+      <p class="lead">往下拉發射。對戰時手指在畫面上拖可以推著陀螺跑，必殺鈕亮了就按。戰鬥盤會浮出特殊軌道，還會出現道具；四周的牆會慢慢降下。先拿 4 分贏。</p>
       <div class="cycle"><b>攻擊</b> 剋 耐久　<b>耐久</b> 剋 防禦　<b>防禦</b> 剋 攻擊　<b>平衡</b> 不剋也不被剋<br>
         轉停 <b>+1</b>　撞出場 <b>+2</b>（牆壁會慢慢降下，從降下的地方最容易）　撞爆 <b>+3</b></div>
       <button class="btn" id="tourBtn" type="button">競技大賽　32強五關</button>
       <button class="btn ghost" id="shopBtn" type="button">工坊　商店・組裝・強化</button>
       <button class="btn ghost" id="go" type="button">單場練習賽</button>
+    </div>
+  </section>
+
+  <section id="practice" class="sheet gut" hidden>
+    <div class="inner">
+      <div class="eyebrow">單場練習賽</div>
+      <div id="pracSlot"><div id="p1Panel">
+      <div class="fighter"><canvas id="pFaceMenu" width="144" height="144"></canvas><div><b id="pNameLbl">小鬥士</b><span>你的鬥士</span></div><button class="btn small" id="editBtn" type="button">捏臉</button></div>
+      <div class="secHead"><b>陀螺</b><span id="topCount">40 顆</span></div>
+      <div class="filters" id="filters"></div>
+      <div class="tops" id="pick"></div>
+      <div class="card" id="detail" aria-pressed="true" aria-live="polite"></div>
+      </div></div>
+      <div class="secHead"><b>戰鬥盤</b><span id="arenaName">星藍競技場</span><button class="mini" id="arenaRand" type="button" aria-pressed="false">🎲 隨機</button></div>
+      <div class="arenas" id="arenas"></div>
+      <button class="btn" id="goPrac" type="button">開始對戰</button>
+      <button class="btn ghost" id="pracBack" type="button">返回</button>
     </div>
   </section>
 
@@ -318,7 +337,7 @@ canvas.ico{width:44px;height:44px;flex:none}
       <div class="note" id="cupNote" style="font-size:12px;color:var(--dim)"></div>
       <div class="secHead"><b>參賽人數</b></div>
       <div class="row"><button class="btn ghost" id="tn1" type="button" aria-pressed="true">單人</button><button class="btn ghost" id="tn2" type="button" aria-pressed="false">雙人</button></div>
-      <div class="fighter"><canvas id="t1Face" width="144" height="144"></canvas><div><b id="t1Lbl">小鬥士</b><span id="t1Top">—</span></div><span>P1</span></div>
+      <div class="secHead"><b>P1 設定</b><span id="t1Top">—</span></div><div id="p1Slot"></div><div hidden><canvas id="t1Face" width="144" height="144"></canvas><b id="t1Lbl"></b></div>
       <div id="p2box" hidden>
         <div class="fighter"><canvas id="p2Face" width="144" height="144"></canvas><div><b id="p2NameLbl">玩家二</b><span id="p2TopLbl">—</span></div><button class="btn small" id="p2Rand" type="button">換造型</button></div>
         <div style="display:grid;gap:6px;margin-top:10px"><label for="p2NameIn" style="font-size:13px;font-weight:700">P2 名字</label><input id="p2NameIn" maxlength="8" autocomplete="off" style="all:unset;box-sizing:border-box;padding:8px 10px;border:2px solid var(--line);border-radius:8px;background:var(--deck);font-size:15px">
@@ -351,7 +370,7 @@ canvas.ico{width:44px;height:44px;flex:none}
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.4.2</div>
+  <div class="ver">v1.5</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -506,8 +525,11 @@ function withBoost(def){const b=boostOf(def.id);if(!b.atk&&!b.def&&!b.sta&&!b.wt
 const BEATS={atk:'sta',sta:'def',def:'atk'};
 let emit=()=>{};
 function bowlH(r){return 0.03*r*r}
+const SPD={atk:1.3,bal:1.25,sta:1.05,def:0.85};
+const MAXC=6,DURM=1/3,DECM={atk:1.2,bal:1,sta:1/1.2,def:1/1.3};
 const CHG={atk:1.25,bal:1,sta:0.85,def:0.5},BRK={def:0.55,bal:0.9,sta:1,atk:1.25};
-const chgMul=T=>CHG[T.def.type]||1,spGuard=T=>T.def.type==='atk'&&(T.sp||T.chain)?0.35:T.def.type==='def'?0.8:1;
+let npcChgX=1;
+const chgMul=T=>(CHG[T.def.type]||1)*(T.side==='E'?npcChgX:1),spGuard=T=>T.def.type==='atk'&&(T.sp||T.chain)?0.35:T.def.type==='def'?0.8:1;
 function newTop(def,side){return {def,side,sp:null,storm:0,buff:null,buffT:0,boostCD:0,onTrack:0,x:0,z:0,vx:0,vz:0,s:0,burst:1,charge:0,state:'idle',m:0.6+def.wt*0.15,rad:(def.wt>=8?1.18:1.12)*TOPSCALE,dash:0,shell:0,moon:0,sx:0,sz:0,y:0,vy:0}}
 function launchTop(T,pull,aim,perfect){
   const dir=T.side==='P'?-1:1;
@@ -632,7 +654,8 @@ function stepPhysics(A,B,h){
     if(T.dash<=0){const fr=Math.exp(-T.def.fric*(T.shell>0?2.2:1)*h);T.vx*=fr;T.vz*=fr}
     const sp=Math.hypot(T.vx,T.vz),cap=T.sp&&T.sp.kind==='path'?46:T.dash>0?24:T.onTrack>0?17:MAXV;if(sp>cap){T.vx*=cap/sp;T.vz*=cap/sp}
     T.x+=T.vx*h;T.z+=T.vz*h;
-    let decay=0.014*(1.45-T.def.sta*0.07)*(1.12-T.def.wt*0.025)+0.006*T.s+sm*0.006;
+    let decay=0.014*(1.45-T.def.sta*0.07)*(1.12-T.def.wt*0.025)+0.006*T.s+sm*0.006
+    decay*=DECM[T.def.type]||1;
     if(T.moon>0)decay*=0.4;
     T.s-=decay*h;T.charge=Math.min(1,T.charge+0.0175*h*chgMul(T));
     const bc=bestCircle(T.x,T.z),bdx=T.x-bc[0],bdz=T.z-bc[1],bdd=Math.hypot(bdx,bdz)||1e-6,LIM=bc[2]-0.6;
@@ -671,10 +694,10 @@ function collide(A,B,h){
   A.vx+=-nx*pA+tx*pA*0.3;A.vz+=-nz*pA+tz*pA*0.3;
   B.vx+=nx*pB-tx*pB*0.3;B.vz+=nz*pB-tz*pB*0.3;
   A.dash=0;B.dash=0;
-  A.s-=impact*0.005*atkB*advB/(defA*Math.sqrt(A.m))*gA;B.s-=impact*0.005*atkA*advA/(defB*Math.sqrt(B.m))*gB;
+  A.s-=impact*0.005*atkB*advB/(defA*Math.sqrt(A.m))*gA*(SPD[B.def.type]||1);B.s-=impact*0.005*atkA*advA/(defB*Math.sqrt(B.m))*gB*(SPD[A.def.type]||1);
   if(impact>9){
-    A.burst-=(impact-9)*0.012*atkB*advB/defA*(1.4-Math.min(1,A.s)*0.6)*(A.shell>0?0.3:1)*bB.br*bA.brIn*gA*(BRK[A.def.type]||1);
-    B.burst-=(impact-9)*0.012*atkA*advA/defB*(1.4-Math.min(1,B.s)*0.6)*(B.shell>0?0.3:1)*bA.br*bB.brIn*gB*(BRK[B.def.type]||1);
+    A.burst-=(impact-9)*0.012*atkB*advB/defA*(1.4-Math.min(1,A.s)*0.6)*(A.shell>0?0.3:1)*bB.br*bA.brIn*gA*(BRK[A.def.type]||1)*DURM*((A.sp||A.chain)?0.5:1);
+    B.burst-=(impact-9)*0.012*atkA*advA/defB*(1.4-Math.min(1,B.s)*0.6)*(B.shell>0?0.3:1)*bA.br*bB.brIn*gB*(BRK[B.def.type]||1)*DURM*((B.sp||B.chain)?0.5:1);
   }
   if(bA.k==='thunder')B.s-=0.04;if(bB.k==='thunder')A.s-=0.04;if(bA.k==='ice')B.s-=impact*0.003;if(bB.k==='ice')A.s-=impact*0.003;
   A.charge=Math.min(1,A.charge+impact*0.009*chgMul(A));B.charge=Math.min(1,B.charge+impact*0.009*chgMul(B));
@@ -1361,7 +1384,9 @@ function setupTops(pDef,eDef){
 }
 function rebuild(T){disposeModel(T.model);T.model=makeModel(T.def)}
 
+const NOSFX=new Proxy({},{get:()=>()=>{}});
 emit=(type,d)=>{
+  const sf=phase==='menu'?NOSFX:sfx;
   const vis=phase!=='menu';
   if(type==='hit'){
     const y=groundHc(d.x,d.z)+0.9,ca=d.A.def.color,cb=d.B.def.color,toRGB=c=>[((c>>16)&255)/255*1.6,((c>>8)&255)/255*1.6,(c&255)/255*1.6];
@@ -1370,29 +1395,29 @@ emit=(type,d)=>{
     if(d.impact>6)shock(d.x,y-0.3,d.z,Math.min(1.6,d.impact/12));
     for(const b of [d.bA,d.bB]){if(b==='fire')sparks(d.x,y,d.z,40,[[1.8,0.7,0.15],[1.8,1.3,0.3]]);if(b==='thunder')zap(d.x,y,d.z,4,2.4);if(b==='ice')sparks(d.x,y,d.z,30,[[1.2,1.6,1.8],[1.6,1.6,1.6]]);if(b==='steel')sparks(d.x,y,d.z,30,[[1.6,1.6,1.4]]);if(b==='light')shock(d.x,y-0.2,d.z,1.8)}
     if(!vis)return;
-    sfx.hit(d.impact);if(d.impact>7)sfx.zap(Math.min(1,d.impact/16));if(d.impact>13)camPunch=Math.min(5,camPunch+d.impact*0.25);shake=Math.min(1.3,shake+d.impact*0.045*(reduce?0.3:1));
+    sf.hit(d.impact);if(d.impact>7)sf.zap(Math.min(1,d.impact/16));if(d.impact>13)camPunch=Math.min(5,camPunch+d.impact*0.25);shake=Math.min(1.3,shake+d.impact*0.045*(reduce?0.3:1));
     if(d.impact>13&&slowT<=0&&!reduce)slowT=0.35;
     stats.hits++;stats.max=Math.max(stats.max,d.impact);totalHits++;
     if(d.impact>15)popText('重擊！');
     if(totalHits%67===0){popText('6 7!','送你必殺能量');say('Six! Seven!');P.charge=1}
   }else if(type==='item'){const it=d.it,col=ITEM_KINDS[it.kind].col,rgb=[((col>>16)&255)/150,((col>>8)&255)/150,(col&255)/150];
     sparks(it.x,groundHc(it.x,it.z)+1.2,it.z,40,[rgb,[1.6,1.6,1.6]]);shock(it.x,groundHc(it.x,it.z)+0.2,it.z,1.2);
-    if(vis){sfx.item();popText(ITEM_KINDS[it.kind].name+'！',d.T===P?'你拿到了道具':'對手拿到了道具')}
+    if(vis){sf.item();popText(ITEM_KINDS[it.kind].name+'！',d.T===P?'你拿到了道具':'對手拿到了道具')}
   }else if(type==='boost'){const T=d.T,col=track?track.color:0xffffff,rgb=[((col>>16)&255)/150,((col>>8)&255)/150,(col&255)/150];
-    sparks(T.x,groundHc(T.x,T.z)+0.6,T.z,24,[rgb,[1.6,1.6,1.6]]);if(vis){sfx.boost();shake=Math.max(shake,0.35)}
-  }else if(type==='wall'){if(vis)sfx.wall(d.v);const T=d.T;sparks(T.x,groundHc(T.x,T.z)+0.8,T.z,8,[[1.4,1.2,0.6]])}
-  else if(type==='burst'){explode(d.T);if(vis){sfx.boom();shake=1.6;if(!reduce)slowT=0.6}sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,90,[[1.6,1.2,0.5],[1.6,1.6,1.6]]);shock(d.T.x,groundHc(d.T.x,d.T.z)+0.4,d.T.z,2.2)}
-  else if(type==='out'){if(vis){sfx.out();shake=Math.max(shake,0.7)}}
-  else if(type==='strike'){const T=d.T;if(vis){sfx.boost();shake=Math.max(shake,0.6);speedFx=0.7;speedCol=hex(T.def.accent)}}
-  else if(type==='blink'){const T=d.T;sparks(T.x,groundHc(T.x,T.z)+0.7,T.z,18,[[1.6,1.6,1.8],topRGB(T)]);if(d.zap)zap(T.x,groundHc(T.x,T.z)+0.9,T.z,3,2.8);if(d.smoke)sparks(T.x,groundHc(T.x,T.z)+0.7,T.z,30,[[0.5,0.5,0.6],[0.3,0.3,0.4],topRGB(T)]);if(d.star){sparks(T.x,groundHc(T.x,T.z)+1,T.z,26,[[1.8,1.8,1.6],[1.8,1.5,0.6]]);shock(T.x,groundHc(T.x,T.z)+0.3,T.z,0.9)}if(d.fire)sparks(T.x,groundHc(T.x,T.z)+0.8,T.z,30,[[1.8,0.7,0.15],[1.8,1.3,0.3]]);if(vis)sfx.zap(0.6)}
+    sparks(T.x,groundHc(T.x,T.z)+0.6,T.z,24,[rgb,[1.6,1.6,1.6]]);if(vis){sf.boost();shake=Math.max(shake,0.35)}
+  }else if(type==='wall'){if(vis)sf.wall(d.v);const T=d.T;sparks(T.x,groundHc(T.x,T.z)+0.8,T.z,8,[[1.4,1.2,0.6]])}
+  else if(type==='burst'){explode(d.T);if(vis){sf.boom();shake=1.6;if(!reduce)slowT=0.6}sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,90,[[1.6,1.2,0.5],[1.6,1.6,1.6]]);shock(d.T.x,groundHc(d.T.x,d.T.z)+0.4,d.T.z,2.2)}
+  else if(type==='out'){if(vis){sf.out();shake=Math.max(shake,0.7)}}
+  else if(type==='strike'){const T=d.T;if(vis){sf.boost();shake=Math.max(shake,0.6);speedFx=0.7;speedCol=hex(T.def.accent)}}
+  else if(type==='blink'){const T=d.T;sparks(T.x,groundHc(T.x,T.z)+0.7,T.z,18,[[1.6,1.6,1.8],topRGB(T)]);if(d.zap)zap(T.x,groundHc(T.x,T.z)+0.9,T.z,3,2.8);if(d.smoke)sparks(T.x,groundHc(T.x,T.z)+0.7,T.z,30,[[0.5,0.5,0.6],[0.3,0.3,0.4],topRGB(T)]);if(d.star){sparks(T.x,groundHc(T.x,T.z)+1,T.z,26,[[1.8,1.8,1.6],[1.8,1.5,0.6]]);shock(T.x,groundHc(T.x,T.z)+0.3,T.z,0.9)}if(d.fire)sparks(T.x,groundHc(T.x,T.z)+0.8,T.z,30,[[1.8,0.7,0.15],[1.8,1.3,0.3]]);if(vis)sf.zap(0.6)}
   else if(type==='slash'){const T=d.T,c=topRGB(T);for(let i=0;i<=24;i++){const f=i/24,x=d.x0+(d.x1-d.x0)*f,z=d.z0+(d.z1-d.z0)*f;sparks(x,groundHc(x,z)+0.8,z,5,[[1.8,1.8,1.8],c])}
-    shock((d.x0+d.x1)/2,groundHc(0,0)+0.5,(d.z0+d.z1)/2,2.8);if(vis){sfx.boom();sfx.zap(1);shake=Math.max(shake,1.0);flashFx=0.4;speedFx=0.5;speedCol='#ffffff';popText('一閃！','把戰場切成兩半')}}
+    shock((d.x0+d.x1)/2,groundHc(0,0)+0.5,(d.z0+d.z1)/2,2.8);if(vis){sf.boom();sf.zap(1);shake=Math.max(shake,1.0);flashFx=0.4;speedFx=0.5;speedCol='#ffffff';popText('一閃！','把戰場切成兩半')}}
   else if(type==='strikeHit'){const y=groundHc(d.x,d.z)+0.8,c=topRGB(d.T);sparks(d.x,y,d.z,90,[c,[1.8,1.8,1.8],[1.8,1.3,0.4]]);shock(d.x,y-0.3,d.z,2.4);shock(d.x,y,d.z,1.4);zap(d.x,y,d.z,6,3);
-    if(vis){sfx.boom();shake=1.5;camPunch=Math.min(5,camPunch+3);if(!reduce)slowT=Math.max(slowT,0.45);flashFx=0.35;popText('爆擊！')}}
-  else if(type==='repel'){const T=d.T,y=groundHc(T.x,T.z)+0.4;shock(T.x,y,T.z,2.6);shock(T.x,y+0.4,T.z,1.8);sparks(T.x,y+0.4,T.z,50,[[0.6,1.2,1.8],[1.6,1.6,1.6]]);if(vis){sfx.boom();shake=Math.max(shake,0.8)}}
+    if(vis){sf.boom();shake=1.5;camPunch=Math.min(5,camPunch+3);if(!reduce)slowT=Math.max(slowT,0.45);flashFx=0.35;popText('爆擊！')}}
+  else if(type==='repel'){const T=d.T,y=groundHc(T.x,T.z)+0.4;shock(T.x,y,T.z,2.6);shock(T.x,y+0.4,T.z,1.8);sparks(T.x,y+0.4,T.z,50,[[0.6,1.2,1.8],[1.6,1.6,1.6]]);if(vis){sf.boom();shake=Math.max(shake,0.8)}}
   else if(type==='special'){sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,60,[topRGB(d.T),[1.6,1.6,1.6],[1.6,1.4,0.5]]);shock(d.T.x,groundHc(d.T.x,d.T.z)+0.4,d.T.z,1.8);
     {const fx=d.T.def.fx;if(fx==='quake'){shock(d.T.x,groundHc(d.T.x,d.T.z)+0.2,d.T.z,3.4);if(vis)shake=Math.max(shake,1.2)}if(fx==='holy'||fx==='moon'||fx==='song')shock(d.T.x,groundHc(d.T.x,d.T.z)+0.9,d.T.z,2.6);if(fx==='flame'||fx==='dragon')sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,60,[[1.8,0.7,0.15],[1.8,1.3,0.3]]);if(fx==='ice'||fx==='snow')sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,60,[[1.2,1.6,1.8],[1.6,1.6,1.6]])}
-    if(vis){sfx.special();if(d.T===P)stats.sp++;cutIn(d.T);if(!reduce)slowT=Math.max(slowT,0.9)}}
+    if(vis){sf.special();if(d.T===P)stats.sp++;cutIn(d.T);if(!reduce)slowT=Math.max(slowT,0.9)}}
 };
 
 /* ---------- HUD ---------- */
@@ -1407,7 +1432,7 @@ function buffChip(el,T,base){if(T.buffT>0&&T.state==='spin'){el.textContent=ITEM
 function hudTick(){
   buffChip($('pType'),P,P.def.name+'・'+P.def.typeName);buffChip($('eType'),E,E.def.name+'・'+E.def.typeName);
   const live=T=>T.state==='spin'||T.state==='idle';
-  bar($('pSpin'),live(P)?P.s:0);bar($('eSpin'),live(E)?E.s:0);bar($('pArm'),P.burst);bar($('eArm'),E.burst);
+  bar($('pSpin'),live(P)?P.s:0);bar($('eSpin'),live(E)?E.s:0);bar($('pArm'),P.burst);bar($('eArm'),E.burst);bar($('pChg'),P.charge);bar($('eChg'),E.charge);$('pChg').classList.toggle('full',P.charge>=0.99);$('eChg').classList.toggle('full',E.charge>=0.99);
   spBtn.style.setProperty('--g',P.charge.toFixed(3));$('spName').textContent=Math.floor(P.charge*100)+'%';
   if(duel2){sp2Btn.style.setProperty('--g',E.charge.toFixed(3));$('spName2').textContent=Math.floor(E.charge*100)+'%'}
 }
@@ -1442,7 +1467,7 @@ function renderPicker(){
   pinFirst(TOPS).map(d=>[d,TOPS.indexOf(d)]).forEach(([def,i])=>{if(topFilter==='custom'){if(!def.custom)return}else if(topFilter==='mine'){if(!owns(def))return}else if(topFilter!=='all'&&def.tier!==topFilter)return;
     const b=document.createElement('button');b.type='button';b.className='tp t-'+def.tier+(owns(def)?'':' lock');b.id='pick-'+def.id;b.setAttribute('aria-pressed',i===pick);b.setAttribute('aria-label',def.name+' '+def.typeName);
     b.innerHTML=`<canvas width="96" height="96"></canvas><span>${def.name}</span>${owns(def)?`<i class="pin ${pins.has(def.id)?'on':''}" data-pin="1" title="釘選">📌</i>`:''}`;drawIcon(b.querySelector('canvas'),def);
-    b.onclick=e=>{audioInit();if(e.target.closest('[data-pin]')){togglePin(def.id);renderPicker();return}if(!owns(def)){peek=i;renderDetail();peek=-1;return}pick=i;save('top',i);[...pickEl.children].forEach(c=>c.setAttribute('aria-pressed',c===b));renderDetail();sfx.ding();demoReset()};
+    b.onclick=e=>{audioInit();if(e.target.closest('[data-pin]')){togglePin(def.id);renderPicker();return}if(!owns(def)){peek=i;renderDetail();peek=-1;return}pick=i;save('top',i);[...pickEl.children].forEach(c=>c.setAttribute('aria-pressed',c===b));renderDetail();sfx.ding();demoReset();if(!$('tourSetup').hidden)tourSetupUI()};
     pickEl.appendChild(b)});
 }
 [['mine','我的'],['all','圖鑑'],['div','神聖'],['leg','傳說'],['brz','青銅'],['custom','自組']].forEach(([k,n])=>{const b=document.createElement('button');b.type='button';b.id='flt-'+k;b.textContent=n;b.setAttribute('aria-pressed',k==='mine');
@@ -1454,15 +1479,24 @@ function demoReset(){trackReset();
   const others=TOPS.filter((_,i)=>i!==pick);setupTops(TOPS[pick],others[Math.floor(Math.random()*others.length)]);
   launchTop(P,0.7+Math.random()*0.3,(Math.random()-.5),false);launchTop(E,0.7+Math.random()*0.3,(Math.random()-.5),false);demoT=0;
 }
-$('go').onclick=()=>{audioInit();startMatch()};
+$('go').onclick=()=>{audioInit();openPractice()};
+function mountP1(host){host.appendChild($('p1Panel'));renderPicker();renderDetail();menuFighter();demoReset()}
+let arenaRandMode=load('arenaR')===1;
+function arenaRandUI(){$('arenaRand').setAttribute('aria-pressed',arenaRandMode);if(arenaRandMode)[...arenasEl.children].forEach(c=>c.setAttribute('aria-pressed',false))}
+function openPractice(){$('menu').hidden=true;$('practice').hidden=false;mountP1($('pracSlot'));const a=load('arena');if(!arenaRandMode)pickArena(Number.isInteger(a)&&a<ARENAS.length?a:0);arenaRandUI()}
+$('goPrac').onclick=()=>{audioInit();startMatch()};
+$('pracBack').onclick=()=>{$('practice').hidden=true;$('menu').hidden=false;menuEnter()};
+function quietAll(){try{humSet(0,false);if(AC&&master){const t=AC.currentTime;master.gain.cancelScheduledValues(t);master.gain.setValueAtTime(0,t);master.gain.setValueAtTime(0.8,t+0.35)}}catch(e){}}
+function menuEnter(){quietAll();const cur=load('arena');let i;do{i=Math.floor(Math.random()*ARENAS.length)}while(ARENAS.length>1&&i===menuArenaI);menuArenaI=i;applyArena(i);demoReset();mcT=0}
+let menuArenaI=-1,mcT=0,mcD=0,mcEl=0,mcF=null;
 function startMatch(){
   const others=TOPS.filter((d,i)=>i!==pick&&!d.custom&&d.tier===TOPS[pick].tier);const eDef=others[Math.floor(Math.random()*others.length)];
-  curMatch=null;duel2=false;matchTarget=4;aiSkill=0.7;
+  curMatch=null;duel2=false;matchTarget=4;aiSkill=0.7;npcChgX=1;
   score={P:0,E:0};stats={hits:0,max:0,perf:0,sp:0};eAv=randomAvatar();eName=RIVAL_NAMES[Math.floor(Math.random()*RIVAL_NAMES.length)];
-  setupTops(withBoost(TOPS[pick]),eDef);$('menu').hidden=true;$('matchEnd').hidden=true;$('hud').hidden=false;hudNames();toLaunch();
+  if(arenaRandMode)applyArena(Math.floor(Math.random()*ARENAS.length));setupTops(withBoost(TOPS[pick]),eDef);$('menu').hidden=true;$('practice').hidden=true;$('matchEnd').hidden=true;$('hud').hidden=false;hudNames();toLaunch();
 }
 $('again').onclick=()=>{audioInit();startMatch()};
-$('change').onclick=()=>{$('matchEnd').hidden=true;$('hud').hidden=true;$('menu').hidden=false;phase='menu';ov.mode=null;demoReset()};
+$('change').onclick=()=>{$('matchEnd').hidden=true;$('hud').hidden=true;phase='menu';ov.mode=null;spShow(false);quietAll();openPractice()};
 
 /* ---------- launch ---------- */
 const launchEl=$('launch'),fill=$('fill'),zoneEl=$('zone');
@@ -1990,8 +2024,9 @@ function crRenderOpts(){
     pal.forEach((col,i)=>{const b=document.createElement('button');b.type='button';b.className='sw';b.id=`sw-${ck}-${i}`;b.style.background=col;b.setAttribute('aria-label',(lb.textContent)+' '+(i+1));b.setAttribute('aria-pressed',pAv[ck]===i);
       b.onclick=()=>{pAv[ck]=i;crRenderOpts()};crSw.appendChild(b)})}
 }
-function openCreator(){crOpen=true;$('menu').hidden=true;$('creator').hidden=false;nameIn.value=pName;crRenderTabs();crRenderOpts()}
-function closeCreator(){crOpen=false;pName=(nameIn.value||'').trim().slice(0,8)||'小鬥士';save('av',pAv);save('name',pName);$('creator').hidden=true;$('menu').hidden=false;menuFighter()}
+let crBack='menu';
+function openCreator(){crOpen=true;crBack=!$('practice').hidden?'practice':!$('tourSetup').hidden?'tourSetup':'menu';$(crBack).hidden=true;$('creator').hidden=false;nameIn.value=pName;crRenderTabs();crRenderOpts()}
+function closeCreator(){crOpen=false;pName=(nameIn.value||'').trim().slice(0,8)||'小鬥士';save('av',pAv);save('name',pName);$('creator').hidden=true;$(crBack).hidden=false;menuFighter();if(crBack==='tourSetup')tourSetupUI()}
 $('crDone').onclick=closeCreator;
 $('crRand').onclick=()=>{audioInit();pAv=randomAvatar();sfx.ding();crRenderOpts()};
 document.querySelectorAll('[data-pose]').forEach(b=>b.onclick=()=>{crPose=b.dataset.pose;document.querySelectorAll('[data-pose]').forEach(x=>x.setAttribute('aria-pressed',x===b))});
@@ -2018,8 +2053,8 @@ ARENAS.forEach((A,i)=>{const b=document.createElement('button');b.type='button';
   b.appendChild(c);
   const s=document.createElement('span');s.textContent=(A.geo?'★':'')+A.name;b.appendChild(s);
   b.onclick=()=>{audioInit();pickArena(i);sfx.ding()};arenasEl.appendChild(b)});
-function pickArena(i){applyArena(i);save('arena',i);[...arenasEl.children].forEach((c,j)=>c.setAttribute('aria-pressed',j===i))}
-$('arenaRand').onclick=()=>{audioInit();pickArena(Math.floor(Math.random()*ARENAS.length));sfx.ding()};
+function pickArena(i){arenaRandMode=false;save('arenaR',0);applyArena(i);save('arena',i);[...arenasEl.children].forEach((c,j)=>c.setAttribute('aria-pressed',j===i))}
+$('arenaRand').onclick=()=>{audioInit();arenaRandMode=!arenaRandMode;save('arenaR',arenaRandMode?1:0);if(arenaRandMode)applyArena(Math.floor(Math.random()*ARENAS.length));arenaRandUI();sfx.ding()};
 
 /* ---------- music: 開場=片段1、結算=片段6、戰鬥=其餘16段隨機；每次從隨機位置開始 ---------- */
 const MUSIC={"battle": [{"url": "music/b02.mp3", "ls": 0.5, "le": 29.68465, "seg": 2}, {"url": "music/b03.mp3", "ls": 0.5, "le": 29.73476, "seg": 3}, {"url": "music/b04.mp3", "ls": 0.5, "le": 29.71531, "seg": 4}, {"url": "music/b05.mp3", "ls": 0.5, "le": 29.71499, "seg": 5}, {"url": "music/b07.mp3", "ls": 0.5, "le": 27.56238, "seg": 7}, {"url": "music/b08.mp3", "ls": 0.5, "le": 27.6041, "seg": 8}, {"url": "music/b09.mp3", "ls": 0.5, "le": 27.5881, "seg": 9}, {"url": "music/b10.mp3", "ls": 0.5, "le": 27.5471, "seg": 10}, {"url": "music/b11.mp3", "ls": 0.5, "le": 27.549, "seg": 11}, {"url": "music/b12.mp3", "ls": 0.5, "le": 27.55898, "seg": 12}, {"url": "music/b13.mp3", "ls": 0.5, "le": 29.11492, "seg": 13}, {"url": "music/b14.mp3", "ls": 0.5, "le": 29.09311, "seg": 14}, {"url": "music/b15.mp3", "ls": 0.5, "le": 29.1366, "seg": 15}, {"url": "music/b16.mp3", "ls": 0.5, "le": 29.1, "seg": 16}, {"url": "music/b17.mp3", "ls": 0.5, "le": 29.12308, "seg": 17}, {"url": "music/b18.mp3", "ls": 0.5, "le": 29.0942, "seg": 18}], "intro": {"url": "music/intro.mp3", "ls": 0.5, "le": 29.71195, "seg": 1}, "result": {"url": "music/result.mp3", "ls": 0.5, "le": 29.73036, "seg": 6}};
@@ -2123,7 +2158,14 @@ function updateCamera(dt){
     dist=camDist+(tight-camDist)*z;el=ELEV+(elT-ELEV)*z;
     _f.set(cx*z*0.85,0.8+groundHc(cx,cz)*z*0.6,0.4+(cz*0.85-0.4)*z);
     yawV=0.12*z*(phase==='ending'?0.5:1);
-  }else if(phase==='menu')yawV=0.07;
+  }else if(phase==='menu'){
+    yawV=0.05;
+    const live=[P,E].filter(T=>T&&T.state==='spin');
+    mcT-=dt;
+    if(mcT<=0||!mcF){mcT=2.6+Math.random()*2.4;const cl=Math.random()<0.65;mcD=cl?12+Math.random()*5:camDist*(0.85+Math.random()*0.2);mcEl=(26+Math.random()*36)*Math.PI/180;mcF=cl?Math.floor(Math.random()*2):-1;camYaw+=(Math.random()-.5)*3;camD=mcD;camEl=mcEl}
+    mcD=Math.max(10,mcD-dt*0.45);dist=mcD;el=mcEl;
+    if(mcF>=0&&live.length){const T=live[mcF%live.length];_f.set(T.x*0.9,0.8+groundHc(T.x,T.z)*0.6,T.z*0.9)}
+  }
   if(yawV)camYaw+=yawV*dt;
   else{let d=((camYaw%(2*Math.PI))+3*Math.PI)%(2*Math.PI)-Math.PI;camYaw-=d*Math.min(1,dt*2.5)}
   camPunch*=Math.exp(-dt*3);
@@ -2172,7 +2214,7 @@ function renderAsm(box){
   pv.innerHTML=`<canvas width="152" height="152"></canvas><div><b style="font-size:17px">${d.name}</b><div><span class="chip tc-${d.tier}">${TIER_NAME[d.tier]}</span> <span class="chip">${d.typeName}</span> <span class="chip">${d.left?'左旋':'右旋'}</span></div><div style="font-size:12px;color:var(--gold);margin-top:4px">必殺：${d.special}</div><div style="font-size:11px;color:var(--dim)">單項最高 8；混搭時能力總和不超過來源陀螺的 85%</div></div>${statBars(d)}`;
   box.appendChild(pv);drawIcon(pv.querySelector('canvas'),d);
   const ctl=document.createElement('div');ctl.style.display='grid';ctl.style.gap='8px';
-  ctl.innerHTML=`<input id="asmName" maxlength="6" placeholder="替陀螺取名字（最多 6 字）" value="${asm.name.replace(/"/g,'')}"><div class="row"><button class="btn ghost small" data-a="spin" type="button">${asm.left?'左旋 → 改右旋':'右旋 → 改左旋'}</button><button class="btn small" data-a="save" type="button">儲存成新陀螺（已有 ${customs.length} 顆）</button></div>`;
+  ctl.innerHTML=`<input id="asmName" maxlength="6" placeholder="替陀螺取名字（最多 6 字）" value="${asm.name.replace(/"/g,'')}"><div class="row"><button class="btn ghost small" data-a="spin" type="button">${asm.left?'左旋 → 改右旋':'右旋 → 改左旋'}</button><button class="btn small" data-a="save" type="button">儲存成新陀螺（${customs.length}/${MAXC}）</button></div>`;
   box.appendChild(ctl);
   if(customs.length){let l='<div class="shH">我的自組陀螺</div>';for(const c of TOPS.filter(t=>t.custom))l+=`<div class="shr"><div><b>${c.name}</b><small>${TIER_NAME[c.tier]}・${c.typeName}　攻${c.atk} 防${c.def} 久${c.sta} 重${c.wt}　必殺：${c.special}</small></div><button class="mini no" data-a="del" data-id="${c.sp.sid}" type="button">刪除</button></div>`;const w=document.createElement('div');w.style.display='grid';w.style.gap='6px';w.innerHTML=l;box.appendChild(w)}
 }
@@ -2198,7 +2240,7 @@ shBody.addEventListener('click',e=>{
   else if(a==='buyb'){const it=BOOST_ITEMS[id];if(coins<it.pr)shMsg='商店幣不夠，去打競技大賽吧！';else{coins-=it.pr;inv[id]=(inv[id]||0)+1;savePrefs();shMsg='買到了 '+it.n+'！';sfx.ding()}}
   else if(a==='sel'){asm[b.dataset.k]=id;shMsg=''}
   else if(a==='spin'){asm.left=!asm.left}
-  else if(a==='save'){{const dup=customs.find(c=>CATS.every(k=>c[k]===asm[k])&&!!c.left===!!asm.left);if(dup){const d=TOPS.find(t=>t.custom&&t.sid===dup.sid);shMsg='這個組合已經存過了（'+(d?d.name:'自組陀螺')+'），同一種組合只能存一顆';sfx.hit(4);}else{const sid=customs.reduce((m,c)=>Math.max(m,c.sid),0)+1;customs.push(Object.assign({sid},asm));loadCustoms();savePrefs();shMsg='完成！「'+TOPS[TOPS.length-1].name+'」已加入陀螺清單（自組）';asm.name='';sfx.win()}}}
+  else if(a==='save'){{if(customs.length>=MAXC){shMsg='最多只能存 '+MAXC+' 顆，請先到下面「我的自組陀螺」刪除舊的';sfx.hit(4)}else{const dup=customs.find(c=>CATS.every(k=>c[k]===asm[k])&&!!c.left===!!asm.left);if(dup){const d=TOPS.find(t=>t.custom&&t.sid===dup.sid);shMsg='這個組合已經存過了（'+(d?d.name:'自組陀螺')+'），同一種組合只能存一顆';sfx.hit(4);}else{const sid=customs.reduce((m,c)=>Math.max(m,c.sid),0)+1;customs.push(Object.assign({sid},asm));loadCustoms();savePrefs();shMsg='完成！「'+TOPS[TOPS.length-1].name+'」已加入陀螺清單（自組）';asm.name='';sfx.win()}}}}
   else if(a==='del'){const sid=+id,i=customs.findIndex(c=>c.sid===sid);if(i>=0){const cur=TOPS[pick];customs.splice(i,1);delete boosts['c'+sid];loadCustoms();const ni=TOPS.indexOf(cur);pick=ni>=0?ni:TOPS.findIndex(owns);save('top',pick);savePrefs();shMsg='已刪除'}}
   else if(a==='use'){const raw=TOPS[bsSel],bb=boosts[raw.id]=boostOf(raw.id),used=bb.atk+bb.def+bb.sta+bb.wt;
     if(!(inv[id]>0))shMsg='沒有這個道具了，到「盲盒・道具」買';else if(used>=BOOST_BUDGET)shMsg='這顆陀螺已強化到 '+BOOST_BUDGET+' 點上限';else if(raw[id]+(bb[id]||0)>=BOOST_MAX)shMsg='這項能力已經到上限 '+BOOST_MAX+' 了';
@@ -2215,7 +2257,8 @@ function addCoins(n){coins+=n;save('coins',coins);menuStatus()}
 menuStatus();
 const CUP_LV={brz:1,leg:3,div:6},CUP_I={brz:0,leg:1,div:2},XP_OF={'冠軍':100,'亞軍':70,'4強':50,'8強':35,'16強':25,'32強':15};let tourCup='brz';
 const fitsCup=d=>TIER_ORD[d.tier]<=TIER_ORD[tourCup];
-function cupOk(){return lv>=CUP_LV[tourCup]&&fitsCup(TOPS[pick])&&(tourN===1||fitsCup(TOPS[p2pick]))}
+function effPick(i){const d=TOPS[i];if(fitsCup(d))return i;const c=TOPS.map((t,j)=>j).filter(j=>owns(TOPS[j])&&fitsCup(TOPS[j]));const sc=j=>{const t=TOPS[j];return (t.type===d.type?100:0)+TIER_ORD[t.tier]*10+t.atk+t.def+t.sta};return c.sort((a,b)=>sc(b)-sc(a))[0]}
+function cupOk(){return lv>=CUP_LV[tourCup]}
 const shuf=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
 const mkF=(def,name,av,h)=>({def,name,av,h,rank:null});
 function simBout(da,db){
@@ -2228,15 +2271,15 @@ function simBout(da,db){
 function pairUp(list){const m=[];for(let i=0;i<list.length;i+=2)m.push({a:list[i],b:list[i+1],w:null,sa:0,sb:0});return m}
 function setResult(m,wf,sa,sb){m.w=wf;m.sa=sa;m.sb=sb;const l=wf===m.a?m.b:m.a;l.rank=RANK_OF[tour.round]}
 function cpuAuto(m){const r=simBout(m.a.def,m.b.def),T=TARGET[tour.round],lo=Math.floor(Math.random()*T);r==='A'?setResult(m,m.a,T,lo):setResult(m,m.b,lo,T)}
-function tourOpen(){$('menu').hidden=true;$('tourSetup').hidden=false;tourSetupUI()}
+function tourOpen(){$('menu').hidden=true;$('tourSetup').hidden=false;mountP1($('p1Slot'));tourSetupUI()}
 function tourSetupUI(){
   [...$('cupRow').children].forEach(b=>{const c=b.dataset.cup,lock=lv<CUP_LV[c];b.setAttribute('aria-pressed',c===tourCup);b.textContent=(lock?'🔒':'')+{brz:'青銅盃',leg:'傳說盃',div:'神聖盃'}[c]});
-  const mineOk=TOPS.map((t,i)=>i).filter(i=>owns(TOPS[i])&&fitsCup(TOPS[i]));if(!mineOk.includes(p2pick)||p2pick===pick)p2pick=mineOk.find(i=>i!==pick)??mineOk[0];
-  $('cupNote').innerHTML=lv<CUP_LV[tourCup]?`玩家等級 ${CUP_LV[tourCup]} 才能參加（現在 Lv ${lv}）`:!fitsCup(TOPS[pick])?`P1 的陀螺等級太高，請換成${TIER_NAME[tourCup]}或更低等級的陀螺`:`對手都使用${TIER_NAME[tourCup]}陀螺；獎勵 ×${CUP_I[tourCup]+1}`;
+  const mineOk=TOPS.map((t,i)=>i).filter(i=>owns(TOPS[i])&&fitsCup(TOPS[i]));const eP=effPick(pick);if(!mineOk.includes(p2pick)||p2pick===eP)p2pick=mineOk.find(i=>i!==eP)??mineOk[0];
+  $('cupNote').innerHTML=lv<CUP_LV[tourCup]?`玩家等級 ${CUP_LV[tourCup]} 才能參加（現在 Lv ${lv}）`:!fitsCup(TOPS[pick])?`P1 的「${TOPS[pick].name}」超過本盃等級，比賽會自動換成「${TOPS[eP].name}」`:`對手都使用${TIER_NAME[tourCup]}陀螺；獎勵 ×${CUP_I[tourCup]+1}`;
   $('tDraw').style.opacity=cupOk()?1:0.4;
   $('tn1').setAttribute('aria-pressed',tourN===1);$('tn2').setAttribute('aria-pressed',tourN===2);$('p2box').hidden=tourN!==2;
-  $('t1Lbl').textContent=pName;$('t1Top').textContent=TOPS[pick].name+'・'+TOPS[pick].typeName;drawPortrait($('t1Face'),pAv);
-  if(tourN===2){const ni=$('p2NameIn');if(document.activeElement!==ni)ni.value=p2Name;topGrid($('p2Grid'),{list:TOPS.filter((t,i)=>owns(t)&&fitsCup(t)&&i!==pick),sel:TOPS[p2pick],onPick:d=>{p2pick=TOPS.indexOf(d);tourSetupUI()}});$('p2NameLbl').textContent=p2Name;$('p2TopLbl').textContent=TOPS[p2pick].name+'・'+TOPS[p2pick].typeName;drawPortrait($('p2Face'),p2Av)}
+  $('t1Lbl').textContent=pName;$('t1Top').textContent=TOPS[eP].name+'・'+TOPS[eP].typeName;drawPortrait($('t1Face'),pAv);
+  if(tourN===2){const ni=$('p2NameIn');if(document.activeElement!==ni)ni.value=p2Name;topGrid($('p2Grid'),{list:TOPS.filter((t,i)=>owns(t)&&fitsCup(t)&&i!==eP),sel:TOPS[p2pick],onPick:d=>{p2pick=TOPS.indexOf(d);tourSetupUI()}});$('p2NameLbl').textContent=p2Name;$('p2TopLbl').textContent=TOPS[p2pick].name+'・'+TOPS[p2pick].typeName;drawPortrait($('p2Face'),p2Av)}
 }
 $('tourBtn').onclick=()=>{audioInit();tourOpen()};
 $('cupRow').onclick=e=>{const b=e.target.closest('[data-cup]');if(b){tourCup=b.dataset.cup;tourSetupUI()}};
@@ -2244,10 +2287,10 @@ $('tn1').onclick=()=>{tourN=1;tourSetupUI()};$('tn2').onclick=()=>{tourN=2;tourS
 $('p2NameIn').addEventListener('input',e=>{p2Name=e.target.value.trim().slice(0,8)||'玩家二';save('p2name',p2Name);$('p2NameLbl').textContent=p2Name});
 
 $('p2Rand').onclick=()=>{p2Av=randomAvatar();save('p2av',p2Av);tourSetupUI()};
-$('tBack').onclick=()=>{$('tourSetup').hidden=true;$('menu').hidden=false};
+$('tBack').onclick=()=>{$('tourSetup').hidden=true;$('menu').hidden=false;menuEnter()};
 $('tDraw').onclick=()=>{audioInit();if(!cupOk()){$('cupNote').style.color='var(--rival)';return}$('cupNote').style.color='';tourStart()};
 function tourStart(){
-  const hs=[mkF(withBoost(TOPS[pick]),pName,pAv,1)];if(tourN===2)hs.push(mkF(withBoost(TOPS[p2pick]),p2Name,p2Av,2));
+  const hs=[mkF(withBoost(TOPS[effPick(pick)]),pName,pAv,1)];if(tourN===2)hs.push(mkF(withBoost(TOPS[p2pick]),p2Name,p2Av,2));
   const used=new Set(hs.map(f=>f.def.id)),pool=shuf(TOPS.filter(d=>!d.custom&&d.tier===tourCup)),names=shuf(TOUR_NAMES),cpus=[];
   for(let i=0;i<32-hs.length;i++)cpus.push(mkF(pool[i%pool.length],names[i%names.length],randomAvatar(),0));
   const all=shuf(hs.concat(cpus));
@@ -2296,7 +2339,7 @@ function tourBoard(first){
 }
 function tourPlay(m){
   let fp=m.a,fe=m.b;const duel=!!(fp.h&&fe.h);if(!duel&&!fp.h){fp=m.b;fe=m.a}
-  curMatch={m,fp,fe,duel,flip:fp!==m.a};duel2=duel;
+  curMatch={m,fp,fe,duel,flip:fp!==m.a};duel2=duel;npcChgX=duel?1:Math.min(2,[1,1.35,1.7][CUP_I[tour.cup]]+0.075*tour.round);
   pAv=fp.av;pName=fp.name;eAv=fe.av;eName=fe.name;matchTarget=TARGET[tour.round];aiSkill=0.5+0.08*CUP_I[tour.cup]+0.06*tour.round;
   score={P:0,E:0};stats={hits:0,max:0,perf:0,sp:0};applyArena(Math.floor(Math.random()*ARENAS.length));
   setupTops(fp.def,fe.def);$('hud').hidden=false;hudNames();toLaunch();
@@ -2343,9 +2386,9 @@ function tourFinish(){
 }
 function tourExit(){
   if(tour){pAv=tour.save.av;pName=tour.save.name;const a=tour.save.arena;if(Number.isInteger(a))applyArena(a)}
-  tour=null;curMatch=null;duel2=false;aiSkill=0.7;matchTarget=4;
+  tour=null;curMatch=null;duel2=false;aiSkill=0.7;matchTarget=4;npcChgX=1;
   for(const id of ['tourBoard','tourEnd','tourSetup','matchEnd','roundEnd'])$(id).hidden=true;$('hud').hidden=true;$('watchBar').hidden=true;spShow(false);
-  $('menu').hidden=false;phase='menu';ov.mode=null;menuFighter();demoReset()}
+  $('menu').hidden=false;phase='menu';ov.mode=null;menuFighter();menuEnter()}
 $('tourEnd').onclick=()=>tourExit();
 
 function frame(now){
@@ -2375,7 +2418,7 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&AC)AC.suspend();else if(AC)AC.resume()});
-{const ai=load('arena');pickArena(Number.isInteger(ai)&&ai>=0&&ai<ARENAS.length?ai:0)}menuFighter();
+{const ai=load('arena');pickArena(Number.isInteger(ai)&&ai>=0&&ai<ARENAS.length?ai:0)}menuFighter();menuEnter();
 document.fonts&&document.fonts.ready.then(menuFighter);
 demoReset();requestAnimationFrame(frame);
 </script>
