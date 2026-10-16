@@ -222,7 +222,7 @@ h1{margin:0;font-weight:900;font-size:clamp(40px,12vw,62px);line-height:1;letter
 .tp.t-leg{background:linear-gradient(160deg,#2a0f3e,#0e1430);box-shadow:inset 0 0 0 1px rgba(200,120,255,.55)}.tp.t-leg span{color:#e6ccff}
 .chip.tc-div{color:#ffd23d}.chip.tc-leg{color:#d9a8ff}.chip.tc-brz{color:#e0a070}
 canvas.ico{width:44px;height:44px;flex:none}
-.ver{position:absolute;left:max(10px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 8px);font-size:10px;color:var(--dim);pointer-events:none;opacity:.7}
+.ver{position:absolute;right:max(10px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 8px);font-size:11px;z-index:50;color:var(--dim);pointer-events:none;opacity:.7}
 @media (prefers-reduced-motion:reduce){#sp.ready{animation:none}}
 *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
 input,textarea{-webkit-user-select:text;user-select:text}
@@ -253,23 +253,34 @@ button,.tops,.arenas,#app{touch-action:manipulation}
   <div id="stick" hidden><i></i></div>
   <div id="pop"></div>
 
-  <section id="menu" class="sheet gut">
+  <section id="title" class="sheet gut">
+    <div class="inner" style="margin-top:0;text-align:center;height:100%;align-content:space-between">
+      <div style="padding-top:8vh"><div class="eyebrow">SHOOT LEGEND</div><h1 id="ttl" style="text-shadow:0 4px 24px #000,0 0 30px rgba(255,200,61,.5);font-size:clamp(46px,16vw,84px);margin:6px 0 0">旋風小鬥士</h1></div>
+      <div style="display:grid;gap:12px;padding-bottom:22px"><button class="btn" id="tStart" type="button">開始遊戲</button><button class="btn ghost" id="tReset" type="button">重新開始</button></div>
+    </div>
+  </section>
+  <section id="resetAsk" class="result" hidden style="z-index:60;background:rgba(5,8,18,.88)">
+    <div class="rcard" style="gap:14px;max-width:420px"><div class="big" style="font-size:28px">確定要重新開始？</div>
+      <div class="note" style="font-size:15px;line-height:1.7">所有的<b>商店幣、等級、陀螺、零件、道具、自組陀螺</b>都會<b style="color:var(--rival)">全部重設</b>，沒辦法復原。<br>請玩家（和家長）確認。</div>
+      <div class="row"><button class="btn ghost" id="rsNo" type="button">先不要</button><button class="btn" id="rsYes" type="button" style="background:var(--rival);border-color:var(--rival)">確定重設</button></div></div>
+  </section>
+  <section id="menu" class="sheet gut" hidden>
     <div class="inner">
-      <div class="eyebrow" style="display:flex;align-items:center">v1.6 試玩<span id="coinLbl" style="margin-left:12px;color:var(--ink)">商店幣 0</span><button class="mini" id="musicBtn" type="button" aria-pressed="true">音樂：開</button></div>
-      <h1>旋風小鬥士</h1>
+      <div class="eyebrow" style="display:flex;align-items:center">選擇賽制<span id="coinLbl" style="margin-left:12px;color:var(--ink)">商店幣 0</span><button class="mini" id="musicBtn" type="button" aria-pressed="true">音樂：開</button></div>
       <p class="lead">往下拉發射。對戰時手指在畫面上拖可以推著陀螺跑，必殺鈕亮了就按。戰鬥盤會浮出特殊軌道，還會出現道具；四周的牆會慢慢降下。先拿 4 分贏。</p>
       <div class="cycle"><b>攻擊</b> 剋 耐久　<b>耐久</b> 剋 防禦　<b>防禦</b> 剋 攻擊　<b>平衡</b> 不剋也不被剋<br>
         轉停 <b>+1</b>　撞出場 <b>+2</b>（牆壁會慢慢降下，從降下的地方最容易）　撞爆 <b>+3</b></div>
-      <button class="btn" id="tourBtn" type="button">競技大賽　32強五關</button>
-      <button class="btn" id="b3Btn" type="button">三戰兩勝制　帶三顆陀螺對決</button>
+      <button class="btn" id="tourBtn" type="button">積分淘汰　32強五關</button>
+      <button class="btn" id="b3Btn" type="button">三戰兩勝　帶三顆陀螺對決</button>
       <button class="btn ghost" id="shopBtn" type="button">工坊　商店・組裝・強化</button>
-      <button class="btn ghost" id="go" type="button">單場練習賽</button>
+      <button class="btn ghost" id="go" type="button">自由練習</button>
+      <button class="btn ghost" id="menuBack" type="button">回標題</button>
     </div>
   </section>
 
   <section id="practice" class="sheet gut" hidden>
     <div class="inner">
-      <div class="eyebrow">單場練習賽</div>
+      <div class="eyebrow">自由練習</div>
       <div id="pracSlot"><div id="p1Panel">
       <div class="fighter"><canvas id="pFaceMenu" width="144" height="144"></canvas><div><b id="pNameLbl">小鬥士</b><span>你的鬥士</span></div><button class="btn small" id="editBtn" type="button">捏臉</button></div>
       <div class="secHead"><b>陀螺</b><span id="topCount">40 顆</span></div>
@@ -397,7 +408,7 @@ button,.tops,.arenas,#app{touch-action:manipulation}
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.6</div>
+  <div class="ver">v1.7</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -1517,6 +1528,7 @@ function quietAll(){try{humSet(0,false);if(AC&&master){const t=AC.currentTime;ma
 function menuEnter(){quietAll();const cur=load('arena');let i;do{i=Math.floor(Math.random()*ARENAS.length)}while(ARENAS.length>1&&i===menuArenaI);menuArenaI=i;applyArena(i);demoReset();mcT=0}
 let menuArenaI=-1,mcT=0,mcD=0,mcEl=0,mcF=null;
 function startMatch(){
+  markPlayed();
   const others=TOPS.filter((d,i)=>i!==pick&&!d.custom&&d.tier===TOPS[pick].tier);const eDef=others[Math.floor(Math.random()*others.length)];
   b3=null;curMatch=null;duel2=false;matchTarget=4;aiSkill=0.7;npcChgX=1;
   score={P:0,E:0};stats={hits:0,max:0,perf:0,sp:0};eAv=randomAvatar();eName=RIVAL_NAMES[Math.floor(Math.random()*RIVAL_NAMES.length)];
@@ -2318,6 +2330,7 @@ $('p2Rand').onclick=()=>{p2Av=randomAvatar();save('p2av',p2Av);tourSetupUI()};
 $('tBack').onclick=()=>{$('tourSetup').hidden=true;$('menu').hidden=false;menuEnter()};
 $('tDraw').onclick=()=>{audioInit();if(!cupOk()){$('cupNote').style.color='var(--rival)';return}$('cupNote').style.color='';tourStart()};
 function tourStart(){
+  markPlayed();
   const hs=[mkF(withBoost(TOPS[effPick(pick)]),pName,pAv,1)];if(tourN===2)hs.push(mkF(withBoost(TOPS[p2pick]),p2Name,p2Av,2));
   const used=new Set(hs.map(f=>f.def.id)),pool=shuf(TOPS.filter(d=>!d.custom&&d.tier===tourCup)),names=shuf(TOUR_NAMES),cpus=[];
   for(let i=0;i<32-hs.length;i++)cpus.push(mkF(pool[i%pool.length],names[i%names.length],randomAvatar(),0));
@@ -2443,6 +2456,7 @@ $('b3Edit').onclick=()=>{audioInit();openCreator()};
 $('b3Back').onclick=()=>{$('b3Setup').hidden=true;$('menu').hidden=false;menuEnter()};
 $('b3Go').onclick=()=>{audioInit();if(lv<CUP_LV[b3Cup]||!b3Slots.every(Boolean)||new Set(b3Slots).size<3){$('b3Note').style.color='var(--rival)';return}$('b3Note').style.color='';b3Start()};
 function b3Start(){
+  markPlayed();
   const pool=shuf(TOPS.filter(d=>!d.custom&&d.tier===b3Cup));
   b3={cup:b3Cup,mine:b3Slots.map(b3Def),foe:pool.slice(0,3),pool,fname:RIVAL_NAMES[Math.floor(Math.random()*RIVAL_NAMES.length)],fav:randomAvatar(),w:{P:0,E:0},res:[],ot:false,pick:null,done:false};
   $('b3Setup').hidden=true;b3Round();
@@ -2517,6 +2531,17 @@ function frame(now){
 }
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&AC)AC.suspend();else if(AC)AC.resume()});
 {const ai=load('arena');pickArena(Number.isInteger(ai)&&ai>=0&&ai<ARENAS.length?ai:0)}menuFighter();menuEnter();
+/* ---------- 標題畫面 ---------- */
+function hasPlayed(){return load('played')===1||lv>1||xp>0||coins>0||customs.length>0||ownedTops.size>STARTER.length}
+function titleUI(){$('tStart').textContent=hasPlayed()?'繼續遊戲':'開始遊戲'}
+function markPlayed(){if(load('played')!==1)save('played',1)}
+$('tStart').onclick=()=>{audioInit();$('title').hidden=true;$('menu').hidden=false;sfx.ding()};
+$('menuBack').onclick=()=>{$('menu').hidden=true;$('title').hidden=false;titleUI();menuEnter()};
+$('tReset').onclick=()=>{audioInit();$('resetAsk').hidden=false};
+$('rsNo').onclick=()=>{$('resetAsk').hidden=true};
+$('rsYes').onclick=()=>{try{Object.keys(localStorage).filter(k=>k.indexOf('spin_')===0).forEach(k=>localStorage.removeItem(k))}catch(e){}location.reload()};
+titleUI();
+
 document.fonts&&document.fonts.ready.then(menuFighter);
 demoReset();requestAnimationFrame(frame);
 </script>
