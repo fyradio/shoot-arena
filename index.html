@@ -213,6 +213,7 @@ h1{margin:0;font-weight:900;font-size:clamp(40px,12vw,62px);line-height:1;letter
 .prev{display:grid;grid-template-columns:76px 1fr;gap:10px;align-items:center;background:var(--deck);border:2px solid var(--gold);border-radius:10px;padding:10px}
 .prev canvas{width:76px;height:76px}.prev .st{grid-column:1/-1;display:grid;grid-template-columns:auto 1fr auto;gap:3px 6px;font-size:11px;color:var(--dim);align-items:center}
 .prev .st i{height:6px;border-radius:3px;background:var(--line);overflow:hidden;display:block}.prev .st i em{display:block;height:100%;background:var(--gold)}.prev .st i em.b{background:var(--you)}
+.tp{position:relative}.tp .pin{position:absolute;top:1px;right:2px;font-style:normal;font-size:12px;opacity:.22;padding:2px;filter:grayscale(1)}.tp .pin.on{opacity:1;filter:none}
 .tp.lock{opacity:.4}.tp.lock span::before{content:"🔒"}
 .tp.t-div{background:linear-gradient(160deg,#3a2a06,#141020);box-shadow:inset 0 0 0 1px rgba(255,200,61,.6)}.tp.t-div span{color:#ffe08a}
 .tp.t-leg{background:linear-gradient(160deg,#2a0f3e,#0e1430);box-shadow:inset 0 0 0 1px rgba(200,120,255,.55)}.tp.t-leg span{color:#e6ccff}
@@ -245,7 +246,7 @@ canvas.ico{width:44px;height:44px;flex:none}
 
   <section id="menu" class="sheet gut">
     <div class="inner">
-      <div class="eyebrow" style="display:flex;align-items:center">v1.3.2 試玩<span id="coinLbl" style="margin-left:12px;color:var(--ink)">商店幣 0</span><button class="mini" id="musicBtn" type="button" aria-pressed="true">音樂：開</button></div>
+      <div class="eyebrow" style="display:flex;align-items:center">v1.4 試玩<span id="coinLbl" style="margin-left:12px;color:var(--ink)">商店幣 0</span><button class="mini" id="musicBtn" type="button" aria-pressed="true">音樂：開</button></div>
       <h1>旋風小鬥士</h1>
       <p class="lead">捏好你的鬥士、選陀螺和戰鬥盤，往下拉發射。對戰時手指在畫面上拖可以推著陀螺跑，必殺鈕亮了就按。戰鬥盤會浮出特殊軌道，衝上去會高速撞向中心，還會出現道具；四周的牆會慢慢降下。先拿 4 分贏。</p>
       <div class="fighter"><canvas id="pFaceMenu" width="144" height="144"></canvas><div><b id="pNameLbl">小鬥士</b><span>你的鬥士</span></div><button class="btn small" id="editBtn" type="button">捏臉</button></div>
@@ -319,8 +320,9 @@ canvas.ico{width:44px;height:44px;flex:none}
       <div class="row"><button class="btn ghost" id="tn1" type="button" aria-pressed="true">單人</button><button class="btn ghost" id="tn2" type="button" aria-pressed="false">雙人</button></div>
       <div class="fighter"><canvas id="t1Face" width="144" height="144"></canvas><div><b id="t1Lbl">小鬥士</b><span id="t1Top">—</span></div><span>P1</span></div>
       <div id="p2box" hidden>
-        <div class="fighter"><canvas id="p2Face" width="144" height="144"></canvas><div><b id="p2NameLbl">挑戰者B</b><span id="p2TopLbl">—</span></div><button class="btn small" id="p2Rand" type="button">換人</button></div>
-        <div class="row" style="margin-top:10px"><button class="btn ghost" id="p2Prev" type="button">◀ 陀螺</button><button class="btn ghost" id="p2Next" type="button">陀螺 ▶</button></div>
+        <div class="fighter"><canvas id="p2Face" width="144" height="144"></canvas><div><b id="p2NameLbl">玩家二</b><span id="p2TopLbl">—</span></div><button class="btn small" id="p2Rand" type="button">換造型</button></div>
+        <div style="display:grid;gap:6px;margin-top:10px"><label for="p2NameIn" style="font-size:13px;font-weight:700">P2 名字</label><input id="p2NameIn" maxlength="8" autocomplete="off" style="all:unset;box-sizing:border-box;padding:8px 10px;border:2px solid var(--line);border-radius:8px;background:var(--deck);font-size:15px">
+        <div class="secHead"><b>P2 的陀螺</b><span>📌 可以釘選</span></div><div id="p2Grid"></div></div>
       </div>
       <div class="cycle">32 位參賽者抽籤對戰，打贏 5 關就是冠軍。<br>雙人：兩人沒對到時各打各的；對到時輪流發射，用畫面上下兩半各自操控。<br>必殺技氣滿自動發動；按「集氣」按鈕可以更快集滿。打完按名次拿商店幣。</div>
       <button class="btn" id="tDraw" type="button">抽籤！</button>
@@ -349,7 +351,7 @@ canvas.ico{width:44px;height:44px;flex:none}
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.3.2</div>
+  <div class="ver">v1.4</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -449,11 +451,11 @@ const TOPS=[
  T_('b_genbu','玄武','leg','beast','def','玄',0x1a2a1a,0x9cff8a,[3,10,5,9],6,'bump','hex','ball','玄武・甲盾','fx:shell','北方玄武的龜甲'),
  // ===== 青銅：原色 =====
  T_('p_red','紅原色','brz','primary','atk','紅',0xe53935,0xffd23d,[7,4,4,5],3,'claw','stripe','flat','紅色衝刺','dash','直直衝過去'),
- T_('p_blue','藍原色','brz','primary','def','藍',0x2f6bff,0xffffff,[3,6,5,7],6,'bump','hex','ball','藍色補給','fx:holy','必殺：補回轉速'),
+ T_('p_blue','藍原色','brz','primary','def','藍',0x2f6bff,0xffffff,[3,8,6,7],6,'bump','hex','ball','藍色補給','fx:holy','必殺：補回轉速'),
  T_('p_yellow','黃原色','brz','primary','bal','黃',0xffd23d,0x1d1d26,[6,5,5,5],4,'star','bolt','semi','黃色閃電','bolt3','三段閃電走位'),
  T_('p_green','綠原色','brz','primary','sta','綠',0x3fb950,0xffffff,[3,4,8,5],4,'petal','leaf','sharp','綠色回轉','fx:moon','轉得很久'),
  T_('p_white','白原色','brz','primary','bal','白',0xf4f4f4,0x2f6bff,[5,6,5,5],5,'gear','gem','semi','白色三角','tri','三角形走位'),
- T_('p_black','黑原色','brz','primary','atk','黑',0x2a2c36,0xff5ab4,[6,5,4,6],4,'saw','swirl','flat','黑色連擊','weave2','兩連撞擊'),
+ T_('p_black','黑原色','brz','primary','atk','黑',0x2a2c36,0xff5ab4,[6,4,4,6],4,'saw','swirl','flat','黑色連擊','weave2','兩連撞擊'),
 ];
 const TYPE_NAME={atk:'攻擊',def:'防禦',sta:'耐久',bal:'平衡'};
 TOPS.forEach(d=>d.typeName=TYPE_NAME[d.type]);
@@ -504,6 +506,8 @@ function withBoost(def){const b=boostOf(def.id);if(!b.atk&&!b.def&&!b.sta&&!b.wt
 const BEATS={atk:'sta',sta:'def',def:'atk'};
 let emit=()=>{};
 function bowlH(r){return 0.03*r*r}
+const CHG={atk:1.25,bal:1,sta:0.85,def:0.5},BRK={def:0.55,bal:0.9,sta:1,atk:1.25};
+const chgMul=T=>CHG[T.def.type]||1,spGuard=T=>T.def.type==='atk'&&(T.sp||T.chain)?0.35:T.def.type==='def'?0.8:1;
 function newTop(def,side){return {def,side,sp:null,storm:0,buff:null,buffT:0,boostCD:0,onTrack:0,x:0,z:0,vx:0,vz:0,s:0,burst:1,charge:0,state:'idle',m:0.6+def.wt*0.15,rad:(def.wt>=8?1.18:1.12)*TOPSCALE,dash:0,shell:0,moon:0,sx:0,sz:0,y:0,vy:0}}
 function launchTop(T,pull,aim,perfect){
   const dir=T.side==='P'?-1:1;
@@ -630,7 +634,7 @@ function stepPhysics(A,B,h){
     T.x+=T.vx*h;T.z+=T.vz*h;
     let decay=0.014*(1.45-T.def.sta*0.07)*(1.12-T.def.wt*0.025)+0.006*T.s+sm*0.006;
     if(T.moon>0)decay*=0.4;
-    T.s-=decay*h;T.charge=Math.min(1,T.charge+0.0175*h*(T.def.type==='def'?0.5:1));
+    T.s-=decay*h;T.charge=Math.min(1,T.charge+0.0175*h*chgMul(T));
     const bc=bestCircle(T.x,T.z),bdx=T.x-bc[0],bdz=T.z-bc[1],bdd=Math.hypot(bdx,bdz)||1e-6,LIM=bc[2]-0.6;
     if(bdd>LIM){
       const nx=bdx/bdd,nz=bdz/bdd,vout=T.vx*nx+T.vz*nz,th=Math.atan2(T.x,T.z);
@@ -662,18 +666,18 @@ function collide(A,B,h){
   const advA=BEATS[A.def.type]===B.def.type?1.6:1,advB=BEATS[B.def.type]===A.def.type?1.6:1;
   const defA=(0.6+A.def.def*0.12)*(A.shell>0?1.5:1)*bA.def,defB=(0.6+B.def.def*0.12)*(B.shell>0?1.5:1)*bB.def;
   const atkA=(0.3+A.def.atk*0.12)*(A.def.type==='atk'?1.55:A.def.type==='bal'?1.4:1)*bA.atk,atkB=(0.3+B.def.atk*0.12)*(B.def.type==='atk'?1.55:B.def.type==='bal'?1.4:1)*bB.atk;
-  const pA=impact*atkB*advB/(mA*defA),pB=impact*atkA*advA/(mB*defB);
+  const gA=spGuard(A),gB=spGuard(B),pA=impact*atkB*advB/(mA*defA)*gA,pB=impact*atkA*advA/(mB*defB)*gB;
   const tx=-nz,tz=nx;
   A.vx+=-nx*pA+tx*pA*0.3;A.vz+=-nz*pA+tz*pA*0.3;
   B.vx+=nx*pB-tx*pB*0.3;B.vz+=nz*pB-tz*pB*0.3;
   A.dash=0;B.dash=0;
-  A.s-=impact*0.005*atkB*advB/(defA*Math.sqrt(A.m));B.s-=impact*0.005*atkA*advA/(defB*Math.sqrt(B.m));
+  A.s-=impact*0.005*atkB*advB/(defA*Math.sqrt(A.m))*gA;B.s-=impact*0.005*atkA*advA/(defB*Math.sqrt(B.m))*gB;
   if(impact>9){
-    A.burst-=(impact-9)*0.012*atkB*advB/defA*(1.4-Math.min(1,A.s)*0.6)*(A.shell>0?0.3:1)*bB.br*bA.brIn;
-    B.burst-=(impact-9)*0.012*atkA*advA/defB*(1.4-Math.min(1,B.s)*0.6)*(B.shell>0?0.3:1)*bA.br*bB.brIn;
+    A.burst-=(impact-9)*0.012*atkB*advB/defA*(1.4-Math.min(1,A.s)*0.6)*(A.shell>0?0.3:1)*bB.br*bA.brIn*gA*(BRK[A.def.type]||1);
+    B.burst-=(impact-9)*0.012*atkA*advA/defB*(1.4-Math.min(1,B.s)*0.6)*(B.shell>0?0.3:1)*bA.br*bB.brIn*gB*(BRK[B.def.type]||1);
   }
   if(bA.k==='thunder')B.s-=0.04;if(bB.k==='thunder')A.s-=0.04;if(bA.k==='ice')B.s-=impact*0.003;if(bB.k==='ice')A.s-=impact*0.003;
-  A.charge=Math.min(1,A.charge+impact*0.009*(A.def.type==='def'?0.5:1));B.charge=Math.min(1,B.charge+impact*0.009*(B.def.type==='def'?0.5:1));
+  A.charge=Math.min(1,A.charge+impact*0.009*chgMul(A));B.charge=Math.min(1,B.charge+impact*0.009*chgMul(B));
   emit('hit',{A,B,bA:bA.k,bB:bB.k,impact,x:(A.x+B.x)/2,z:(A.z+B.z)/2});
   if(A.burst<=0){A.burst=0;A.state='burst';emit('burst',{T:A})}
   if(B.burst<=0){B.burst=0;B.state='burst';emit('burst',{T:B})}
@@ -1422,7 +1426,12 @@ function drawIcon(c,def){
 }
 const pickEl=$('pick'),detailEl=$('detail'),filtersEl=$('filters');let topFilter='mine';
 {const sv=load('top');if(Number.isInteger(sv)&&sv>=0&&sv<TOPS.length)pick=sv;if(!owns(TOPS[pick]))pick=TOPS.findIndex(owns)}
-let peek=-1;
+let peek=-1,pins=new Set(load('pins')||[]);
+function togglePin(id){pins.has(id)?pins.delete(id):pins.add(id);save('pins',[...pins])}
+const pinFirst=list=>list.map((d,i)=>[d,i]).sort((x,y)=>(pins.has(y[0].id)-pins.has(x[0].id))||x[1]-y[1]).map(x=>x[0]);
+function topGrid(el,o){el.innerHTML='';el.className='tops';for(const d of pinFirst(o.list)){const b=document.createElement('button');b.type='button';b.className='tp t-'+d.tier;b.setAttribute('aria-pressed',d===o.sel);b.setAttribute('aria-label',d.name);
+  b.innerHTML=`<canvas width="96" height="96"></canvas><span>${d.name}</span><i class="pin ${pins.has(d.id)?'on':''}" data-pin="1" title="釘選">📌</i>`;drawIcon(b.querySelector('canvas'),d);
+  b.onclick=e=>{if(e.target.closest('[data-pin]')){togglePin(d.id);topGrid(el,o);return}o.onPick(d)};el.appendChild(b)}}
 function renderDetail(){const raw=TOPS[peek>=0?peek:pick],own=owns(raw),def=withBoost(raw),bs=boostOf(raw.id),bn=bs.atk+bs.def+bs.sta+bs.wt;
   detailEl.innerHTML=`<canvas width="116" height="116"></canvas><div class="nm">${def.name}<span class="chip tc-${def.tier}">${TIER_NAME[def.tier]}</span><span class="chip">${SERIES_NAME[def.series]||''}</span><span class="chip">${def.typeName}</span><span class="chip">${def.left?'左旋':'右旋'}</span>${bn?`<span class="chip" style="color:var(--gold)">強化+${bn}</span>`:''}</div><div class="ds">${def.desc}<br><span class="spn">必殺：${def.special}</span>${own?'':`<br><b style="color:var(--rival)">🔒 還沒擁有：工坊 ${def.price} 幣，或比賽後抽到</b>`}</div>
   <div class="st"><span>攻</span><i><em style="width:${def.atk*10}%"></em></i><span>防</span><i><em style="width:${def.def*10}%"></em></i><span>久</span><i><em style="width:${def.sta*10}%"></em></i><span>重</span><i><em style="width:${def.wt*10}%"></em></i></div>`;
@@ -1430,10 +1439,10 @@ function renderDetail(){const raw=TOPS[peek>=0?peek:pick],own=owns(raw),def=with
 function renderPicker(){
   pickEl.innerHTML='';
   $('topCount').textContent=`擁有 ${TOPS.filter(owns).length}／${TOPS.length}`;
-  TOPS.forEach((def,i)=>{if(topFilter==='custom'){if(!def.custom)return}else if(topFilter==='mine'){if(!owns(def))return}else if(topFilter!=='all'&&def.tier!==topFilter)return;
+  pinFirst(TOPS).map(d=>[d,TOPS.indexOf(d)]).forEach(([def,i])=>{if(topFilter==='custom'){if(!def.custom)return}else if(topFilter==='mine'){if(!owns(def))return}else if(topFilter!=='all'&&def.tier!==topFilter)return;
     const b=document.createElement('button');b.type='button';b.className='tp t-'+def.tier+(owns(def)?'':' lock');b.id='pick-'+def.id;b.setAttribute('aria-pressed',i===pick);b.setAttribute('aria-label',def.name+' '+def.typeName);
-    b.innerHTML=`<canvas width="96" height="96"></canvas><span>${def.name}</span>`;drawIcon(b.querySelector('canvas'),def);
-    b.onclick=()=>{audioInit();if(!owns(def)){peek=i;renderDetail();peek=-1;return}pick=i;save('top',i);[...pickEl.children].forEach(c=>c.setAttribute('aria-pressed',c===b));renderDetail();sfx.ding();demoReset()};
+    b.innerHTML=`<canvas width="96" height="96"></canvas><span>${def.name}</span>${owns(def)?`<i class="pin ${pins.has(def.id)?'on':''}" data-pin="1" title="釘選">📌</i>`:''}`;drawIcon(b.querySelector('canvas'),def);
+    b.onclick=e=>{audioInit();if(e.target.closest('[data-pin]')){togglePin(def.id);renderPicker();return}if(!owns(def)){peek=i;renderDetail();peek=-1;return}pick=i;save('top',i);[...pickEl.children].forEach(c=>c.setAttribute('aria-pressed',c===b));renderDetail();sfx.ding();demoReset()};
     pickEl.appendChild(b)});
 }
 [['mine','我的'],['all','圖鑑'],['div','神聖'],['leg','傳說'],['brz','青銅'],['custom','自組']].forEach(([k,n])=>{const b=document.createElement('button');b.type='button';b.id='flt-'+k;b.textContent=n;b.setAttribute('aria-pressed',k==='mine');
@@ -1480,20 +1489,22 @@ function pullMove(e){
 }
 launchEl.addEventListener('pointerup',e=>{if(!pullStart||e.pointerId!==pullStart.id)return;pullStart=null;
   if(pull<0.12){fill.style.height='0';return}
-  const perfect=Math.abs(pull-zoneC)<=ZW/2;
-  if(duel2&&launchWho==='P'){pendingP={p:pull,a:aim,perfect};if(perfect)stats.perf++;launchWho='E';ov.who='E';ov.ePull=0;fill.style.height='0';pull=0;launchTipSet();sfx.launch();return}
-  doLaunch(pull,aim,perfect)});
+  const perfect=Math.abs(pull-zoneC)<=ZW/2,q=perfect?'p':(Math.abs(pull-zoneC)<=0.25&&pull>=0.35?'n':'b');
+  if(duel2&&launchWho==='P'){pendingP={p:pull,a:aim,perfect,q};if(perfect)stats.perf++;launchWho='E';ov.who='E';ov.ePull=0;fill.style.height='0';pull=0;launchTipSet();sfx.launch();return}
+  doLaunch(pull,aim,perfect,q)});
 launchEl.addEventListener('pointercancel',()=>{pullStart=null;fill.style.height='0'});
 let pendingLaunch=null;
-function doLaunch(p,a,perfect){
-  pendingLaunch=duel2&&pendingP?{p:pendingP.p,a:pendingP.a,perfect:pendingP.perfect,E:{p,a,perfect}}:{p,a,perfect};phase='shoot';ov.mode='shoot';ov.t=0;launchEl.hidden=true;sfx.launch();
+function doLaunch(p,a,perfect,q){q=q||(perfect?'p':'n');
+  pendingLaunch=duel2&&pendingP?{p:pendingP.p,a:pendingP.a,perfect:pendingP.perfect,q:pendingP.q,E:{p,a,perfect,q}}:{p,a,perfect,q};phase='shoot';ov.mode='shoot';ov.t=0;launchEl.hidden=true;sfx.launch();
   if(perfect&&!duel2)stats.perf++;
 }
 function startBattle(){
   const L=pendingLaunch||{p:0.6,a:0,perfect:false};pendingLaunch=null;
   launchTop(P,L.p,L.a*0.8,L.perfect);if(L.E)launchTop(E,L.E.p,L.E.a*0.8,L.E.perfect);else{const ep=0.62+Math.random()*0.33;launchTop(E,ep,(Math.random()-.5)*0.8,Math.random()<0.25)}
   P.lift=E.lift=3.2;spShow(true);$('hud').hidden=false;phase='battle';battleT=0;ended=null;endWait=null;humStart();
-  if(L.perfect)popText('完美發射！','轉速加成');else popText('旋轉！');
+  const QB={p:0.35,n:0.15,b:0},QN={p:'完美發射！',n:'普通發射',b:'發射失誤…'};
+  P.charge=QB[L.q||'n'];E.charge=L.E?QB[L.E.q||'n']:QB[Math.random()<0.25?'p':Math.random()<0.75?'n':'b'];
+  popText(QN[L.q||'n'],(L.perfect?'轉速加成・':'')+'必殺氣 +'+Math.round(P.charge*100)+'%');
 }
 
 /* ---------- steering ---------- */
@@ -1511,7 +1522,7 @@ appEl.addEventListener('pointermove',e=>{for(const k of ['P','E']){const sp=stee
   let dx=e.clientX-sp.x,dy=e.clientY-sp.y;const l=Math.hypot(dx,dy),m=Math.min(l,46);if(l>0){dx=dx/l*m;dy=dy/l*m}stickEls[k].firstElementChild.style.transform=`translate(${dx}px,${dy}px)`}});
 const endSteer=e=>{for(const k of ['P','E']){const sp=steers[k];if(sp&&e.pointerId===sp.id){steers[k]=null;stickEls[k].hidden=true}}};
 appEl.addEventListener('pointerup',endSteer);appEl.addEventListener('pointercancel',endSteer);
-function tapCharge(k){const T=k==='P'?P:E;if(phase!=='battle'||!T||T.state!=='spin')return;T.charge=Math.min(1,T.charge+(T.def.type==='def'?0.5:1)/35);const b=k==='P'?spBtn:sp2Btn;b.classList.add('tap');setTimeout(()=>b.classList.remove('tap'),70)}
+function tapCharge(k){const T=k==='P'?P:E;if(phase!=='battle'||!T||T.state!=='spin')return;T.charge=Math.min(1,T.charge+chgMul(T)/35);const b=k==='P'?spBtn:sp2Btn;b.classList.add('tap');setTimeout(()=>b.classList.remove('tap'),70)}
 addEventListener('keydown',e=>{const k=e.key.toLowerCase();keys[k]=true;if(phase!=='battle')return;if(k===' '){e.preventDefault();tapCharge('P')}if(duel2&&k==='enter'){e.preventDefault();tapCharge('E')}});
 addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false});
 const sp2Btn=$('sp2');
@@ -2168,7 +2179,7 @@ function renderAsm(box){
 function renderBoost(box){
   const mine=TOPS.map((t,i)=>[t,i]).filter(([t])=>owns(t));if(!mine.some(([,i])=>i===bsSel))bsSel=mine[0][1];
   const raw=TOPS[bsSel],b=boostOf(raw.id),eff=withBoost(raw),used=b.atk+b.def+b.sta+b.wt;
-  box.innerHTML=`<select id="bsSel">${mine.map(([t,i])=>`<option value="${i}" ${i===bsSel?'selected':''}>${t.name}（${TIER_NAME[t.tier]}・${t.typeName}）</option>`).join('')}</select>`;
+  box.innerHTML='<div class="shH">選一顆陀螺（📌 可以釘選常用的）</div><div id="bsGrid"></div>';topGrid(box.querySelector('#bsGrid'),{list:mine.map(([t])=>t),sel:raw,onPick:d=>{bsSel=TOPS.indexOf(d);shRender()}});
   const pv=document.createElement('div');pv.className='prev';
   pv.innerHTML=`<canvas width="152" height="152"></canvas><div><b style="font-size:17px">${raw.name}</b><div class="chip" style="display:inline-block;margin:4px 0">${raw.typeName}</div><div style="font-size:12px;color:var(--dim)">已強化 ${used}/${BOOST_BUDGET} 點<br>藍色是強化增加的部分</div></div>${statBars(eff,raw)}`;
   box.appendChild(pv);drawIcon(pv.querySelector('canvas'),raw);
@@ -2198,7 +2209,7 @@ function menuStatus(){const l=$('coinLbl');if(l)l.textContent=`Lv ${lv}（${xp}/
 /* ---------- tournament (競技大賽 32強 五關) ---------- */
 const TOUR_NAMES=['阿烈','小雷','星野','莉莉','阿凱','小翼','夜月','千夏','大熊','迅風','小葵','龍介','雷電','小白','阿虎','美咲','火火','阿海','小櫻','飛飛','阿明','小竹','烈焰','冰冰','阿鐵','小夏','疾風','蒼龍','小草','金剛','阿光','小月','天翔','暴雷','小石','銀狼'];
 const R_NAMES=['32強賽','16強賽','8強賽','4強賽','決賽'],TARGET=[2,3,3,4,5],RANK_OF=['32強','16強','8強','4強','亞軍'],COIN_OF={'冠軍':200,'亞軍':120,'4強':70,'8強':40,'16強':20,'32強':10};
-let tour=null,curMatch=null,tourN=1,p2pick=1,p2Av=randomAvatar(),p2Name='挑戰者B',matchTarget=4,aiSkill=0.7,watchFast=false,watchEndT=0,watchM=null;
+let tour=null,curMatch=null,tourN=1,p2pick=1,p2Av=load('p2av')||randomAvatar(),p2Name=load('p2name')||'玩家二',matchTarget=4,aiSkill=0.7,watchFast=false,watchEndT=0,watchM=null;
 let coins=load('coins')||0;if(!Number.isFinite(coins))coins=0;
 function addCoins(n){coins+=n;save('coins',coins);menuStatus()}
 menuStatus();
@@ -2225,15 +2236,14 @@ function tourSetupUI(){
   $('tDraw').style.opacity=cupOk()?1:0.4;
   $('tn1').setAttribute('aria-pressed',tourN===1);$('tn2').setAttribute('aria-pressed',tourN===2);$('p2box').hidden=tourN!==2;
   $('t1Lbl').textContent=pName;$('t1Top').textContent=TOPS[pick].name+'・'+TOPS[pick].typeName;drawPortrait($('t1Face'),pAv);
-  if(tourN===2){$('p2NameLbl').textContent=p2Name;$('p2TopLbl').textContent=TOPS[p2pick].name+'・'+TOPS[p2pick].typeName;drawPortrait($('p2Face'),p2Av)}
+  if(tourN===2){const ni=$('p2NameIn');if(document.activeElement!==ni)ni.value=p2Name;topGrid($('p2Grid'),{list:TOPS.filter((t,i)=>owns(t)&&fitsCup(t)&&i!==pick),sel:TOPS[p2pick],onPick:d=>{p2pick=TOPS.indexOf(d);tourSetupUI()}});$('p2NameLbl').textContent=p2Name;$('p2TopLbl').textContent=TOPS[p2pick].name+'・'+TOPS[p2pick].typeName;drawPortrait($('p2Face'),p2Av)}
 }
 $('tourBtn').onclick=()=>{audioInit();tourOpen()};
 $('cupRow').onclick=e=>{const b=e.target.closest('[data-cup]');if(b){tourCup=b.dataset.cup;tourSetupUI()}};
 $('tn1').onclick=()=>{tourN=1;tourSetupUI()};$('tn2').onclick=()=>{tourN=2;tourSetupUI()};
-function p2Step(dv){const ok=TOPS.map((t,i)=>i).filter(i=>owns(TOPS[i])&&fitsCup(TOPS[i])&&i!==pick);if(!ok.length)return;let k=ok.indexOf(p2pick);k=(k+dv+ok.length)%ok.length;p2pick=ok[k];tourSetupUI()}
-$('p2Prev').onclick=()=>p2Step(-1);
-$('p2Next').onclick=()=>p2Step(1);
-$('p2Rand').onclick=()=>{p2Av=randomAvatar();p2Name=RIVAL_NAMES[Math.floor(Math.random()*RIVAL_NAMES.length)]+'B';tourSetupUI()};
+$('p2NameIn').addEventListener('input',e=>{p2Name=e.target.value.trim().slice(0,8)||'玩家二';save('p2name',p2Name);$('p2NameLbl').textContent=p2Name});
+
+$('p2Rand').onclick=()=>{p2Av=randomAvatar();save('p2av',p2Av);tourSetupUI()};
 $('tBack').onclick=()=>{$('tourSetup').hidden=true;$('menu').hidden=false};
 $('tDraw').onclick=()=>{audioInit();if(!cupOk()){$('cupNote').style.color='var(--rival)';return}$('cupNote').style.color='';tourStart()};
 function tourStart(){
@@ -2344,7 +2354,7 @@ function frame(now){
   const dt=rdt*scale;
   if(phase==='launch')zoneTick(rdt);
   if(phase==='battle'||phase==='ending'||phase==='menu'||phase==='watch'){
-    if(phase==='battle'){battleT+=dt;playerSteer();for(const k of ['P','E']){const T=k==='P'?P:E;if(spHold[k]&&T.state==='spin')T.charge=Math.min(1,T.charge+0.1*dt*(T.def.type==='def'?0.5:1))}}
+    if(phase==='battle'){battleT+=dt;playerSteer();for(const k of ['P','E']){const T=k==='P'?P:E;if(spHold[k]&&T.state==='spin')T.charge=Math.min(1,T.charge+0.1*dt*chgMul(T))}}
     if(phase==='watch'){battleT+=dt;aiControl(P,E,battleT,0.7)}
     if(phase==='menu'){demoT+=dt;aiControl(P,E,demoT,0.55);}
     if(!(duel2&&phase==='battle'))aiControl(E,P,battleT+demoT,phase==='menu'?0.55:aiSkill);
