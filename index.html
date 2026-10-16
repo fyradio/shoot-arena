@@ -409,7 +409,7 @@ button,.tops,.arenas,#app{touch-action:manipulation}
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.9</div>
+  <div class="ver">v1.10</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -769,7 +769,7 @@ const $=id=>document.getElementById(id);
 const canvas=$('c');
 const isTouch=matchMedia('(pointer:coarse)').matches;
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
-renderer.setPixelRatio(Math.min(devicePixelRatio,isTouch?1.75:2));
+renderer.setPixelRatio(Math.min(devicePixelRatio,isTouch?1.5:1.75));
 renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x0a0f1f);scene.fog=new THREE.Fog(0x0a0f1f,60,160);
 const camera=new THREE.PerspectiveCamera(40,1,0.5,400);
@@ -1056,9 +1056,40 @@ function ringGeo(def){
   g.rotateX(-Math.PI/2);return geoCache[def.id]=g;
 }
 const glyphCanvases=[];
+
+const STK=[['blank','素面'],['star','星星'],['heart','愛心'],['flame','火焰'],['bolt','閃電'],['crown','皇冠'],['moon','月亮'],['sun','太陽'],['flower','花朵'],['paw','肉球'],['smile','笑臉'],['eye','魔眼'],['spiral','漩渦'],['shield','盾牌'],['rainbow','彩虹圈'],['yin','太極'],['clover','四葉草'],['target','靶心'],['gem','寶石'],['ghost','小幽靈']];
+let stk=load('v2stk')||{};
+function drawSticker(g,k,col,cx,cy,r){
+  g.save();g.translate(cx,cy);g.scale(r,r);g.lineJoin='round';g.lineCap='round';g.fillStyle=col;g.strokeStyle='#1b1630';g.lineWidth=0.07;
+  const TAU=Math.PI*2,poly=(pts)=>{g.beginPath();pts.forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.closePath();g.fill();g.stroke()};
+  if(k==='blank'){g.beginPath();g.arc(0,0,0.92,0,TAU);g.fill();g.stroke()}
+  else if(k==='star'){const p=[];for(let i=0;i<10;i++){const a=-Math.PI/2+i/10*TAU,rr=i%2?0.42:0.95;p.push([Math.cos(a)*rr,Math.sin(a)*rr])}poly(p)}
+  else if(k==='heart'){g.beginPath();g.moveTo(0,0.85);g.bezierCurveTo(-1.1,0.1,-0.7,-0.85,0,-0.35);g.bezierCurveTo(0.7,-0.85,1.1,0.1,0,0.85);g.closePath();g.fill();g.stroke()}
+  else if(k==='flame'){g.beginPath();g.moveTo(0,-0.95);g.bezierCurveTo(0.2,-0.5,0.85,-0.2,0.7,0.35);g.bezierCurveTo(0.6,0.85,-0.6,0.85,-0.7,0.3);g.bezierCurveTo(-0.75,-0.1,-0.3,-0.3,0,-0.95);g.closePath();g.fill();g.stroke();g.fillStyle='#fff';g.globalAlpha=0.8;g.beginPath();g.moveTo(0,-0.1);g.bezierCurveTo(0.35,0.2,0.4,0.6,0,0.65);g.bezierCurveTo(-0.4,0.6,-0.3,0.2,0,-0.1);g.fill()}
+  else if(k==='bolt'){poly([[0.25,-0.95],[-0.55,0.1],[-0.05,0.1],[-0.3,0.95],[0.6,-0.2],[0.08,-0.2]])}
+  else if(k==='crown'){poly([[-0.9,0.6],[-0.9,-0.5],[-0.45,-0.05],[0,-0.7],[0.45,-0.05],[0.9,-0.5],[0.9,0.6]])}
+  else if(k==='moon'){g.beginPath();g.arc(0,0,0.9,Math.PI*0.3,Math.PI*1.7);g.arc(0.35,0,0.72,Math.PI*1.62,Math.PI*0.38,true);g.closePath();g.fill();g.stroke()}
+  else if(k==='sun'){for(let i=0;i<10;i++){g.save();g.rotate(i/10*TAU);g.beginPath();g.moveTo(0.62,-0.1);g.lineTo(0.98,0);g.lineTo(0.62,0.1);g.closePath();g.fill();g.stroke();g.restore()}g.beginPath();g.arc(0,0,0.55,0,TAU);g.fill();g.stroke()}
+  else if(k==='flower'){for(let i=0;i<6;i++){g.save();g.rotate(i/6*TAU);g.beginPath();g.ellipse(0.5,0,0.38,0.24,0,0,TAU);g.fill();g.stroke();g.restore()}g.fillStyle='#ffe14a';g.beginPath();g.arc(0,0,0.26,0,TAU);g.fill();g.stroke()}
+  else if(k==='paw'){g.beginPath();g.ellipse(0,0.3,0.5,0.4,0,0,TAU);g.fill();g.stroke();for(const [x,y] of [[-0.62,-0.15],[-0.22,-0.58],[0.22,-0.58],[0.62,-0.15]]){g.beginPath();g.ellipse(x,y,0.19,0.25,0,0,TAU);g.fill();g.stroke()}}
+  else if(k==='smile'){g.beginPath();g.arc(0,0,0.92,0,TAU);g.fill();g.stroke();g.fillStyle='#1b1630';g.beginPath();g.arc(-0.33,-0.2,0.11,0,TAU);g.arc(0.33,-0.2,0.11,0,TAU);g.fill();g.beginPath();g.arc(0,0.08,0.52,0.15*Math.PI,0.85*Math.PI);g.lineWidth=0.1;g.stroke()}
+  else if(k==='eye'){g.beginPath();g.moveTo(-0.95,0);g.quadraticCurveTo(0,-0.95,0.95,0);g.quadraticCurveTo(0,0.95,-0.95,0);g.closePath();g.fillStyle='#fff';g.fill();g.stroke();g.fillStyle=col;g.beginPath();g.arc(0,0,0.42,0,TAU);g.fill();g.stroke();g.fillStyle='#1b1630';g.beginPath();g.arc(0,0,0.18,0,TAU);g.fill()}
+  else if(k==='spiral'){g.beginPath();g.arc(0,0,0.92,0,TAU);g.fill();g.stroke();g.strokeStyle='#fff';g.lineWidth=0.11;g.beginPath();for(let i=0;i<=80;i++){const t=i/80*3.2*Math.PI,rr=0.08+t/(3.2*Math.PI)*0.7;i?g.lineTo(Math.cos(t)*rr,Math.sin(t)*rr):g.moveTo(Math.cos(t)*rr,Math.sin(t)*rr)}g.stroke()}
+  else if(k==='shield'){g.beginPath();g.moveTo(-0.8,-0.75);g.lineTo(0.8,-0.75);g.lineTo(0.8,0.1);g.quadraticCurveTo(0.7,0.7,0,0.98);g.quadraticCurveTo(-0.7,0.7,-0.8,0.1);g.closePath();g.fill();g.stroke();g.fillStyle='#fff';g.globalAlpha=0.85;g.beginPath();g.moveTo(0,-0.5);g.lineTo(0.5,-0.5);g.lineTo(0.5,0.05);g.quadraticCurveTo(0.4,0.45,0,0.65);g.closePath();g.fill()}
+  else if(k==='rainbow'){['#ff3b2f','#ff8a1f','#ffd23d','#3dff7a','#3b7bff','#b24bff'].forEach((c,i)=>{g.fillStyle=c;g.beginPath();g.arc(0,0,0.95-i*0.15,0,TAU);g.fill()});g.beginPath();g.arc(0,0,0.95,0,TAU);g.stroke()}
+  else if(k==='yin'){g.fillStyle='#fff';g.beginPath();g.arc(0,0,0.92,0,TAU);g.fill();g.fillStyle=col;g.beginPath();g.arc(0,0,0.92,-Math.PI/2,Math.PI/2);g.arc(0,0.46,0.46,Math.PI/2,-Math.PI/2,true);g.arc(0,-0.46,0.46,Math.PI/2,-Math.PI/2);g.fill();g.fillStyle='#fff';g.beginPath();g.arc(0,-0.46,0.14,0,TAU);g.fill();g.fillStyle=col;g.beginPath();g.arc(0,0.46,0.14,0,TAU);g.fill();g.beginPath();g.arc(0,0,0.92,0,TAU);g.stroke()}
+  else if(k==='clover'){for(let i=0;i<4;i++){g.save();g.rotate(i/4*TAU+Math.PI/4);g.beginPath();g.arc(0.38,0,0.38,0,TAU);g.fill();g.stroke();g.restore()}g.beginPath();g.moveTo(0.1,0.3);g.quadraticCurveTo(0.3,0.7,0.45,0.95);g.lineWidth=0.1;g.stroke()}
+  else if(k==='target'){['#fff',col,'#fff',col].forEach((c,i)=>{g.fillStyle=c;g.beginPath();g.arc(0,0,0.95-i*0.24,0,TAU);g.fill();g.stroke()})}
+  else if(k==='gem'){poly([[-0.55,-0.55],[0.55,-0.55],[0.95,-0.1],[0,0.95],[-0.95,-0.1]]);g.strokeStyle='rgba(255,255,255,.8)';g.lineWidth=0.05;g.beginPath();g.moveTo(-0.95,-0.1);g.lineTo(0.95,-0.1);g.moveTo(-0.3,-0.1);g.lineTo(0,0.95);g.moveTo(0.3,-0.1);g.lineTo(0,0.95);g.moveTo(-0.3,-0.1);g.lineTo(-0.55,-0.55);g.moveTo(0.3,-0.1);g.lineTo(0.55,-0.55);g.stroke()}
+  else if(k==='ghost'){g.beginPath();g.moveTo(-0.75,0.85);g.lineTo(-0.75,-0.1);g.arc(0,-0.1,0.75,Math.PI,0);g.lineTo(0.75,0.85);g.lineTo(0.45,0.6);g.lineTo(0.15,0.85);g.lineTo(-0.15,0.6);g.lineTo(-0.45,0.85);g.closePath();g.fill();g.stroke();g.fillStyle='#1b1630';g.beginPath();g.arc(-0.25,-0.15,0.11,0,TAU);g.arc(0.25,-0.15,0.11,0,TAU);g.fill()}
+  g.restore();
+}
+function stkOf(def){return stk[def.id]||null}
+function refreshGlyphs(){for(const o of glyphCanvases){drawGlyph(o.c,o.def);o.t.needsUpdate=true}}
 function drawGlyph(c,def){const g=c.getContext('2d'),w=c.width;g.clearRect(0,0,w,w);
   g.fillStyle=hex(def.color);g.beginPath();g.arc(w/2,w/2,w/2,0,7);g.fill();
   g.strokeStyle=hex(def.accent);g.lineWidth=w*0.06;g.beginPath();g.arc(w/2,w/2,w*0.42,0,7);g.stroke();
+  const sk=stkOf(def);if(sk){drawSticker(g,sk.k,sk.c,w/2,w/2,w*0.37);return}
   g.fillStyle=inkOn(def.color);g.font=`900 ${w*0.5}px "Noto Sans TC","PingFang TC",sans-serif`;g.textAlign='center';g.textBaseline='middle';
   g.shadowColor='rgba(0,0,0,.5)';g.shadowBlur=w*0.04;g.fillText(def.glyph,w/2,w*0.53)}
 function glyphTex(def){const c=document.createElement('canvas');c.width=c.height=128;drawGlyph(c,def);const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;glyphCanvases.push({c,def,t});return t}
@@ -1438,8 +1469,9 @@ function humStart(){if(!AC||hum)return;
   const am=AC.createGain();am.gain.value=0.6;const lfo=AC.createOscillator();lfo.frequency.value=10;const lfoG=AC.createGain();lfoG.gain.value=0.4;lfo.connect(lfoG);lfoG.connect(am.gain);
   const g=AC.createGain();g.gain.value=0;src.connect(bp);bp.connect(am);am.connect(g);
   const tn=AC.createOscillator();tn.type='sine';tn.frequency.value=300;const tg=AC.createGain();tg.gain.value=0;tn.connect(tg);tg.connect(am);
-  g.connect(master);src.start();lfo.start();tn.start();hum={bp,lfo,g,tn,tg}}
-function humSet(s,on){if(!hum)return;const t=AC.currentTime;s=Math.max(0,Math.min(1,s));hum.bp.frequency.setTargetAtTime(500+1500*s,t,0.08);hum.lfo.frequency.setTargetAtTime(5+25*s,t,0.08);hum.tn.frequency.setTargetAtTime(180+320*s,t,0.08);hum.tg.gain.setTargetAtTime(on?0.12:0,t,0.1);hum.g.gain.setTargetAtTime(on?0.07*(0.35+0.65*s):0,t,0.1)}
+  g.connect(master);src.start();lfo.start();tn.start();hum={bp,lfo,g,tn,tg,src}}
+function humStop(){if(!hum)return;const h=hum;hum=null;try{h.g.gain.cancelScheduledValues(0);h.g.gain.value=0;h.src.stop();h.lfo.stop();h.tn.stop();h.g.disconnect()}catch(e){}}
+function humSet(s,on){if(!hum)return;if(!on){humStop();return}const t=AC.currentTime;s=Math.max(0,Math.min(1,s));hum.bp.frequency.setTargetAtTime(500+1500*s,t,0.08);hum.lfo.frequency.setTargetAtTime(5+25*s,t,0.08);hum.tn.frequency.setTargetAtTime(180+320*s,t,0.08);hum.tg.gain.setTargetAtTime(on?0.12:0,t,0.1);hum.g.gain.setTargetAtTime(on?0.07*(0.35+0.65*s):0,t,0.1)}
 function say(text){try{const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=1.05;u.pitch=1.2;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
 
 /* ---------- game state ---------- */
@@ -1515,7 +1547,7 @@ function drawIcon(c,def){
     g.beginPath();g.moveTo(r*0.42,-r*0.2);g.lineTo(r*1.0,0);g.lineTo(r*0.42,r*0.2);g.closePath();g.fillStyle='#e6eaf2';g.fill();g.lineWidth=w*0.02;g.strokeStyle='#ffc83d';g.stroke();
     g.beginPath();g.moveTo(r*0.55,-r*0.08);g.lineTo(r*0.8,0);g.lineTo(r*0.55,r*0.08);g.closePath();g.fillStyle=hex(def.accent);g.fill();g.restore()}}
   g.beginPath();g.arc(0,0,r*0.42,0,7);g.fillStyle=hex(def.color);g.fill();
-  g.fillStyle=inkOn(def.color);g.font=`900 ${r*0.5}px "Noto Sans TC","PingFang TC",sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(def.glyph,0,r*0.04);g.restore();
+  {const sk=stkOf(def);if(sk)drawSticker(g,sk.k,sk.c,0,0,r*0.36);else{g.fillStyle=inkOn(def.color);g.font=`900 ${r*0.5}px "Noto Sans TC","PingFang TC",sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(def.glyph,0,r*0.04)}}g.restore();
 }
 const pickEl=$('pick'),detailEl=$('detail'),filtersEl=$('filters');let topFilter='mine';
 {const sv=load('top');if(Number.isInteger(sv)&&sv>=0&&sv<TOPS.length)pick=sv;if(!owns(TOPS[pick]))pick=TOPS.findIndex(owns)}
@@ -2249,7 +2281,7 @@ let last=performance.now();
 /* ---------- workshop (陀螺商店・盲盒・組裝・強化) ---------- */
 const shopEl=$('shop'),shBody=$('shBody');let shTab='tops',asm={ring:'p_red:ring',disc:'p_red:disc',tip:'p_red:tip',emb:'p_red:emb',left:false,name:''},bsSel=0,shMsg='';
 const BOX_PRICE=80;
-function savePrefs(){save('v2tops',[...ownedTops]);save('v2parts',[...ownedParts]);save('inv',inv);save('v2boost',boosts);save('v2customs',customs);save('coins',coins);save('lv',lv);save('xp',xp);save('v2bolt',boltS)}
+function savePrefs(){save('v2tops',[...ownedTops]);save('v2parts',[...ownedParts]);save('inv',inv);save('v2boost',boosts);save('v2customs',customs);save('coins',coins);save('lv',lv);save('xp',xp);save('v2bolt',boltS);save('v2stk',stk)}
 function shOpen(){audioInit();$('menu').hidden=true;shopEl.hidden=false;shMsg='';shRender()}
 function shClose(){shopEl.hidden=true;$('menu').hidden=false;if(pick>=TOPS.length||!owns(TOPS[pick]))pick=TOPS.findIndex(owns);renderPicker();renderDetail();menuFighter();menuStatus()}
 $('shopBtn').onclick=shOpen;$('shBack').onclick=shClose;
@@ -2289,7 +2321,7 @@ function renderAsm(box){
   if(customs.length){let l='<div class="shH">我的自組陀螺</div>';for(const c of TOPS.filter(t=>t.custom))l+=`<div class="shr"><div><b>${c.name}</b><small>${TIER_NAME[c.tier]}・${c.typeName}　攻${c.atk} 防${c.def} 久${c.sta} 重${c.wt}　必殺：${c.special}</small></div><button class="mini no" data-a="del" data-id="${c.sp.sid}" type="button">刪除</button></div>`;const w=document.createElement('div');w.style.display='grid';w.style.gap='6px';w.innerHTML=l;box.appendChild(w)}
 }
 
-let stSid=0;
+let stSid=0,stkTop=0;
 const divMax=()=>Math.max(...TOPS.filter(d=>!d.custom&&d.tier==='div').map(d=>d.price)),slotPrice=n=>{const b=Math.ceil((divMax()+300)/100)*100;return n===2?b:b+2000};
 function renderStyle(box){
   const cs=TOPS.filter(t=>t.custom);let h='<div class="shH">陀螺花紋（畫在自組陀螺的外環上）</div>';
@@ -2302,12 +2334,19 @@ function renderStyle(box){
     h+='<div class="shH">花紋</div><div class="pset">'+PATS.map(([k,n])=>`<button type="button" class="pbtn" data-a="pat" data-id="${k}" aria-pressed="${(ci.pat||'none')===k}">${n}</button>`).join('')+'</div>';
     h+='<div class="shH">顏色</div><div class="pset">'+PCOLS.map(([n,c])=>`<button type="button" class="pbtn" data-a="patc" data-id="${c}" aria-pressed="${(ci.patC||'#ff6a1a')===c}" style="border-left:8px solid ${c}">${n}</button>`).join('')+'</div>';
   }
+
+  h+='<div class="shH">🏷 陀螺貼紙（貼在陀螺中心，可以把字蓋掉）</div><div id="stGrid"></div>';
+  {const mine=TOPS.filter(t=>owns(t));if(!mine.includes(TOPS[stkTop]))stkTop=TOPS.indexOf(mine[0]);const tp=TOPS[stkTop],cs=stk[tp.id];
+   h+=`<div class="prev"><canvas width="152" height="152" id="stkCv"></canvas><div><b style="font-size:17px">${tp.name}</b><div style="font-size:12px;color:var(--dim)">貼紙：${cs?(STK.find(x=>x[0]===cs.k)||STK[0])[1]:'無（顯示原本的字）'}</div></div></div>`;
+   h+='<div class="pset"><button type="button" class="pbtn" data-a="stk" data-id="none" aria-pressed="'+(!cs)+'">不貼</button>'+STK.map(([k,n])=>`<button type="button" class="pbtn" data-a="stk" data-id="${k}" aria-pressed="${!!cs&&cs.k===k}">${n}</button>`).join('')+'</div>';
+   h+='<div class="shH">貼紙顏色</div><div class="pset">'+PCOLS.map(([n,c])=>`<button type="button" class="pbtn" data-a="stkc" data-id="${c}" aria-pressed="${!!cs&&cs.c===c}" style="border-left:8px solid ${c}">${n}</button>`).join('')+'</div>'}
   h+='<div class="shH">⚡ 必殺技的雷電</div>';
   h+=`<div class="note" style="font-size:12px">放必殺技時，陀螺身邊會出現雷電。買顏色、買欄位，再選哪幾種上場（最多 3 種）。沒有配置時，用陀螺原本的雷電色。</div>`;
   h+=`<div class="shr"><div><b>雷電欄位　${boltS.slots}／3</b><small>目前配置：${boltS.equip.length?boltS.equip.map(id=>BOLT_COLORS.find(c=>c[0]===id)[1]).join('、'):'（沿用陀螺原本的雷電）'}</small></div>${boltS.slots<3?`<button class="mini ${coins<slotPrice(boltS.slots+1)?'no':''}" data-a="bslot" type="button">買第 ${boltS.slots+1} 道　${slotPrice(boltS.slots+1)} 幣</button>`:'<span style="color:var(--gold)">已滿</span>'}</div>`;
   for(const [id,n,c,pr] of BOLT_COLORS){const own=boltS.own.includes(id),on=boltS.equip.includes(id);
     h+=`<div class="shr"><div style="display:flex;gap:8px;align-items:center"><i style="width:22px;height:22px;border-radius:50%;background:${c};box-shadow:0 0 12px ${c};display:inline-block"></i><div><b>${n}</b><small>${own?(on?'已配置':'已擁有'):'還沒買'}</small></div></div>${own?`<button class="mini" data-a="beq" data-id="${id}" type="button">${on?'卸下':'配置'}</button>`:`<button class="mini ${coins<pr?'no':''}" data-a="bbuy" data-id="${id}" type="button">${pr} 幣</button>`}</div>`}
   box.innerHTML=h;
+  {const mine=TOPS.filter(t=>owns(t));topGrid(box.querySelector('#stGrid'),{list:mine,sel:TOPS[stkTop],onPick:d=>{stkTop=TOPS.indexOf(d);shRender()}});const c2=box.querySelector('#stkCv');if(c2)drawIcon(c2,TOPS[stkTop])}
   const cv=box.querySelector('#stCv');if(cv){const cur=TOPS.find(t=>t.custom&&t.sp.sid===stSid);drawIcon(cv,cur)}
 }
 function renderBoost(box){
@@ -2330,6 +2369,7 @@ shBody.addEventListener('click',e=>{
   else if(a==='box'){if(coins<BOX_PRICE)shMsg='商店幣不夠，去打競技大賽吧！';else{coins-=BOX_PRICE;const t=rollTier([['brz',0.5],['leg',0.35],['div',0.15]]),pool=TOPS.filter(d=>!d.custom&&d.tier===t),d=pool[Math.floor(Math.random()*pool.length)],c=CATS[Math.floor(Math.random()*4)],pid=d.id+':'+c;
       if(hasPart(pid)){coins+=20;shMsg=`🎁 ${TIER_NAME[d.tier]}「${d.name}」的${PCAT[c]}（重複，退 20 幣）`}else{ownedParts.add(pid);shMsg=`🎁 抽到 ${TIER_NAME[d.tier]}「${d.name}」的${PCAT[c]}！到「組裝」使用`;sfx.item()}savePrefs()}}
   else if(a==='buyb'){const it=BOOST_ITEMS[id];if(coins<it.pr)shMsg='商店幣不夠，去打競技大賽吧！';else{coins-=it.pr;inv[id]=(inv[id]||0)+1;savePrefs();shMsg='買到了 '+it.n+'！';sfx.ding()}}
+  else if(a==='stk'||a==='stkc'){const tp=TOPS[stkTop];if(a==='stk'){if(id==='none')delete stk[tp.id];else stk[tp.id]={k:id,c:(stk[tp.id]&&stk[tp.id].c)||'#ffd23d'}}else{const o=stk[tp.id]||{k:'star',c:id};o.c=id;stk[tp.id]=o}savePrefs();refreshGlyphs()}
   else if(a==='stsel'){stSid=+id}
   else if(a==='pat'||a==='patc'){const ci=customs.find(c=>c.sid===stSid);if(ci){if(a==='pat'){ci.pat=id==='none'?null:id;if(id!=='none'&&!ci.patC)ci.patC='#ff6a1a'}else{ci.patC=id;if(!ci.pat)ci.pat='flame'}
       const cur=TOPS[pick];delete patCache['c'+stSid];loadCustoms();const ni=TOPS.indexOf(cur);pick=ni>=0?ni:TOPS.findIndex(owns);for(const k of Object.keys(patCache))if(k[0]==='c')delete patCache[k];savePrefs()}}
@@ -2592,7 +2632,15 @@ function b3Show(end){
 function b3Exit(){b3=null;curMatch=null;npcChgX=duelX=passX=1;aiSkill=0.7;matchTarget=4;$('b3Board').hidden=true;$('menu').hidden=false;phase='menu';ov.mode=null;menuFighter();menuEnter()}
 
 
+let lastDraw=0;
 function frame(now){
+  if(phase==='menu'){
+    const vis=!$('title').hidden||!$('menu').hidden,minDt=vis?33:crOpen?33:120;
+    if(now-lastDraw<minDt-2){requestAnimationFrame(frame);return}
+    lastDraw=now;
+    if(!vis){const r=Math.min(0.2,(now-last)/1000);last=now;if(crOpen)drawCreator(r);if(AC&&mus.g)setMusic(musicForPhase());requestAnimationFrame(frame);return}
+  }else if(phase==='round'||phase==='over'){if(now-lastDraw<31){requestAnimationFrame(frame);return}lastDraw=now}
+  else lastDraw=now;
   const rdt=Math.min(0.05,(now-last)/1000);last=now;
   let scale=1;if(slowT>0){slowT-=rdt;scale=0.25}
   const dt=rdt*scale;
