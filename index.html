@@ -409,7 +409,7 @@ button,.tops,.arenas,#app{touch-action:manipulation}
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.11.1</div>
+  <div class="ver">v1.12</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -452,7 +452,7 @@ const SERIES_NAME={mecha:'機甲',gold:'黃金星座',dragon:'聖龍',katana:'�
 const TIPP={flat:[1.0,0.35],semi:[0.6,0.5],ball:[0.35,0.6],sharp:[0.15,0.9]};
 const SERIES_BOLTS={mecha:[0xffffff,0xb24bff],gold:[0xffd23d,0xffffff,0xff8a1f],dragon:[0xff3b1f,0xffd23d],katana:[0xffffff,0x9fe8ff],silver:[0xe6eaf2,0x9fe8ff],ninja:[0xb24bff,0x39ffb0],phoenix:[0xff3b1f,0xffd23d,0xff8a1f],arrow:[0xffe14a,0x4fd8ff,0xffffff],beast:[0xffffff],primary:[]};
 function T_(id,name,tier,series,type,glyph,color,accent,st,blades,style,motif,tip,special,sp,desc,x){
-  const [atk,def,sta,wt]=st,[flow,fric]=TIPP[tip];
+  let [atk,def,sta,wt]=st;const [flow,fric]=TIPP[tip];if(type==='sta'){atk=Math.min(10,atk+2);def=Math.min(10,def+2)}
   const d={id,name,tier,series,type,glyph,color,accent,atk,def,sta,wt,blades,style,motif,tip,flow:flow*(type==='atk'?1.1:1),fric,special,desc,edgy:series==='mecha'||series==='arrow',mv:null,fx:null};
   if(sp.startsWith('fx:'))d.fx=sp.slice(3);else d.mv=sp;
   d.metal=series==='gold'?'gold':series==='silver'?'silver':null;
@@ -569,16 +569,17 @@ function withBoost(def){
 const BEATS={atk:'sta',sta:'def',def:'atk'};
 let emit=()=>{};
 function bowlH(r){return 0.03*r*r}
-let BXS=5.5;const BX={atk:3.5,bal:1,sta:1,def:1};
-const SPD={atk:1,bal:1.15,sta:1.05,def:1};
-const MAXC=6,DURM=1/3,DECM={atk:1.2,bal:1,sta:1/1.2,def:1/1.3};
-const CHG={atk:1.4,bal:1,sta:0.85,def:0.8},BRK={def:0.7,bal:0.9,sta:1,atk:1.25};
+let BXS=4.5;const BX={atk:3.5,bal:1,sta:4,def:1};
+const SPD={atk:1,bal:1.2,sta:1,def:1},INIT={atk:1.1,bal:1,sta:1.02,def:0.86};
+const durMod=d=>Math.max(0.35,1/((1+0.06*(d.wt-5))*(1+0.05*(d.def-5))*(1+0.08*(d.sta-5))));;
+const MAXC=6,DURM=1/3,DECM={atk:1.2,bal:1,sta:0.75,def:0.7};
+const CHG={atk:1.3,bal:1,sta:0.85,def:0.8},BRK={def:1,bal:0.9,sta:1/1.5,atk:1.25};
 let npcChgX=1,duelX=1,passX=1;
 const chgMul=T=>(CHG[T.def.type]||1)*(T.side==='E'?npcChgX:1)*duelX,spGuard=T=>T.def.type==='atk'&&(T.sp||T.chain)?0.35:T.def.type==='def'?0.8:1;
 function newTop(def,side){return {def,side,sp:null,storm:0,buff:null,buffT:0,boostCD:0,onTrack:0,x:0,z:0,vx:0,vz:0,s:0,burst:1,charge:0,state:'idle',m:0.6+def.wt*0.15,rad:(def.wt>=8?1.18:1.12)*TOPSCALE,dash:0,shell:0,moon:0,sx:0,sz:0,y:0,vy:0}}
 function launchTop(T,pull,aim,perfect){
   const dir=T.side==='P'?-1:1;
-  T.state='spin';T.s=Math.min(1.05,0.5+0.42*pull+(perfect?0.2:0));T.burst=1;T.charge=0;T.buff=null;T.buffT=0;T.boostCD=0;T.onTrack=0;T.sp=null;T.storm=0;
+  T.state='spin';T.s=Math.min(1.2,(0.5+0.42*pull+(perfect?0.2:0))*(INIT[T.def.type]||1)*(1-0.012*(T.def.wt-5))*(1-0.01*(T.def.sta-5)));T.burst=1;T.charge=0;T.buff=null;T.buffT=0;T.boostCD=0;T.onTrack=0;T.sp=null;T.storm=0;
   const L0=Math.min(R*0.65,rhoAt(dir<0?0:Math.PI)-1.6);T.x=aim*1.5;T.z=-dir*L0;T.vx=aim*5;T.vz=dir*(2+3*pull);T.dash=T.shell=T.moon=0;T.y=0;T.vy=0;T.sx=T.sz=0;
 }
 function startStrike(T){const O=T.sp.O,dx=(O.state==='spin'?O.x:0)-T.x,dz=(O.state==='spin'?O.z:0)-T.z,d=Math.hypot(dx,dz)||1;
@@ -630,7 +631,7 @@ function stepSpecial(T,h){
   return false}
 function useSpecial(T,O){
   if(T.charge<1||T.state!=='spin')return false;
-  T.charge=0;T.spGlow=2.2;const ty=T.def.type,mv=T.def.mv;if(T.def.reborn)T.s=Math.min(1.05,T.s+0.12);
+  T.charge=0;T.spGlow=2.2;const ty=T.def.type,mv=T.def.mv;if(T.def.reborn)T.s=Math.min(1.05,T.s+0.12);if(ty==='def')T.s=Math.min(1.2,T.s+0.2);if(ty==='sta'){T.s=Math.min(1.2,T.s+0.1);T.burst=Math.min(1,T.burst+0.1)}
   if(mv){
     if(ty==='bal'||ty==='god')T.s=Math.min(1.05,T.s+0.05);
     if(mv.startsWith('weave')){T.chain={left:parseInt(mv.slice(5))-1,O,dir:Math.random()<.5?1:-1};T.sp={kind:'veer',t:0,O,dir:T.chain.dir}}
@@ -699,8 +700,8 @@ function stepPhysics(A,B,h){
     if(T.dash<=0){const fr=Math.exp(-T.def.fric*(T.shell>0?2.2:1)*h);T.vx*=fr;T.vz*=fr}
     const sp=Math.hypot(T.vx,T.vz),cap=T.sp&&T.sp.kind==='path'?46:T.dash>0?24:T.onTrack>0?17:MAXV;if(sp>cap){T.vx*=cap/sp;T.vz*=cap/sp}
     T.x+=T.vx*h;T.z+=T.vz*h;
-    let decay=0.014*(1.45-T.def.sta*0.07)*(1.12-T.def.wt*0.025)+0.006*T.s+sm*0.006
-    decay*=DECM[T.def.type]||1;if(T.def.type==='sta'&&T.s<0.5)decay*=0.95;
+    let decay=0.014*(1.1-T.def.def*0.012)*(1.12-T.def.wt*0.025)*(1+0.05*(T.def.atk-5))+0.006*T.s+sm*0.006
+    decay*=DECM[T.def.type]||1;
     if(T.moon>0)decay*=0.4;
     T.s-=decay*h;T.charge=Math.min(1,T.charge+0.0175*h*chgMul(T)*passX);
     const bc=bestCircle(T.x,T.z),bdx=T.x-bc[0],bdz=T.z-bc[1],bdd=Math.hypot(bdx,bdz)||1e-6,LIM=bc[2]-0.6;
@@ -733,8 +734,8 @@ function collide(A,B,h){
   if(vnA>0){A.vx-=vnA*nx*0.85;A.vz-=vnA*nz*0.85}
   if(vnB<0){B.vx-=vnB*nx*0.85;B.vz-=vnB*nz*0.85}
   const advA=BEATS[A.def.type]===B.def.type?1.6:1,advB=BEATS[B.def.type]===A.def.type?1.6:1;
-  const defA=(0.6+A.def.def*0.12)*(A.shell>0?1.5:1)*bA.def*(B.def.type==='sta'&&A.def.type==='def'?0.9:1),defB=(0.6+B.def.def*0.12)*(B.shell>0?1.5:1)*bB.def*(A.def.type==='sta'&&B.def.type==='def'?0.9:1);
-  const atkA=(0.3+A.def.atk*0.12)*(A.def.type==='atk'?1.55:A.def.type==='bal'?1.4:1)*bA.atk,atkB=(0.3+B.def.atk*0.12)*(B.def.type==='atk'?1.55:B.def.type==='bal'?1.4:1)*bB.atk;
+  const defA=(0.6+A.def.def*0.12)*(A.shell>0?1.5:1)*bA.def,defB=(0.6+B.def.def*0.12)*(B.shell>0?1.5:1)*bB.def;
+  const atkA=(1+0.04*(A.def.wt-5))*(0.3+A.def.atk*0.12)*(A.def.type==='atk'?1.55:A.def.type==='bal'?1.4:1)*bA.atk,atkB=(1+0.04*(B.def.wt-5))*(0.3+B.def.atk*0.12)*(B.def.type==='atk'?1.55:B.def.type==='bal'?1.4:1)*bB.atk;
   const gA=spGuard(A),gB=spGuard(B),pA=impact*atkB*advB/(mA*defA)*gA,pB=impact*atkA*advA/(mB*defB)*gB;
   const tx=-nz,tz=nx;
   A.vx+=-nx*pA+tx*pA*0.3;A.vz+=-nz*pA+tz*pA*0.3;
@@ -742,8 +743,8 @@ function collide(A,B,h){
   A.dash=0;B.dash=0;
   A.s-=impact*0.005*atkB*advB/(defA*Math.sqrt(A.m))*gA*(SPD[B.def.type]||1)*(B.def.type==='atk'&&spB?0.5:1);B.s-=impact*0.005*atkA*advA/(defB*Math.sqrt(B.m))*gB*(SPD[A.def.type]||1)*(A.def.type==='atk'&&spA?0.5:1);
   if(impact>9){
-    A.burst-=(impact-9)*0.012*atkB*advB/defA*(1.4-Math.min(1,A.s)*0.6)*(A.shell>0?0.3:1)*bB.br*bA.brIn*gA*(BRK[A.def.type]||1)*DURM*((A.sp||A.chain)?0.5:1)*(BX[B.def.type]||1)*(stB?BXS:1);
-    B.burst-=(impact-9)*0.012*atkA*advA/defB*(1.4-Math.min(1,B.s)*0.6)*(B.shell>0?0.3:1)*bA.br*bB.brIn*gB*(BRK[B.def.type]||1)*DURM*((B.sp||B.chain)?0.5:1)*(BX[A.def.type]||1)*(stA?BXS:1);
+    A.burst-=(impact-9)*0.012*atkB*advB/defA*(1.4-Math.min(1,A.s)*0.6)*(A.shell>0?0.3:1)*bB.br*bA.brIn*gA*(BRK[A.def.type]||1)*DURM*((A.sp||A.chain)?0.5:1)*(BX[B.def.type]||1)*(stB?BXS:1)*durMod(A.def)*(B.def.type==='sta'&&(A.def.type==='atk'||A.def.type==='def')?1/0.7:1);
+    B.burst-=(impact-9)*0.012*atkA*advA/defB*(1.4-Math.min(1,B.s)*0.6)*(B.shell>0?0.3:1)*bA.br*bB.brIn*gB*(BRK[B.def.type]||1)*DURM*((B.sp||B.chain)?0.5:1)*(BX[A.def.type]||1)*(stA?BXS:1)*durMod(B.def)*(A.def.type==='sta'&&(B.def.type==='atk'||B.def.type==='def')?1/0.7:1);
   }
   if(bA.k==='thunder')B.s-=0.04*(A.def.type==='atk'?0.5:1);if(bB.k==='thunder')A.s-=0.04*(B.def.type==='atk'?0.5:1);if(bA.k==='ice')B.s-=impact*0.003;if(bB.k==='ice')A.s-=impact*0.003;
   A.charge=Math.min(1,A.charge+impact*0.009*chgMul(A));B.charge=Math.min(1,B.charge+impact*0.009*chgMul(B));
@@ -758,7 +759,7 @@ function aiControl(E,P,t,skill){
   const chase=()=>{if(ps){sx=dx/d;sz=dz/d}},home=()=>{sx=-E.x/cd*Math.min(1,cd/3);sz=-E.z/cd*Math.min(1,cd/3)};
   if(ty==='atk')chase();
   else if(ty==='def'){home();if(ps&&d<5){sx=sx*0.5+dx/d*0.5;sz=sz*0.5+dz/d*0.5}}
-  else if(ty==='sta'){home();if(ps&&d<4){sx+=-dz/d*0.8;sz+=dx/d*0.8}}
+  else if(ty==='sta'){home();if(ps&&d<7){sx=sx*0.4+dx/d*0.9-dz/d*0.3;sz=sz*0.4+dz/d*0.9+dx/d*0.3}}
   else{if(Math.floor(t/3)%2===0)chase();else home()}
   {let best=null,bd=6;for(const it of items)if(it.alive){const q=Math.hypot(it.x-E.x,it.z-E.z);if(q<bd){bd=q;best=it}}if(best){const q=bd||1;sx=sx*0.3+(best.x-E.x)/q;sz=sz*0.3+(best.z-E.z)/q}}
   sx+=Math.sin(t*1.7+E.x)*0.25;sz+=Math.cos(t*1.3+E.z)*0.25;
