@@ -409,7 +409,7 @@ button,.tops,.arenas,#app{touch-action:manipulation}
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.10.2</div>
+  <div class="ver">v1.10.3</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -509,7 +509,7 @@ const TOPS=[
  T_('b_genbu','玄武','leg','beast','def','玄',0x1a2a1a,0x9cff8a,[3,10,5,9],6,'bump','hex','ball','玄武・甲盾','fx:shell','北方玄武的龜甲'),
  // ===== 青銅：原色 =====
  T_('p_red','紅原色','brz','primary','atk','紅',0xe53935,0xffd23d,[7,4,4,5],3,'claw','stripe','flat','紅色衝刺','dash','直直衝過去'),
- T_('p_blue','藍原色','brz','primary','def','藍',0x2f6bff,0xffffff,[3,8,6,7],6,'bump','hex','ball','藍色補給','fx:holy','必殺：補回轉速'),
+ T_('p_blue','藍原色','brz','primary','def','藍',0x2f6bff,0xffffff,[3,6,5,7],6,'bump','hex','ball','藍色補給','fx:holy','必殺：補回轉速'),
  T_('p_yellow','黃原色','brz','primary','bal','黃',0xffd23d,0x1d1d26,[6,5,5,5],4,'star','bolt','semi','黃色閃電','bolt3','三段閃電走位'),
  T_('p_green','綠原色','brz','primary','sta','綠',0x3fb950,0xffffff,[3,4,8,5],4,'petal','leaf','sharp','綠色回轉','fx:moon','轉得很久'),
  T_('p_white','白原色','brz','primary','bal','白',0xf4f4f4,0x2f6bff,[5,6,5,5],5,'gear','gem','semi','白色三角','tri','三角形走位'),
@@ -571,7 +571,7 @@ let emit=()=>{};
 function bowlH(r){return 0.03*r*r}
 const SPD={atk:1.75,bal:1.25,sta:1.05,def:0.85};
 const MAXC=6,DURM=1/3,DECM={atk:1.2,bal:1,sta:1/1.2,def:1/1.3};
-const CHG={atk:1.25,bal:1,sta:0.85,def:0.5},BRK={def:0.55,bal:0.9,sta:1,atk:1.25};
+const CHG={atk:1.25,bal:1,sta:0.85,def:0.8},BRK={def:0.55,bal:0.9,sta:1,atk:1.25};
 let npcChgX=1,duelX=1,passX=1;
 const chgMul=T=>(CHG[T.def.type]||1)*(T.side==='E'?npcChgX:1)*duelX,spGuard=T=>T.def.type==='atk'&&(T.sp||T.chain)?0.35:T.def.type==='def'?0.8:1;
 function newTop(def,side){return {def,side,sp:null,storm:0,buff:null,buffT:0,boostCD:0,onTrack:0,x:0,z:0,vx:0,vz:0,s:0,burst:1,charge:0,state:'idle',m:0.6+def.wt*0.15,rad:(def.wt>=8?1.18:1.12)*TOPSCALE,dash:0,shell:0,moon:0,sx:0,sz:0,y:0,vy:0}}
