@@ -245,7 +245,7 @@ canvas.ico{width:44px;height:44px;flex:none}
 
   <section id="menu" class="sheet gut">
     <div class="inner">
-      <div class="eyebrow" style="display:flex;align-items:center">v1.3 試玩<span id="coinLbl" style="margin-left:12px;color:var(--ink)">商店幣 0</span><button class="mini" id="musicBtn" type="button" aria-pressed="true">音樂：開</button></div>
+      <div class="eyebrow" style="display:flex;align-items:center">v1.3.1 試玩<span id="coinLbl" style="margin-left:12px;color:var(--ink)">商店幣 0</span><button class="mini" id="musicBtn" type="button" aria-pressed="true">音樂：開</button></div>
       <h1>旋風小鬥士</h1>
       <p class="lead">捏好你的鬥士、選陀螺和戰鬥盤，往下拉發射。對戰時手指在畫面上拖可以推著陀螺跑，必殺鈕亮了就按。戰鬥盤會浮出特殊軌道，衝上去會高速撞向中心，還會出現道具；四周的牆會慢慢降下。先拿 4 分贏。</p>
       <div class="fighter"><canvas id="pFaceMenu" width="144" height="144"></canvas><div><b id="pNameLbl">小鬥士</b><span>你的鬥士</span></div><button class="btn small" id="editBtn" type="button">捏臉</button></div>
@@ -349,7 +349,7 @@ canvas.ico{width:44px;height:44px;flex:none}
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.3</div>
+  <div class="ver">v1.3.1</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -630,7 +630,7 @@ function stepPhysics(A,B,h){
     T.x+=T.vx*h;T.z+=T.vz*h;
     let decay=0.014*(1.45-T.def.sta*0.07)*(1.12-T.def.wt*0.025)+0.006*T.s+sm*0.006;
     if(T.moon>0)decay*=0.4;
-    T.s-=decay*h;T.charge=Math.min(1,T.charge+0.0175*h);
+    T.s-=decay*h;T.charge=Math.min(1,T.charge+0.0175*h*(T.def.type==='def'?0.5:1));
     const bc=bestCircle(T.x,T.z),bdx=T.x-bc[0],bdz=T.z-bc[1],bdd=Math.hypot(bdx,bdz)||1e-6,LIM=bc[2]-0.6;
     if(bdd>LIM){
       const nx=bdx/bdd,nz=bdz/bdd,vout=T.vx*nx+T.vz*nz,th=Math.atan2(T.x,T.z);
@@ -673,7 +673,7 @@ function collide(A,B,h){
     B.burst-=(impact-9)*0.012*atkA*advA/defB*(1.4-Math.min(1,B.s)*0.6)*(B.shell>0?0.3:1)*bA.br*bB.brIn;
   }
   if(bA.k==='thunder')B.s-=0.04;if(bB.k==='thunder')A.s-=0.04;if(bA.k==='ice')B.s-=impact*0.003;if(bB.k==='ice')A.s-=impact*0.003;
-  A.charge=Math.min(1,A.charge+impact*0.009);B.charge=Math.min(1,B.charge+impact*0.009);
+  A.charge=Math.min(1,A.charge+impact*0.009*(A.def.type==='def'?0.5:1));B.charge=Math.min(1,B.charge+impact*0.009*(B.def.type==='def'?0.5:1));
   emit('hit',{A,B,bA:bA.k,bB:bB.k,impact,x:(A.x+B.x)/2,z:(A.z+B.z)/2});
   if(A.burst<=0){A.burst=0;A.state='burst';emit('burst',{T:A})}
   if(B.burst<=0){B.burst=0;B.state='burst';emit('burst',{T:B})}
@@ -1492,7 +1492,7 @@ function doLaunch(p,a,perfect){
 function startBattle(){
   const L=pendingLaunch||{p:0.6,a:0,perfect:false};pendingLaunch=null;
   launchTop(P,L.p,L.a*0.8,L.perfect);if(L.E)launchTop(E,L.E.p,L.E.a*0.8,L.E.perfect);else{const ep=0.62+Math.random()*0.33;launchTop(E,ep,(Math.random()-.5)*0.8,Math.random()<0.25)}
-  P.lift=E.lift=3.2;spShow(true);$('hud').hidden=false;phase='battle';battleT=0;ended=null;humStart();
+  P.lift=E.lift=3.2;spShow(true);$('hud').hidden=false;phase='battle';battleT=0;ended=null;endWait=null;humStart();
   if(L.perfect)popText('完美發射！','轉速加成');else popText('旋轉！');
 }
 
@@ -1511,7 +1511,7 @@ appEl.addEventListener('pointermove',e=>{for(const k of ['P','E']){const sp=stee
   let dx=e.clientX-sp.x,dy=e.clientY-sp.y;const l=Math.hypot(dx,dy),m=Math.min(l,46);if(l>0){dx=dx/l*m;dy=dy/l*m}stickEls[k].firstElementChild.style.transform=`translate(${dx}px,${dy}px)`}});
 const endSteer=e=>{for(const k of ['P','E']){const sp=steers[k];if(sp&&e.pointerId===sp.id){steers[k]=null;stickEls[k].hidden=true}}};
 appEl.addEventListener('pointerup',endSteer);appEl.addEventListener('pointercancel',endSteer);
-function tapCharge(k){const T=k==='P'?P:E;if(phase!=='battle'||!T||T.state!=='spin')return;T.charge=Math.min(1,T.charge+1/35);const b=k==='P'?spBtn:sp2Btn;b.classList.add('tap');setTimeout(()=>b.classList.remove('tap'),70)}
+function tapCharge(k){const T=k==='P'?P:E;if(phase!=='battle'||!T||T.state!=='spin')return;T.charge=Math.min(1,T.charge+(T.def.type==='def'?0.5:1)/35);const b=k==='P'?spBtn:sp2Btn;b.classList.add('tap');setTimeout(()=>b.classList.remove('tap'),70)}
 addEventListener('keydown',e=>{const k=e.key.toLowerCase();keys[k]=true;if(phase!=='battle')return;if(k===' '){e.preventDefault();tapCharge('P')}if(duel2&&k==='enter'){e.preventDefault();tapCharge('E')}});
 addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false});
 const sp2Btn=$('sp2');
@@ -1530,23 +1530,26 @@ function playerSteer(){steerFor('P');if(duel2)steerFor('E')}
 
 /* ---------- round flow ---------- */
 const FIN={burst:['爆裂勝！',3,'把對手撞到零件散開'],out:['出場勝！',2,'把對手撞出場外'],down:['轉停勝！',1,'對手先停下來']};
+let endWait=null;
 function checkEnd(){
   if(ended)return;
   const pd=P.state!=='spin',ed=E.state!=='spin';
   if(!pd&&!ed){if(battleT>60){const w=P.s>=E.s?E:P;w.state='down'}else return}
-  if(P.state!=='spin'&&E.state!=='spin'&&P.state===E.state&&P.state==='down'){ended={draw:true};}
+  if(pd!==ed){if(endWait===null)endWait=battleT;if(battleT-endWait<0.8)return}
+  if(P.state!=='spin'&&E.state!=='spin'){ended={draw:true};}
   else{const loser=P.state!=='spin'?P:E;const f=FIN[loser.state];ended={winner:loser===P?'E':'P',kind:loser.state,pts:f[1]}}
   phase='ending';endT=0;humSet(0,false);
 }
 function showRoundEnd(){
   let big,note;
-  if(ended.draw){big='平手';note='兩顆同時停下，這回合不算分'}
+  if(ended.draw){big='同歸於盡！平手';note='兩顆一起倒下，各得 1 分';score.P+=1;score.E+=1}
   else{score[ended.winner]+=ended.pts;const f=FIN[ended.kind];big=f[0]+' +'+f[1];
     const nm=sd=>curMatch&&curMatch.duel?(sd==='P'?pName:eName)+'的':(sd==='P'?'你的':'對手'),w=nm(ended.winner)+(ended.winner==='P'?P.def.name:E.def.name),l=nm(ended.winner==='P'?'E':'P')+(ended.winner==='P'?E.def.name:P.def.name);
     note=ended.kind==='down'?`${l}先停下來，${w}得 1 分`:ended.kind==='out'?`${w}把${l}撞出場外，得 2 分`:`${w}把${l}撞到零件散開，得 3 分`;
     if(ended.winner==='E'&&!(curMatch&&curMatch.duel))big=big.replace('勝','');}
   hudScore();
-  if(score.P>=matchTarget||score.E>=matchTarget){showMatchEnd();return}
+  if((score.P>=matchTarget||score.E>=matchTarget)&&score.P!==score.E){showMatchEnd();return}
+  if(score.P>=matchTarget&&score.P===score.E)note+='　同分！延長賽，下一回合決勝負';
   $('reBig').textContent=big;$('reNote').textContent=note;$('reY').textContent=score.P;$('reR').textContent=score.E;
   $('roundEnd').hidden=false;spShow(false);phase='round';if(!ended.draw)(ended.winner==='P'?sfx.ding:sfx.wall.bind(null,6))();
 }
@@ -2341,7 +2344,7 @@ function frame(now){
   const dt=rdt*scale;
   if(phase==='launch')zoneTick(rdt);
   if(phase==='battle'||phase==='ending'||phase==='menu'||phase==='watch'){
-    if(phase==='battle'){battleT+=dt;playerSteer();for(const k of ['P','E']){const T=k==='P'?P:E;if(spHold[k]&&T.state==='spin')T.charge=Math.min(1,T.charge+0.1*dt)}}
+    if(phase==='battle'){battleT+=dt;playerSteer();for(const k of ['P','E']){const T=k==='P'?P:E;if(spHold[k]&&T.state==='spin')T.charge=Math.min(1,T.charge+0.1*dt*(T.def.type==='def'?0.5:1))}}
     if(phase==='watch'){battleT+=dt;aiControl(P,E,battleT,0.7)}
     if(phase==='menu'){demoT+=dt;aiControl(P,E,demoT,0.55);}
     if(!(duel2&&phase==='battle'))aiControl(E,P,battleT+demoT,phase==='menu'?0.55:aiSkill);
