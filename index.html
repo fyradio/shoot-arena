@@ -271,7 +271,7 @@ button,.tops,.arenas,#app{touch-action:manipulation}
       <div class="cycle"><b>攻擊</b> 剋 耐久　<b>耐久</b> 剋 防禦　<b>防禦</b> 剋 攻擊　<b>平衡</b> 不剋也不被剋<br>
         轉停 <b>+1</b>　撞出場 <b>+2</b>（牆壁會慢慢降下，從降下的地方最容易）　撞爆 <b>+3</b></div>
       <button class="btn" id="tourBtn" type="button">積分淘汰　32強五關</button>
-      <button class="btn" id="b3Btn" type="button">三戰兩勝　帶三顆陀螺對決</button>
+      <button class="btn" id="b3Btn" type="button">三戰兩勝　32強淘汰賽</button>
       <button class="btn ghost" id="shopBtn" type="button">工坊　商店・組裝・強化</button>
       <button class="btn ghost" id="go" type="button">自由練習</button>
       <button class="btn ghost" id="menuBack" type="button">回標題</button>
@@ -306,7 +306,7 @@ button,.tops,.arenas,#app{touch-action:manipulation}
       <div id="b3Slots" style="display:grid;gap:8px"></div>
       <div class="secHead"><b>我的陀螺</b><span>📌 可以釘選</span></div>
       <div id="b3Grid"></div>
-      <div class="cycle">三場各派一顆陀螺，依順序出場；先贏兩場就獲勝，不管是轉停、出場還是爆裂都算贏。<br>打完三場還是同分就延長賽：每次自己挑一顆陀螺再比一場，直到第 10 場；全部平手就算失敗。</div>
+      <div class="cycle">三場各派一顆陀螺，依順序出場；32 位選手淘汰賽，共 5 關，每一關都是三戰兩勝：三場各派一顆陀螺，先贏兩場晉級，轉停、出場、爆裂都算贏。<br>三場結束同分就延長賽：每次自己挑一顆陀螺再比一場，直到第 10 場；全部平手就算淘汰。</div>
       <button class="btn" id="b3Go" type="button">開戰！</button>
       <button class="btn ghost" id="b3Back" type="button">返回</button>
     </div>
@@ -381,7 +381,7 @@ button,.tops,.arenas,#app{touch-action:manipulation}
         <div style="display:grid;gap:6px;margin-top:10px"><label for="p2NameIn" style="font-size:13px;font-weight:700">P2 名字</label><input id="p2NameIn" maxlength="8" autocomplete="off" style="all:unset;box-sizing:border-box;padding:8px 10px;border:2px solid var(--line);border-radius:8px;background:var(--deck);font-size:15px">
         <div class="secHead"><b>P2 的陀螺</b><span>📌 可以釘選</span></div><div id="p2Grid"></div></div>
       </div>
-      <div class="cycle">32 位參賽者抽籤對戰，打贏 5 關就是冠軍。<br>雙人：兩人沒對到時各打各的；對到時輪流發射，用畫面上下兩半各自操控。<br>必殺技氣滿自動發動；按「集氣」按鈕可以更快集滿。打完按名次拿商店幣。</div>
+      <div class="cycle">32 位參賽者抽籤對戰，打贏 5 關就是冠軍。<br>雙人：兩人沒對到時各打各的；對到時輪流發射，用畫面上下兩半各自操控。<br>雙人對決時，必殺氣不再自己慢慢長（只剩 20%），要靠<b>互相撞擊</b>和<b>狂按集氣鈕</b>（集氣快 1.5 倍），決勝負更快。<br>必殺技氣滿自動發動；按「集氣」按鈕可以更快集滿。打完按名次拿商店幣。</div>
       <button class="btn" id="tDraw" type="button">抽籤！</button>
       <button class="btn ghost" id="tBack" type="button">返回</button>
     </div>
@@ -408,7 +408,7 @@ button,.tops,.arenas,#app{touch-action:manipulation}
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.7.1</div>
+  <div class="ver">v1.8</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -566,8 +566,8 @@ function bowlH(r){return 0.03*r*r}
 const SPD={atk:1.75,bal:1.25,sta:1.05,def:0.85};
 const MAXC=6,DURM=1/3,DECM={atk:1.2,bal:1,sta:1/1.2,def:1/1.3};
 const CHG={atk:1.25,bal:1,sta:0.85,def:0.5},BRK={def:0.55,bal:0.9,sta:1,atk:1.25};
-let npcChgX=1;
-const chgMul=T=>(CHG[T.def.type]||1)*(T.side==='E'?npcChgX:1),spGuard=T=>T.def.type==='atk'&&(T.sp||T.chain)?0.35:T.def.type==='def'?0.8:1;
+let npcChgX=1,duelX=1,passX=1;
+const chgMul=T=>(CHG[T.def.type]||1)*(T.side==='E'?npcChgX:1)*duelX,spGuard=T=>T.def.type==='atk'&&(T.sp||T.chain)?0.35:T.def.type==='def'?0.8:1;
 function newTop(def,side){return {def,side,sp:null,storm:0,buff:null,buffT:0,boostCD:0,onTrack:0,x:0,z:0,vx:0,vz:0,s:0,burst:1,charge:0,state:'idle',m:0.6+def.wt*0.15,rad:(def.wt>=8?1.18:1.12)*TOPSCALE,dash:0,shell:0,moon:0,sx:0,sz:0,y:0,vy:0}}
 function launchTop(T,pull,aim,perfect){
   const dir=T.side==='P'?-1:1;
@@ -695,7 +695,7 @@ function stepPhysics(A,B,h){
     let decay=0.014*(1.45-T.def.sta*0.07)*(1.12-T.def.wt*0.025)+0.006*T.s+sm*0.006
     decay*=DECM[T.def.type]||1;
     if(T.moon>0)decay*=0.4;
-    T.s-=decay*h;T.charge=Math.min(1,T.charge+0.0175*h*chgMul(T));
+    T.s-=decay*h;T.charge=Math.min(1,T.charge+0.0175*h*chgMul(T)*passX);
     const bc=bestCircle(T.x,T.z),bdx=T.x-bc[0],bdz=T.z-bc[1],bdd=Math.hypot(bdx,bdz)||1e-6,LIM=bc[2]-0.6;
     if(bdd>LIM){
       const nx=bdx/bdd,nz=bdz/bdd,vout=T.vx*nx+T.vz*nz,th=Math.atan2(T.x,T.z);
@@ -1530,7 +1530,7 @@ let menuArenaI=-1,mcT=0,mcD=0,mcEl=0,mcF=null;
 function startMatch(){
   markPlayed();
   const others=TOPS.filter((d,i)=>i!==pick&&!d.custom&&d.tier===TOPS[pick].tier);const eDef=others[Math.floor(Math.random()*others.length)];
-  b3=null;curMatch=null;duel2=false;matchTarget=4;aiSkill=0.7;npcChgX=1;
+  b3=null;curMatch=null;duel2=false;matchTarget=4;aiSkill=0.7;npcChgX=duelX=passX=1;
   score={P:0,E:0};stats={hits:0,max:0,perf:0,sp:0};eAv=randomAvatar();eName=RIVAL_NAMES[Math.floor(Math.random()*RIVAL_NAMES.length)];
   if(arenaRandMode)applyArena(Math.floor(Math.random()*ARENAS.length));setupTops(withBoost(TOPS[pick]),eDef);$('menu').hidden=true;$('practice').hidden=true;$('matchEnd').hidden=true;$('hud').hidden=false;hudNames();toLaunch();
 }
@@ -2380,7 +2380,7 @@ function tourBoard(first){
 }
 function tourPlay(m){
   let fp=m.a,fe=m.b;const duel=!!(fp.h&&fe.h);if(!duel&&!fp.h){fp=m.b;fe=m.a}
-  curMatch={m,fp,fe,duel,flip:fp!==m.a};duel2=duel;npcChgX=duel?1:Math.min(2,[1,1.35,1.7][CUP_I[tour.cup]]+0.075*tour.round);
+  curMatch={m,fp,fe,duel,flip:fp!==m.a};duel2=duel;npcChgX=duel?1:Math.min(2,[1,1.35,1.7][CUP_I[tour.cup]]+0.075*tour.round);duelX=duel?1.5:1;passX=duel?0.2:1;
   pAv=fp.av;pName=fp.name;eAv=fe.av;eName=fe.name;matchTarget=TARGET[tour.round];aiSkill=0.5+0.08*CUP_I[tour.cup]+0.06*tour.round;
   score={P:0,E:0};stats={hits:0,max:0,perf:0,sp:0};applyArena(Math.floor(Math.random()*ARENAS.length));
   setupTops(fp.def,fe.def);$('hud').hidden=false;hudNames();toLaunch();
@@ -2427,7 +2427,7 @@ function tourFinish(){
 }
 function tourExit(){
   if(tour){pAv=tour.save.av;pName=tour.save.name;const a=tour.save.arena;if(Number.isInteger(a))applyArena(a)}
-  tour=null;curMatch=null;duel2=false;aiSkill=0.7;matchTarget=4;npcChgX=1;
+  tour=null;curMatch=null;duel2=false;aiSkill=0.7;matchTarget=4;npcChgX=duelX=passX=1;
   for(const id of ['tourBoard','tourEnd','tourSetup','matchEnd','roundEnd'])$(id).hidden=true;$('hud').hidden=true;$('watchBar').hidden=true;spShow(false);
   $('menu').hidden=false;phase='menu';ov.mode=null;menuFighter();menuEnter()}
 $('tourEnd').onclick=()=>tourExit();
@@ -2441,7 +2441,7 @@ function b3UI(){
   [...$('b3Cup').children].forEach(b=>{const c=b.dataset.cup,lock=lv<CUP_LV[c];b.setAttribute('aria-pressed',c===b3Cup);b.textContent=(lock?'🔒':'')+{brz:'青銅盃',leg:'傳說盃',div:'神聖盃'}[c]});
   b3Slots=b3Slots.map(id=>id&&av.some(t=>t.id===id)?id:null);
   for(let i=0;i<3;i++)if(!b3Slots[i]){const c=av.find(t=>!b3Slots.includes(t.id));if(c)b3Slots[i]=c.id}
-  $('b3Note').textContent=lv<CUP_LV[b3Cup]?`玩家等級 ${CUP_LV[b3Cup]} 才能參加（現在 Lv ${lv}）`:`對手帶三顆${TIER_NAME[b3Cup]}陀螺；獎勵 ×${CUP_I[b3Cup]+1}`;
+  $('b3Note').textContent=lv<CUP_LV[b3Cup]?`玩家等級 ${CUP_LV[b3Cup]} 才能參加（現在 Lv ${lv}）`:`32 強淘汰，對手都帶三顆${TIER_NAME[b3Cup]}陀螺；獎勵 ×${CUP_I[b3Cup]+1}`;
   $('b3Name').textContent=pName;drawPortrait($('b3Face'),pAv);
   const box=$('b3Slots');box.innerHTML='';
   b3Slots.forEach((id,i)=>{const d=id&&b3Def(id),r=document.createElement('div');r.className='shr';r.style.cssText='cursor:pointer;border-width:2px;'+(i===b3Sel?'border-color:var(--gold);box-shadow:0 0 10px rgba(255,200,61,.35)':'');
@@ -2455,15 +2455,34 @@ $('b3Cup').onclick=e=>{const b=e.target.closest('[data-cup]');if(b){b3Cup=b.data
 $('b3Edit').onclick=()=>{audioInit();openCreator()};
 $('b3Back').onclick=()=>{$('b3Setup').hidden=true;$('menu').hidden=false;menuEnter()};
 $('b3Go').onclick=()=>{audioInit();if(lv<CUP_LV[b3Cup]||!b3Slots.every(Boolean)||new Set(b3Slots).size<3){$('b3Note').style.color='var(--rival)';return}$('b3Note').style.color='';b3Start()};
+function b3Trio(pool){return shuf(pool).slice(0,3)}
+function b3Series(){const o=b3.opp;b3.res=[];b3.w={P:0,E:0};b3.ot=false;b3.pick=null;b3.foe=o.trio;b3.fname=o.name;b3.fav=o.av}
 function b3Start(){
   markPlayed();
-  const pool=shuf(TOPS.filter(d=>!d.custom&&d.tier===b3Cup));
-  b3={cup:b3Cup,mine:b3Slots.map(b3Def),foe:pool.slice(0,3),pool,fname:RIVAL_NAMES[Math.floor(Math.random()*RIVAL_NAMES.length)],fav:randomAvatar(),w:{P:0,E:0},res:[],ot:false,pick:null,done:false};
-  $('b3Setup').hidden=true;b3Round();
+  const pool=TOPS.filter(d=>!d.custom&&d.tier===b3Cup),names=shuf(TOUR_NAMES);
+  const cpus=[];for(let i=0;i<31;i++)cpus.push({trio:b3Trio(pool),name:names[i%names.length],av:randomAvatar(),h:0});
+  const me={trio:null,name:pName,av:pAv,h:1};
+  const all=shuf([me].concat(cpus));
+  b3={cup:b3Cup,mine:b3Slots.map(b3Def),pool,all,me,rd:0,matches:pairUp(all),res:[],w:{P:0,E:0},ot:false,pick:null};
+  const mm=b3.matches.find(m=>m.a===me||m.b===me);b3.opp=mm.a===me?mm.b:mm.a;
+  b3Series();$('b3Setup').hidden=true;b3Intro()
+}
+function b3SimSeries(a,b){let wa=0,wb=0,n=0;while(n<10){const x=n<3?a.trio[n]:a.trio[Math.floor(Math.random()*3)],y=n<3?b.trio[n]:b.trio[Math.floor(Math.random()*3)];const r=simBout(x,y);r==='A'?wa++:wb++;n++;if(wa>=2||wb>=2)break}return wa>wb?a:b}
+function b3Intro(){
+  $('b3Board').hidden=false;$('b3PickBox').hidden=true;
+  const n=b3.rd;$('b3Eyebrow').textContent=`三戰兩勝淘汰賽・${TIER_NAME[b3.cup]}盃　${R_NAMES[n]}`;
+  $('b3Title').textContent=`第 ${n+1} 關　${R_NAMES[n]}`;
+  $('b3Info').innerHTML=`對手：<b>${b3.opp.name}</b><br>你的出場順序：${b3.mine.map((d,i)=>`${i+1}. ${d.name}`).join('　')}<br>${b3.opp.name} 的陀螺：${b3.opp.trio.map(d=>d.name).join('、')}`;
+  const nx=$('b3Next');nx.textContent='開打！';nx.onclick=()=>{audioInit();b3Round()};
+}
+function b3Advance(){
+  const wins=[];for(const m of b3.matches){if(m.a===b3.me||m.b===b3.me){wins.push(b3.me);continue}wins.push(b3SimSeries(m.a,m.b))}
+  b3.rd++;b3.all=wins;b3.matches=pairUp(wins);
+  const mm=b3.matches.find(m=>m.a===b3.me||m.b===b3.me);b3.opp=mm.a===b3.me?mm.b:mm.a;b3Series();b3Intro();
 }
 function b3Round(){
-  const n=b3.res.length,ci=CUP_I[b3.cup],pd=n<3?b3.mine[n]:b3.pick,fd=n<3?b3.foe[n]:b3.pool[Math.floor(Math.random()*b3.pool.length)];
-  curMatch=null;duel2=false;matchTarget=99;aiSkill=Math.min(0.9,0.5+0.08*ci+0.05*Math.min(n,5));npcChgX=Math.min(2,[1,1.35,1.7][ci]+0.075*Math.min(n,4));
+  const n=b3.res.length,ci=CUP_I[b3.cup],pd=n<3?b3.mine[n]:b3.pick,fd=n<3?b3.foe[n]:b3.foe[Math.floor(Math.random()*3)];
+  curMatch=null;duel2=false;matchTarget=99;aiSkill=Math.min(0.92,0.5+0.08*ci+0.05*b3.rd+0.02*n);npcChgX=Math.min(2,[1,1.35,1.7][ci]+0.075*b3.rd);duelX=passX=1;
   score={P:b3.w.P,E:b3.w.E};stats={hits:0,max:0,perf:0,sp:0};eAv=b3.fav;eName=b3.fname;b3.cur=[pd,fd];
   applyArena(Math.floor(Math.random()*ARENAS.length));
   setupTops(withBoost(pd),fd);$('b3Board').hidden=true;$('matchEnd').hidden=true;$('hud').hidden=false;hudNames();toLaunch();
@@ -2481,14 +2500,20 @@ function b3Result(){
 function b3Show(end){
   const n=b3.res.length;$('b3Board').hidden=false;$('b3PickBox').hidden=true;
   let lines=b3.res.map((r,i)=>{const t=r.r==='draw'?'平手（同歸於盡）':r.r==='P'?`<b style="color:var(--gold)">勝</b>（${b3Kind[r.k]}）`:`敗（${b3Kind[r.k]}）`;return `${i<3?'第 '+(i+1)+' 場':'延長 '+(i-2)}：${r.pn} vs ${r.fn}　${t}`}).join('<br>');
-  $('b3Eyebrow').textContent=`三戰兩勝・${TIER_NAME[b3.cup]}盃　對手 ${b3.fname}`;
+  $('b3Eyebrow').textContent=`三戰兩勝・${R_NAMES[b3.rd]}　對手 ${b3.fname}`;
   const nx=$('b3Next');
   if(end){
-    const win=end==='win',ci=CUP_I[b3.cup],c=win?[60,140,280][ci]:15*(ci+1),x=Math.round((win?60:15)*(1+0.25*ci));
-    addCoins(c);xp+=x;let up=0;while(xp>=xpNeed(lv)){xp-=xpNeed(lv);lv++;up++}savePrefs();menuStatus();
-    $('b3Title').textContent=win?'你贏了！':(n>=10?'延長賽到底都平手…失敗':'敗北');
-    lines+=`<br><br>勝場 ${b3.w.P} : ${b3.w.E}　+${c} 商店幣　+${x} 經驗${up?`<br>⬆ 升級！玩家等級 Lv ${lv}`:''}`;
-    nx.textContent='回主選單';nx.onclick=()=>b3Exit();if(win){sfx.win()}
+    const win=end==='win';
+    if(win&&b3.rd<4){
+      $('b3Title').textContent='晉級！';lines+=`<br><br>勝場 ${b3.w.P} : ${b3.w.E}　打贏 ${b3.fname}，進入下一關`;
+      nx.textContent='抽下一關對手';nx.onclick=()=>{audioInit();b3Advance()};sfx.ding();
+    }else{
+      const rank=win?'冠軍':RANK_OF[b3.rd],ci=CUP_I[b3.cup],c=(COIN_OF[rank]||0)*(ci+1),x=Math.round((XP_OF[rank]||0)*(1+0.25*ci));
+      addCoins(c);xp+=x;let up=0;while(xp>=xpNeed(lv)){xp-=xpNeed(lv);lv++;up++}savePrefs();menuStatus();
+      $('b3Title').textContent=win?'冠軍！':(n>=10?'延長賽全平手…淘汰':'止步於 '+rank);
+      lines+=`<br><br>最終名次：<b>${rank}</b>　+${c} 商店幣　+${x} 經驗${up?`<br>⬆ 升級！玩家等級 Lv ${lv}`:''}`;
+      nx.textContent='回主選單';nx.onclick=()=>b3Exit();if(win)sfx.win();
+    }
   }else if(n<3){
     const nd=b3.mine[n];$('b3Title').textContent=`第 ${n+1} 場準備`;lines+=`<br><br>下一場：你的「${nd.name}」對 ${b3.fname} 的「${b3.foe[n].name}」`;
     nx.textContent=`第 ${n+1} 場　開打`;nx.onclick=()=>{audioInit();b3Round()};
@@ -2500,7 +2525,7 @@ function b3Show(end){
   }
   $('b3Info').innerHTML=lines;
 }
-function b3Exit(){b3=null;curMatch=null;npcChgX=1;aiSkill=0.7;matchTarget=4;$('b3Board').hidden=true;$('menu').hidden=false;phase='menu';ov.mode=null;menuFighter();menuEnter()}
+function b3Exit(){b3=null;curMatch=null;npcChgX=duelX=passX=1;aiSkill=0.7;matchTarget=4;$('b3Board').hidden=true;$('menu').hidden=false;phase='menu';ov.mode=null;menuFighter();menuEnter()}
 
 
 function frame(now){
