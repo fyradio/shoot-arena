@@ -205,7 +205,7 @@ h1{margin:0;font-weight:900;font-size:clamp(40px,12vw,62px);line-height:1;letter
 
   <section id="menu" class="sheet gut">
     <div class="inner">
-      <div class="eyebrow">v0.8 試玩</div>
+      <div class="eyebrow">v0.9 試玩</div>
       <h1>旋風小鬥士</h1>
       <p class="lead">捏好你的鬥士、選陀螺和戰鬥盤，往下拉發射。對戰時手指在畫面上拖可以推著陀螺跑，必殺鈕亮了就按。戰鬥盤會浮出特殊軌道，衝上去會高速撞向中心，還會出現道具；四周的牆會慢慢降下。先拿 4 分贏。</p>
       <div class="fighter"><canvas id="pFaceMenu" width="144" height="144"></canvas><div><b id="pNameLbl">小鬥士</b><span>你的鬥士</span></div><button class="btn small" id="editBtn" type="button">捏臉</button></div>
@@ -265,7 +265,7 @@ h1{margin:0;font-weight:900;font-size:clamp(40px,12vw,62px);line-height:1;letter
       <div class="row"><button class="btn ghost" id="again" type="button">再來一場</button><button class="btn ghost" id="change" type="button">換陀螺</button></div>
     </div>
   </section>
-  <div class="ver">v0.8</div>
+  <div class="ver">v0.9</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -346,22 +346,33 @@ TOPS.forEach(d=>d.typeName=TYPE_NAME[d.type]);
 const BEATS={atk:'sta',sta:'def',def:'atk'};
 let emit=()=>{};
 function bowlH(r){return 0.03*r*r}
-function newTop(def,side){return {def,side,buff:null,buffT:0,boostCD:0,onTrack:0,x:0,z:0,vx:0,vz:0,s:0,burst:1,charge:0,state:'idle',m:0.6+def.wt*0.15,rad:(def.wt>=8?1.18:1.12)*TOPSCALE,dash:0,shell:0,moon:0,sx:0,sz:0,y:0,vy:0}}
+function newTop(def,side){return {def,side,sp:null,storm:0,buff:null,buffT:0,boostCD:0,onTrack:0,x:0,z:0,vx:0,vz:0,s:0,burst:1,charge:0,state:'idle',m:0.6+def.wt*0.15,rad:(def.wt>=8?1.18:1.12)*TOPSCALE,dash:0,shell:0,moon:0,sx:0,sz:0,y:0,vy:0}}
 function launchTop(T,pull,aim,perfect){
   const dir=T.side==='P'?-1:1;
-  T.state='spin';T.s=Math.min(1.05,0.5+0.42*pull+(perfect?0.2:0));T.burst=1;T.charge=0;T.buff=null;T.buffT=0;T.boostCD=0;T.onTrack=0;
+  T.state='spin';T.s=Math.min(1.05,0.5+0.42*pull+(perfect?0.2:0));T.burst=1;T.charge=0;T.buff=null;T.buffT=0;T.boostCD=0;T.onTrack=0;T.sp=null;T.storm=0;
   const L0=Math.min(R*0.65,rhoAt(dir<0?0:Math.PI)-1.6);T.x=aim*1.5;T.z=-dir*L0;T.vx=aim*5;T.vz=dir*(2+3*pull);T.dash=T.shell=T.moon=0;T.y=0;T.vy=0;T.sx=T.sz=0;
 }
+function startStrike(T){const O=T.sp.O,dx=(O.state==='spin'?O.x:0)-T.x,dz=(O.state==='spin'?O.z:0)-T.z,d=Math.hypot(dx,dz)||1;
+  T.vx=dx/d*26;T.vz=dz/d*26;T.dash=0.7;T.sp={kind:'strike',t:0,O};emit('strike',{T})}
+function stepSpecial(T,h){const S=T.sp;if(!S)return false;S.t+=h;
+  if(T.state!=='spin'){T.sp=null;return false}
+  if(S.kind==='orbit'){const rr=Math.min(0.62*GEO.minRho,6),O=S.O;S.ang+=S.dir*8.5*h;
+    const tx=Math.sin(S.ang)*rr,tz=Math.cos(S.ang)*rr;let vx=(tx-T.x)*10+Math.cos(S.ang)*S.dir*rr*8.5,vz=(tz-T.z)*10-Math.sin(S.ang)*S.dir*rr*8.5;const v=Math.hypot(vx,vz);if(v>24){vx*=24/v;vz*=24/v}
+    T.vx=vx;T.vz=vz;T.dash=0.2;if(S.t>0.85)startStrike(T);return true}
+  if(S.kind==='zig'){const O=S.O,ph=Math.floor(S.t/0.17);if(ph>S.hop){S.hop=ph;if(ph>=4){startStrike(T);return true}
+      const dx=(O.state==='spin'?O.x:0)-T.x,dz=(O.state==='spin'?O.z:0)-T.z,d=Math.hypot(dx,dz)||1,a=(ph%2?1:-1)*1.15,c=Math.cos(a),sn=Math.sin(a);
+      T.vx=(dx/d*c-dz/d*sn)*22;T.vz=(dx/d*sn+dz/d*c)*22;T.dash=0.2;emit('blink',{T})}
+    if(S.hop===0&&S.t<0.01){S.hop=-1}
+    return true}
+  if(S.kind==='strike'){if(S.t>0.7||T.dash<=0)T.sp=null;return false}
+  return false}
 function useSpecial(T,O){
   if(T.charge<1||T.state!=='spin')return false;
   T.charge=0;const ty=T.def.type;
-  if(ty==='atk'||ty==='bal'){
-    let dx=(O.state==='spin'?O.x:0)-T.x,dz=(O.state==='spin'?O.z:0)-T.z,d=Math.hypot(dx,dz)||1;
-    const sp=ty==='atk'?21:16;T.vx=dx/d*sp;T.vz=dz/d*sp;T.dash=0.45;
-    if(ty==='bal')T.s=Math.min(1.05,T.s+0.05);
-  }
-  if(ty==='def')T.shell=4;
-  if(ty==='sta'){T.s=Math.min(1.05,T.s+0.28);T.moon=4}
+  if(ty==='atk')T.sp={kind:'orbit',t:0,ang:Math.atan2(T.x,T.z),dir:Math.random()<.5?1:-1,O};
+  if(ty==='bal'){T.s=Math.min(1.05,T.s+0.05);T.sp={kind:'zig',t:0,hop:0,O}}
+  if(ty==='def'){T.shell=4;const dx=O.x-T.x,dz=O.z-T.z,d=Math.hypot(dx,dz)||1;if(O.state==='spin'&&d<4.8){const f=15*(1-d/6);O.vx+=dx/d*f;O.vz+=dz/d*f;O.s-=0.05;emit('repel',{T,O})}}
+  if(ty==='sta'){T.s=Math.min(1.05,T.s+0.28);T.moon=4;T.storm=4}
   emit('special',{T});return true;
 }
 let track=null;
@@ -391,11 +402,13 @@ function stepPhysics(A,B,h){
     T.dash=Math.max(0,T.dash-h);T.shell=Math.max(0,T.shell-h);T.moon=Math.max(0,T.moon-h);T.buffT=Math.max(0,(T.buffT||0)-h);T.boostCD=Math.max(0,(T.boostCD||0)-h);
     for(const it of items)if(it.alive&&Math.hypot(it.x-T.x,it.z-T.z)<1.15)pickItem(T,it);
     const d=Math.hypot(T.x,T.z)||1e-6;
-    const gg=groundGrad(T.x,T.z);let ax=-15*gg[0],az=-15*gg[1];
+    T.storm=Math.max(0,(T.storm||0)-h);
+    const spOn=stepSpecial(T,h);
+    const gg=groundGrad(T.x,T.z);let ax=spOn?0:-15*gg[0],az=spOn?0:-15*gg[1];
     const f=T.def.flow*2.2*T.s*Math.min(1,d/1.2);
     ax+=f*(T.z/d);az+=f*(-T.x/d);
     const sm=Math.min(1,Math.hypot(T.sx,T.sz));
-    const sg=track&&track.on?2.5:7;ax+=T.sx*sg;az+=T.sz*sg;
+    const sg=spOn?0:track&&track.on?2.5:7;ax+=T.sx*sg;az+=T.sz*sg;
     T.onTrack=Math.max(0,(T.onTrack||0)-h);
     if(track&&track.on){const tp=trackPull(T);if(tp){if(T.onTrack<=0&&T.boostCD<=0){T.vx=tp[2]*20;T.vz=tp[3]*20;T.dash=0.45;T.boosting=true;T.boostCD=1.1;emit('boost',{T})}ax+=tp[0];az+=tp[1];T.onTrack=0.25;T.s=Math.min(1.05,T.s+0.012*h)}else if(d<3.2){ax-=T.x*4;az-=T.z*4;const tx=T.z/d,tz=-T.x/d,vt=T.vx*tx+T.vz*tz,dmp=vt*(1-Math.exp(-4*h))/h;ax-=tx*dmp;az-=tz*dmp}else{ax-=T.x*1.2;az-=T.z*1.2}}
     if(T.boosting&&(d<1.6||T.dash<=0)){T.boosting=false;if(T.dash>0){T.dash=0.08;T.vx*=0.55;T.vz*=0.55}}
@@ -410,12 +423,13 @@ function stepPhysics(A,B,h){
     if(bdd>LIM){
       const nx=bdx/bdd,nz=bdz/bdd,vout=T.vx*nx+T.vz*nz,th=Math.atan2(T.x,T.z);
       const wh=wallAt(th);
-      if(vout>4.5+9.5*wh){T.state='out';T.vy=6+vout*0.3;T.vx*=1.1;T.vz*=1.1;emit('out',{T});continue}
+      if(!T.sp&&vout>4.5+9.5*wh){T.state='out';T.vy=6+vout*0.3;T.vx*=1.1;T.vz*=1.1;emit('out',{T});continue}
       if(vout>0){T.vx-=1.55*vout*nx;T.vz-=1.55*vout*nz;if(vout>2)T.s-=0.002*vout;if(vout>4)emit('wall',{T,v:vout})}
       T.x=bc[0]+nx*LIM;T.z=bc[1]+nz*LIM;
     }
     if(T.s<=0.05){T.s=0.05;T.state='down';emit('down',{T})}
   }
+  for(const [T,O] of [[A,B],[B,A]])if(T.storm>0&&T.state==='spin'&&O.state==='spin'&&Math.hypot(O.x-T.x,O.z-T.z)<3.6)O.s-=0.05*h;
   collide(A,B,h);
 }
 function collide(A,B,h){
@@ -428,7 +442,9 @@ function collide(A,B,h){
   A.x-=nx*ov*mB/(mA+mB);A.z-=nz*ov*mB/(mA+mB);B.x+=nx*ov*mA/(mA+mB);B.z+=nz*ov*mA/(mA+mB);
   if(pairCool>0)return;pairCool=0.12;
   const vnA=A.vx*nx+A.vz*nz,vnB=B.vx*nx+B.vz*nz,closing=Math.max(0,vnA-vnB);
-  const impact=closing+1.6*(A.s+B.s)+(A.dash>0?6:0)+(B.dash>0?6:0);
+  const stA=A.sp&&A.sp.kind==='strike',stB=B.sp&&B.sp.kind==='strike';
+  const impact=closing+1.6*(A.s+B.s)+(A.dash>0?6:0)+(B.dash>0?6:0)+(stA?10:0)+(stB?10:0);
+  if(stA||stB){A.sp=stA?null:A.sp;B.sp=stB?null:B.sp;emit('strikeHit',{x:(A.x+B.x)/2,z:(A.z+B.z)/2,T:stA?A:B})}
   if(vnA>0){A.vx-=vnA*nx*0.85;A.vz-=vnA*nz*0.85}
   if(vnB<0){B.vx-=vnB*nx*0.85;B.vz-=vnB*nz*0.85}
   const advA=BEATS[A.def.type]===B.def.type?1.6:1,advB=BEATS[B.def.type]===A.def.type?1.6:1;
@@ -907,6 +923,7 @@ function makeModel(def){
   fx.ice=new THREE.Group();{const mt=new THREE.MeshStandardMaterial({color:0xcff6ff,metalness:0.1,roughness:0.05,transparent:true,opacity:0.82,emissive:0x2f8fd0,emissiveIntensity:0.35});
     for(let i=0;i<12;i++){const pv=new THREE.Group(),c=new THREE.Mesh(new THREE.ConeGeometry(0.13,0.6,6),mt);c.rotation.z=-Math.PI/2+(i%2?0.5:0);c.position.set(1.32,0.62+(i%2?0.12:0),0);pv.add(c);pv.rotation.y=i/12*Math.PI*2;fx.ice.add(pv)}}
   fx.light=new THREE.Mesh(new THREE.IcosahedronGeometry(1.6,1),new THREE.MeshBasicMaterial({color:0xffe9a0,wireframe:true,transparent:true,opacity:0.6,blending:THREE.AdditiveBlending,depthWrite:false}));fx.light.position.y=0.6;fx.light.scale.y=0.65;
+  fx.shell=new THREE.Mesh(new THREE.IcosahedronGeometry(1.75,1),new THREE.MeshBasicMaterial({color:0x6fc8ff,wireframe:true,transparent:true,opacity:0.6,blending:THREE.AdditiveBlending,depthWrite:false}));fx.shell.position.y=0.6;fx.shell.scale.y=0.7;
   for(const k in fx){fx[k].visible=false;tilt.add(fx[k])}
   return {root,tilt,spin,blur,aura,shadow,parts,edge,fx,orbit,glowL,orbitPh:Math.random()*6,phase:Math.random()*6};
 }
@@ -923,6 +940,8 @@ function sparks(x,y,z,n,colors){
     const a=Math.random()*6.283,s=4+Math.random()*12;spVel[i*3]=Math.cos(a)*s;spVel[i*3+1]=2+Math.random()*8;spVel[i*3+2]=Math.sin(a)*s;
     spLife[i]=0.35+Math.random()*0.45;const c=colors[k%colors.length];spBase[i*3]=c[0];spBase[i*3+1]=c[1];spBase[i*3+2]=c[2]}
 }
+function topRGB(T){const c=T.def.accent;return [((c>>16)&255)/150,((c>>8)&255)/150,(c&255)/150]}
+function trailP(x,y,z,c){const i=spI;spI=(spI+1)%SP;spPos[i*3]=x;spPos[i*3+1]=y;spPos[i*3+2]=z;spVel[i*3]=(Math.random()-.5)*0.6;spVel[i*3+1]=1.2+Math.random();spVel[i*3+2]=(Math.random()-.5)*0.6;spLife[i]=0.45;spBase[i*3]=c[0];spBase[i*3+1]=c[1];spBase[i*3+2]=c[2]}
 function ember(x,y,z,c){const i=spI;spI=(spI+1)%SP;spPos[i*3]=x;spPos[i*3+1]=y;spPos[i*3+2]=z;spVel[i*3]=(Math.random()-.5)*1.5;spVel[i*3+1]=4+Math.random()*4;spVel[i*3+2]=(Math.random()-.5)*1.5;spLife[i]=0.35+Math.random()*0.3;spBase[i*3]=c[0];spBase[i*3+1]=c[1];spBase[i*3+2]=c[2]}
 function updateSparks(dt){
   for(let i=0;i<SP;i++){if(spLife[i]<=0){spCol[i*3]=spCol[i*3+1]=spCol[i*3+2]=0;continue}
@@ -1118,6 +1137,11 @@ emit=(type,d)=>{
   }else if(type==='wall'){if(vis)sfx.wall(d.v);const T=d.T;sparks(T.x,groundHc(T.x,T.z)+0.8,T.z,8,[[1.4,1.2,0.6]])}
   else if(type==='burst'){explode(d.T);if(vis){sfx.boom();shake=1.6;if(!reduce)slowT=0.6}sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,90,[[1.6,1.2,0.5],[1.6,1.6,1.6]]);shock(d.T.x,groundHc(d.T.x,d.T.z)+0.4,d.T.z,2.2)}
   else if(type==='out'){if(vis){sfx.out();shake=Math.max(shake,0.7)}}
+  else if(type==='strike'){const T=d.T;if(vis){sfx.boost();shake=Math.max(shake,0.6);speedFx=0.7;speedCol=hex(T.def.accent)}}
+  else if(type==='blink'){const T=d.T;sparks(T.x,groundHc(T.x,T.z)+0.7,T.z,18,[[1.6,1.6,1.8],topRGB(T)]);if(vis)sfx.zap(0.6)}
+  else if(type==='strikeHit'){const y=groundHc(d.x,d.z)+0.8,c=topRGB(d.T);sparks(d.x,y,d.z,90,[c,[1.8,1.8,1.8],[1.8,1.3,0.4]]);shock(d.x,y-0.3,d.z,2.4);shock(d.x,y,d.z,1.4);zap(d.x,y,d.z,6,3);
+    if(vis){sfx.boom();shake=1.5;camPunch=Math.min(5,camPunch+3);if(!reduce)slowT=Math.max(slowT,0.45);flashFx=0.35;popText('爆擊！')}}
+  else if(type==='repel'){const T=d.T,y=groundHc(T.x,T.z)+0.4;shock(T.x,y,T.z,2.6);shock(T.x,y+0.4,T.z,1.8);sparks(T.x,y+0.4,T.z,50,[[0.6,1.2,1.8],[1.6,1.6,1.6]]);if(vis){sfx.boom();shake=Math.max(shake,0.8)}}
   else if(type==='special'){sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,40,[[1.6,1.4,0.5],[0.6,1.4,1.6]]);
     if(vis){sfx.special();if(d.T===P)stats.sp++;cutIn(d.T);if(!reduce)slowT=Math.max(slowT,0.9)}}
 };
@@ -1658,8 +1682,15 @@ function drawCutIns(dt){
     g.restore();
   }
 }
+let speedFx=0,speedCol='#fff',flashFx=0;
+function drawSpeedFx(dt){const g=cg,W=CW,H=CH;
+  if(speedFx>0){speedFx-=dt;const a=Math.min(1,speedFx/0.25);g.save();g.translate(W/2,H/2);g.lineCap='round';
+    for(let i=0;i<40;i++){const an=Math.random()*Math.PI*2,r0=Math.min(W,H)*(0.28+Math.random()*0.2),r1=r0+Math.max(W,H)*(0.3+Math.random()*0.3);
+      g.strokeStyle=i%3?`rgba(255,255,255,${0.5*a})`:speedCol;g.globalAlpha=i%3?1:0.7*a;g.lineWidth=1+Math.random()*4;g.beginPath();g.moveTo(Math.cos(an)*r0,Math.sin(an)*r0);g.lineTo(Math.cos(an)*r1,Math.sin(an)*r1);g.stroke()}
+    g.restore()}
+  if(flashFx>0){flashFx-=dt;g.fillStyle=`rgba(255,255,255,${Math.max(0,flashFx/0.35)*0.6})`;g.fillRect(0,0,W,H)}}
 function overlayTick(dt){
-  if(ov.mode||cutIns.length){cg.setTransform(CD,0,0,CD,0,0);cg.clearRect(0,0,CW,CH);if(ov.mode)drawSplit(dt);drawCutIns(dt);cutDirty=true}
+  if(ov.mode||cutIns.length||speedFx>0||flashFx>0){cg.setTransform(CD,0,0,CD,0,0);cg.clearRect(0,0,CW,CH);drawSpeedFx(dt);if(ov.mode)drawSplit(dt);drawCutIns(dt);cutDirty=true}
   else if(cutDirty){cg.setTransform(1,0,0,1,0,0);cg.clearRect(0,0,cut.width,cut.height);cutDirty=false}
 }
 function sayZh(text){try{const u=new SpeechSynthesisUtterance(text+'！');u.lang='zh-TW';u.rate=1.15;u.pitch=1.35;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
@@ -1740,13 +1771,17 @@ function updateModel(T,dt,rdt){
   if(T.state==='out'&&T.y<-14)M.root.visible=false;
   const now=performance.now()/1000,live=T.state==='spin';
   const bk=live&&T.buffT>0?T.buff:null,blink=T.buffT>1.5||Math.sin(now*24)>0;
-  for(const k in M.fx)M.fx[k].visible=bk===k&&blink;
+  for(const k in M.fx)if(k!=='shell')M.fx[k].visible=bk===k&&blink;
   if(bk==='fire'){M.fx.fire.scale.setScalar(1+Math.random()*0.15);for(let i=0;i<2;i++){const a=Math.random()*6.283;ember(T.x+Math.sin(a)*1.3,y+0.7,T.z+Math.cos(a)*1.3,Math.random()<0.5?[1.8,0.7,0.15]:[1.8,1.3,0.3])}}
   if(bk==='thunder'){M.fx.thunder.material.opacity=0.4+Math.random()*0.6;if(Math.random()<rdt*9)zap(T.x,y+0.7,T.z,1,1.5)}
   if(bk==='steel')M.fx.steel.rotation.y+=rdt*1.2;
   if(bk==='ice'){M.fx.ice.rotation.y-=rdt*0.8;if(Math.random()<rdt*6)ember(T.x+(Math.random()-.5)*2.4,y+0.9,T.z+(Math.random()-.5)*2.4,[1.2,1.6,1.8])}
   if(bk==='light'){M.fx.light.rotation.y+=rdt*0.9;M.fx.light.material.opacity=0.45+0.3*Math.sin(now*6)}
   if(M.edge)M.edge.material.opacity=live?0.4+0.3*Math.sin(now*7):0;
+  if(live&&T.sp){const c=topRGB(T),n=T.sp.kind==='strike'?6:4;for(let i=0;i<n;i++)trailP(T.x+(Math.random()-.5)*0.5,y+0.5+Math.random()*0.4,T.z+(Math.random()-.5)*0.5,Math.random()<0.3?[1.8,1.8,1.8]:c);
+    M.aura.material.color.setHex(T.def.accent);M.aura.material.opacity=0.55}
+  if(live&&T.storm>0){const c=topRGB(T);for(let i=0;i<5;i++){const a=now*9+i*1.256,hh=((now*1.6+i*0.2)%1),rr=0.6+hh*2.4;trailP(T.x+Math.sin(a+hh*6)*rr,y+0.2+hh*3,T.z+Math.cos(a+hh*6)*rr,i%2?c:[1.4,1.8,1.8])}}
+  if(M.fx.shell){M.fx.shell.visible=live&&T.shell>0;if(M.fx.shell.visible){M.fx.shell.rotation.y+=rdt*1.5;M.fx.shell.material.opacity=0.5+0.25*Math.sin(now*8)}}
   if(M.orbit){M.orbit.visible=live;
     if(live){const {NB,NS,pal}=M.orbit.userData;M.orbitPh+=rdt*(5+4*Math.min(1,T.s));
       const pos=M.orbit.children[0].geometry.attributes.position.array,col=M.orbit.children[0].geometry.attributes.color.array,
