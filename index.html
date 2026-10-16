@@ -246,7 +246,7 @@ canvas.ico{width:44px;height:44px;flex:none}
 
   <section id="menu" class="sheet gut">
     <div class="inner">
-      <div class="eyebrow" style="display:flex;align-items:center">v1.4.1 試玩<span id="coinLbl" style="margin-left:12px;color:var(--ink)">商店幣 0</span><button class="mini" id="musicBtn" type="button" aria-pressed="true">音樂：開</button></div>
+      <div class="eyebrow" style="display:flex;align-items:center">v1.4.2 試玩<span id="coinLbl" style="margin-left:12px;color:var(--ink)">商店幣 0</span><button class="mini" id="musicBtn" type="button" aria-pressed="true">音樂：開</button></div>
       <h1>旋風小鬥士</h1>
       <p class="lead">捏好你的鬥士、選陀螺和戰鬥盤，往下拉發射。對戰時手指在畫面上拖可以推著陀螺跑，必殺鈕亮了就按。戰鬥盤會浮出特殊軌道，衝上去會高速撞向中心，還會出現道具；四周的牆會慢慢降下。先拿 4 分贏。</p>
       <div class="fighter"><canvas id="pFaceMenu" width="144" height="144"></canvas><div><b id="pNameLbl">小鬥士</b><span>你的鬥士</span></div><button class="btn small" id="editBtn" type="button">捏臉</button></div>
@@ -351,7 +351,7 @@ canvas.ico{width:44px;height:44px;flex:none}
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.4.1</div>
+  <div class="ver">v1.4.2</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2198,7 +2198,7 @@ shBody.addEventListener('click',e=>{
   else if(a==='buyb'){const it=BOOST_ITEMS[id];if(coins<it.pr)shMsg='商店幣不夠，去打競技大賽吧！';else{coins-=it.pr;inv[id]=(inv[id]||0)+1;savePrefs();shMsg='買到了 '+it.n+'！';sfx.ding()}}
   else if(a==='sel'){asm[b.dataset.k]=id;shMsg=''}
   else if(a==='spin'){asm.left=!asm.left}
-  else if(a==='save'){{const sid=customs.reduce((m,c)=>Math.max(m,c.sid),0)+1;customs.push(Object.assign({sid},asm));loadCustoms();savePrefs();shMsg='完成！「'+TOPS[TOPS.length-1].name+'」已加入陀螺清單（自組）';asm.name='';sfx.win()}}
+  else if(a==='save'){{const dup=customs.find(c=>CATS.every(k=>c[k]===asm[k])&&!!c.left===!!asm.left);if(dup){const d=TOPS.find(t=>t.custom&&t.sid===dup.sid);shMsg='這個組合已經存過了（'+(d?d.name:'自組陀螺')+'），同一種組合只能存一顆';sfx.hit(4);}else{const sid=customs.reduce((m,c)=>Math.max(m,c.sid),0)+1;customs.push(Object.assign({sid},asm));loadCustoms();savePrefs();shMsg='完成！「'+TOPS[TOPS.length-1].name+'」已加入陀螺清單（自組）';asm.name='';sfx.win()}}}
   else if(a==='del'){const sid=+id,i=customs.findIndex(c=>c.sid===sid);if(i>=0){const cur=TOPS[pick];customs.splice(i,1);delete boosts['c'+sid];loadCustoms();const ni=TOPS.indexOf(cur);pick=ni>=0?ni:TOPS.findIndex(owns);save('top',pick);savePrefs();shMsg='已刪除'}}
   else if(a==='use'){const raw=TOPS[bsSel],bb=boosts[raw.id]=boostOf(raw.id),used=bb.atk+bb.def+bb.sta+bb.wt;
     if(!(inv[id]>0))shMsg='沒有這個道具了，到「盲盒・道具」買';else if(used>=BOOST_BUDGET)shMsg='這顆陀螺已強化到 '+BOOST_BUDGET+' 點上限';else if(raw[id]+(bb[id]||0)>=BOOST_MAX)shMsg='這項能力已經到上限 '+BOOST_MAX+' 了';
