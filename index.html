@@ -409,7 +409,7 @@ button,.tops,.arenas,#app{touch-action:manipulation}
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.10.3</div>
+  <div class="ver">v1.11</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -569,7 +569,7 @@ function withBoost(def){
 const BEATS={atk:'sta',sta:'def',def:'atk'};
 let emit=()=>{};
 function bowlH(r){return 0.03*r*r}
-const SPD={atk:1.75,bal:1.25,sta:1.05,def:0.85};
+const SPD={atk:1.75,bal:1.4,sta:1.05,def:1.0};
 const MAXC=6,DURM=1/3,DECM={atk:1.2,bal:1,sta:1/1.2,def:1/1.3};
 const CHG={atk:1.25,bal:1,sta:0.85,def:0.8},BRK={def:0.55,bal:0.9,sta:1,atk:1.25};
 let npcChgX=1,duelX=1,passX=1;
@@ -662,7 +662,7 @@ const ITEM_KINDS={spin:{name:'轉速提升',col:0x5dff8a},charge:{name:'必殺�
 let items=[];const BUFF_T=8;
 function buffMul(T){const k=T.buffT>0?T.buff:null;return {atk:k==='fire'?1.6:k==='thunder'?1.35:1,def:k==='steel'?2.2:k==='ice'?1.8:k==='light'?1.6:1,m:k==='steel'?1.6:1,br:k==='fire'?1.7:1,brIn:k==='steel'?0.4:k==='ice'?0.5:k==='light'?0:1,k}}
 function pickItem(T,it){it.alive=false;
-  if(it.kind==='spin')T.s=Math.min(1.1,T.s+0.3);else if(it.kind==='charge')T.charge=1;else{T.buff=it.kind;T.buffT=BUFF_T}
+  if(it.kind==='spin')T.s=Math.min(1.1,T.s+0.3);else if(it.kind==='charge')T.charge=1;else{T.buff=it.kind;T.buffT=BUFF_T*(T.def.type==='bal'?1.4:1)}
   emit('item',{T,it})}
 function trackPull(T){
   const r=Math.hypot(T.x,T.z);if(r<3||r>rhoAt(Math.atan2(T.x,T.z))-0.4)return null;
@@ -680,7 +680,7 @@ function stepPhysics(A,B,h){
     if(T.state==='out'){T.x+=T.vx*h;T.z+=T.vz*h;T.vy-=22*h;T.y+=T.vy*h;continue}
     if(T.state!=='spin')continue;
     T.dash=Math.max(0,T.dash-h);T.shell=Math.max(0,T.shell-h);T.moon=Math.max(0,T.moon-h);T.buffT=Math.max(0,(T.buffT||0)-h);T.boostCD=Math.max(0,(T.boostCD||0)-h);
-    for(const it of items)if(it.alive&&Math.hypot(it.x-T.x,it.z-T.z)<1.15)pickItem(T,it);
+    for(const it of items)if(it.alive&&Math.hypot(it.x-T.x,it.z-T.z)<1.15*(T.def.type==='bal'?1.7:1))pickItem(T,it);
     const d=Math.hypot(T.x,T.z)||1e-6;
     T.storm=Math.max(0,(T.storm||0)-h);
     const spOn=stepSpecial(T,h);
@@ -690,7 +690,7 @@ function stepPhysics(A,B,h){
     const f=T.def.flow*2.2*T.s*Math.min(1,d/1.2)*(T.def.left?-1:1);
     ax+=f*(T.z/d);az+=f*(-T.x/d);
     const sm=Math.min(1,Math.hypot(T.sx,T.sz));
-    const sg=spOn?0:track&&track.on?2.5:7;ax+=T.sx*sg;az+=T.sz*sg;
+    const sg=spOn?0:track&&track.on?2.5:7;const sgm=T.def.type==='bal'?1.35:1;ax+=T.sx*sg*sgm;az+=T.sz*sg*sgm;
     T.onTrack=Math.max(0,(T.onTrack||0)-h);
     if(track&&track.on){const tp=trackPull(T);if(tp){if(T.onTrack<=0&&T.boostCD<=0){T.vx=tp[2]*20;T.vz=tp[3]*20;T.dash=0.45;T.boosting=true;T.boostCD=1.1;emit('boost',{T})}ax+=tp[0];az+=tp[1];T.onTrack=0.25;T.s=Math.min(1.05,T.s+0.012*h)}else if(d<3.2){ax-=T.x*4;az-=T.z*4;const tx=T.z/d,tz=-T.x/d,vt=T.vx*tx+T.vz*tz,dmp=vt*(1-Math.exp(-4*h))/h;ax-=tx*dmp;az-=tz*dmp}else{ax-=T.x*1.2;az-=T.z*1.2}}
     if(T.boosting&&(d<1.6||T.dash<=0)){T.boosting=false;if(T.dash>0){T.dash=0.08;T.vx*=0.55;T.vz*=0.55}}
@@ -699,7 +699,7 @@ function stepPhysics(A,B,h){
     const sp=Math.hypot(T.vx,T.vz),cap=T.sp&&T.sp.kind==='path'?46:T.dash>0?24:T.onTrack>0?17:MAXV;if(sp>cap){T.vx*=cap/sp;T.vz*=cap/sp}
     T.x+=T.vx*h;T.z+=T.vz*h;
     let decay=0.014*(1.45-T.def.sta*0.07)*(1.12-T.def.wt*0.025)+0.006*T.s+sm*0.006
-    decay*=DECM[T.def.type]||1;
+    decay*=DECM[T.def.type]||1;if(T.def.type==='sta'&&T.s<0.5)decay*=0.85;
     if(T.moon>0)decay*=0.4;
     T.s-=decay*h;T.charge=Math.min(1,T.charge+0.0175*h*chgMul(T)*passX);
     const bc=bestCircle(T.x,T.z),bdx=T.x-bc[0],bdz=T.z-bc[1],bdd=Math.hypot(bdx,bdz)||1e-6,LIM=bc[2]-0.6;
@@ -732,7 +732,7 @@ function collide(A,B,h){
   if(vnA>0){A.vx-=vnA*nx*0.85;A.vz-=vnA*nz*0.85}
   if(vnB<0){B.vx-=vnB*nx*0.85;B.vz-=vnB*nz*0.85}
   const advA=BEATS[A.def.type]===B.def.type?1.6:1,advB=BEATS[B.def.type]===A.def.type?1.6:1;
-  const defA=(0.6+A.def.def*0.12)*(A.shell>0?1.5:1)*bA.def,defB=(0.6+B.def.def*0.12)*(B.shell>0?1.5:1)*bB.def;
+  const defA=(0.6+A.def.def*0.12)*(A.shell>0?1.5:1)*bA.def*(B.def.type==='sta'&&A.def.type==='def'?0.8:1),defB=(0.6+B.def.def*0.12)*(B.shell>0?1.5:1)*bB.def*(A.def.type==='sta'&&B.def.type==='def'?0.8:1);
   const atkA=(0.3+A.def.atk*0.12)*(A.def.type==='atk'?1.55:A.def.type==='bal'?1.4:1)*bA.atk,atkB=(0.3+B.def.atk*0.12)*(B.def.type==='atk'?1.55:B.def.type==='bal'?1.4:1)*bB.atk;
   const gA=spGuard(A),gB=spGuard(B),pA=impact*atkB*advB/(mA*defA)*gA,pB=impact*atkA*advA/(mB*defB)*gB;
   const tx=-nz,tz=nx;
