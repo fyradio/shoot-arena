@@ -412,7 +412,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.14.3</div>
+  <div class="ver">v1.14.4</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -666,11 +666,11 @@ function useSpecial(T,O){
 let track=null;
 const TRACKS=[{name:'旋風螺旋',arms:2,twist:3.2,color:0x3fd0ff},{name:'三叉星軌',arms:3,twist:2.4,color:0xffc83d},{name:'龍捲加速道',arms:4,twist:4.4,color:0xff5ad8},
  {name:'十字衝刺道',arms:4,twist:0,color:0xff4b3a},{name:'五芒星軌',arms:5,twist:1.6,color:0xb388ff},{name:'六連疾風',arms:6,twist:2.8,color:0x39ff9a},{name:'雙龍螺旋',arms:2,twist:6.5,color:0xffe14a}];
-const ITEM_KINDS={spin:{name:'轉速提升',col:0x5dff8a},charge:{name:'必殺能量',col:0xffd23d},fire:{name:'烈焰之力',col:0xff6a1a},thunder:{name:'雷電之力',col:0x4fd8ff},steel:{name:'鋼鐵鎧甲',col:0xc4cbe0},ice:{name:'冰晶鎧甲',col:0x9fe8ff},light:{name:'光之護盾',col:0xffe9a0}};
+const ITEM_KINDS={spin:{name:'轉速提升',col:0x5dff8a},charge:{name:'必殺能量',col:0xffd23d},fire:{name:'烈焰之力',col:0xff6a1a},thunder:{name:'雷電之力',col:0x4fd8ff},steel:{name:'鋼鐵鎧甲',col:0xc4cbe0},ice:{name:'冰晶鎧甲',col:0x9fe8ff},light:{name:'光之護盾',col:0xffe9a0},heal:{name:'耐久修復',col:0xff6aa8},rush:{name:'轉速爆發',col:0x7dffe4}};
 let items=[];const BUFF_T=8;
 function buffMul(T){const k=T.buffT>0?T.buff:null;return {atk:k==='fire'?1.6:k==='thunder'?1.35:1,def:k==='steel'?2.2:k==='ice'?1.8:k==='light'?1.6:1,m:k==='steel'?1.6:1,br:k==='fire'?1.7:1,brIn:k==='steel'?0.4:k==='ice'?0.5:k==='light'?0:1,k}}
 function pickItem(T,it){it.alive=false;
-  if(it.kind==='spin')T.s=Math.min(1.1,T.s+0.3);else if(it.kind==='charge')T.charge=1;else{T.buff=it.kind;T.buffT=BUFF_T*(T.def.type==='bal'?1.4:1)}
+  if(it.kind==='spin')T.s=Math.min(1.1,T.s+0.3);else if(it.kind==='rush')T.s=Math.min(1.15,T.s+0.55);else if(it.kind==='heal')T.burst=Math.min(1,T.burst+0.4);else if(it.kind==='charge')T.charge=1;else{T.buff=it.kind;T.buffT=BUFF_T*(T.def.type==='bal'?1.4:1)}
   emit('item',{T,it})}
 function trackPull(T){
   const r=Math.hypot(T.x,T.z);if(r<3||r>rhoAt(Math.atan2(T.x,T.z))-0.4)return null;
@@ -1442,7 +1442,8 @@ let trackViews=[];function buildTrackViews(){for(const v of trackViews)scene.rem
   return {grp,mat,vortex};
 });}
 
-function trackReset(){wallReset();if(wallSegs)wallSegs._told=false;track=null;trackClock=0;trackPhase=0;trackCount=0;items=[];for(const v of trackViews){v.grp.visible=false}trackShown=null}
+let supplyClock=3;
+function trackReset(){supplyClock=3;wallReset();if(wallSegs)wallSegs._told=false;track=null;trackClock=0;trackPhase=0;trackCount=0;items=[];for(const v of trackViews){v.grp.visible=false}trackShown=null}
 function drawItemIcon(g,w,k){
   const col=hex(ITEM_KINDS[k].col),c=w/2;const gr=g.createRadialGradient(c,c,0,c,c,c);gr.addColorStop(0,col);gr.addColorStop(0.55,col);gr.addColorStop(1,'rgba(0,0,0,0)');
   g.fillStyle=gr;g.fillRect(0,0,w,w);g.beginPath();g.arc(c,c,w*0.3,0,7);g.fillStyle='#0e1430';g.fill();g.lineWidth=w*0.04;g.strokeStyle='#fff';g.stroke();
@@ -1454,27 +1455,40 @@ function drawItemIcon(g,w,k){
   else if(k==='thunder')P2([6,-30,-16,4,-2,4,-8,30,16,-6,2,-6]);
   else if(k==='steel'){g.beginPath();g.moveTo(0,-26);g.lineTo(22,-18);g.lineTo(20,6);g.quadraticCurveTo(14,22,0,28);g.quadraticCurveTo(-14,22,-20,6);g.lineTo(-22,-18);g.closePath();g.fill()}
   else if(k==='ice')P2([0,-30,14,0,0,30,-14,0]);
+  else if(k==='heal'){P2([-9,-26,9,-26,9,-9,26,-9,26,9,9,9,9,26,-9,26,-9,9,-26,9,-26,-9,-9,-9])}
+  else if(k==='rush'){g.beginPath();g.arc(0,0,22,-0.3,Math.PI*1.4);g.stroke();P2([18,-16,30,-4,12,0]);P2([-6,-26,10,-8,-2,-8,8,14,-18,-4,-6,-4])}
   else{g.beginPath();for(let i=0;i<6;i++){const a=i/6*Math.PI*2;g.lineTo(Math.cos(a)*24,Math.sin(a)*24)}g.closePath();g.stroke();g.beginPath();g.arc(0,0,8,0,7);g.fill()}
   g.restore();
 }
 const itemTex={};for(const k in ITEM_KINDS)itemTex[k]=canvasTex(128,128,(g,w)=>drawItemIcon(g,w,k));
-const itemViews=[];for(let i=0;i<4;i++){const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:itemTex.spin,transparent:true,depthWrite:false}));sp.visible=false;scene.add(sp);
+const itemViews=[];for(let i=0;i<10;i++){const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:itemTex.spin,transparent:true,depthWrite:false}));sp.visible=false;scene.add(sp);
   const ring=new THREE.Mesh(new THREE.RingGeometry(0.9,1.15,32),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.6,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;ring.visible=false;scene.add(ring);
   itemViews.push({sp,ring})}
 function spawnItems(tk){
-  items=[];const keys=Object.keys(ITEM_KINDS),n=tk.arms>=4?3:2,arms=[...Array(tk.arms).keys()].sort(()=>Math.random()-.5);
+  items=items.filter(i=>i.alive).slice(0,5);const keys=Object.keys(ITEM_KINDS),n=tk.arms>=4?3:2,arms=[...Array(tk.arms).keys()].sort(()=>Math.random()-.5);
   for(let i=0;i<n;i++){const arm=arms[i%arms.length],r=(0.56+Math.random()*0.16)*GEO.minRho,th=arm*2*Math.PI/tk.arms+tk.twist*(1-r/R);
     items.push({x:Math.sin(th)*r,z:Math.cos(th)*r,kind:keys[Math.floor(Math.random()*keys.length)],alive:true,t:0})}
 }
 function updateItems(dt){
   itemViews.forEach((v,i)=>{const it=items[i];
     if(!it||!it.alive){v.sp.visible=v.ring.visible=false;return}
-    it.t+=dt;const gy=groundHc(it.x,it.z),sc=Math.min(1,it.t/0.35)*1.6;
+    it.t+=dt;if(it.supply&&it.t>16){it.alive=false;v.sp.visible=v.ring.visible=false;return}const gy=groundHc(it.x,it.z),sc=Math.min(1,it.t/0.35)*1.6*(it.supply&&it.t>12?(0.6+0.4*Math.abs(Math.sin(it.t*10))):1);
     v.sp.material.map=itemTex[it.kind];v.sp.visible=v.ring.visible=true;v.sp.position.set(it.x,gy+1.2+Math.sin(it.t*4)*0.2,it.z);v.sp.scale.set(sc,sc,1);
     v.ring.position.set(it.x,gy+0.08,it.z);v.ring.material.color.setHex(ITEM_KINDS[it.kind].col);v.ring.scale.setScalar(1+0.15*Math.sin(it.t*6));
   });
 }
+function supplyTick(dt){
+  supplyClock-=dt;if(supplyClock>0)return;supplyClock=5.5+Math.random()*3;
+  if(items.filter(i=>i.alive).length>=5)return;
+  const low=[P,E].some(T=>T&&T.state==='spin'&&(T.s<0.4||T.burst<0.5));
+  const W={spin:3,rush:1.2,heal:3,charge:2,fire:1,thunder:1,steel:1,ice:1,light:1};if(low){W.heal*=2.5;W.spin*=2;W.rush*=2}
+  let tot=0;for(const k in W)tot+=W[k];let q=Math.random()*tot,kind='spin';for(const k in W){q-=W[k];if(q<=0){kind=k;break}}
+  const r=(0.2+Math.random()*0.55)*GEO.minRho,th=Math.random()*Math.PI*2,it={x:Math.sin(th)*r,z:Math.cos(th)*r,kind,alive:true,t:0,supply:true};
+  const di=items.findIndex(i=>!i.alive);if(di>=0)items[di]=it;else if(items.length<10)items.push(it);else return;
+  sparks(it.x,groundHc(it.x,it.z)+1,it.z,12,[[1.4,1.4,1.4],[1.2,1.5,1.2]])
+}
 function trackTick(dt,running){
+  if(running)supplyTick(dt);
   if(running){trackClock+=dt;
     if(!trackShown&&trackClock>=(trackCount===0?8:15)){trackClock=0;trackCount++;let ti=Math.floor(Math.random()*TRACKS.length);if(ti===trackIdx)ti=(ti+1)%TRACKS.length;trackIdx=ti;const tk=TRACKS[ti];spawnItems(tk);track={...tk,on:false};trackShown=trackViews[TRACKS.indexOf(tk)];trackShown.grp.visible=true;trackPhase=0;
       popText('特殊軌道！',tk.name+'・道具出現');sfx.track();for(const it of items)sparks(it.x,groundHc(it.x,it.z)+1,it.z,20,[[1.6,1.6,1.6],[1.6,1.4,0.6]]);
