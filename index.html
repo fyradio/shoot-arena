@@ -414,7 +414,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.16.4</div>
+  <div class="ver">v1.16.5</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -574,7 +574,7 @@ function withBoost(def){
 const BEATS={atk:'sta',sta:'def',def:'atk'};
 let emit=()=>{};
 function bowlH(r){return 0.03*r*r}
-let BXS=4.5;const BX={atk:7.5,bal:1,sta:4,def:1};
+let BXS=4.5,BALDEF=1.18;const BX={atk:7.5,bal:1,sta:4,def:1};
 const SPD={atk:1,bal:1.2,sta:1.35,def:1},INIT={atk:1.1,bal:1,sta:1.02,def:0.8};
 const TUNE={"p_red":0.906,"p_blue":0.873,"p_yellow":0.795,"p_green":0.804,"p_white":0.825,"p_black":0.882,"s_lyra":0.963,"s_aquila":1.089,"s_cassio":0.925,"s_orion":0.984,"s_ursa":1.077,"s_cygnus":0.994,"n_kage":1.08,"n_kaze":0.975,"n_hi":0.979,"n_mizu":0.942,"n_tsuchi":0.819,"n_rai":0.915,"phoenix":1.012,"tri_arrow":0.934,"b_seiryu":0.848,"b_byakko":0.931,"b_suzaku":0.994,"b_genbu":0.743,"m_ares":1.05,"m_titan":0.774,"m_raven":0.837,"m_raijin":1.223,"m_aegis":0.858,"m_zero":0.887,"g_aries":0.864,"g_taurus":0.779,"g_gemini":0.896,"g_leo":0.906,"g_scorpio":1.151,"g_sagitt":0.927,"d_red":1.045,"d_azure":0.825,"d_gold":0.767,"d_black":0.898,"d_white":0.89,"d_king":0.748,"k_masamune":0.813,"k_muramasa":1.208,"k_kiku":1.142,"k_onimaru":0.838,"k_monohoshi":0.986,"k_douji":0.899};
 const SPCAP=0.4;/* 單次必殺（含連擊）最多打掉防禦/耐久型這麼多耐久，開場必殺不會直接爆 */
@@ -741,7 +741,7 @@ function collide(A,B,h){
   if(stA||stB){A.sp=stA?null:A.sp;B.sp=stB?null:B.sp;emit('strikeHit',{x:(A.x+B.x)/2,z:(A.z+B.z)/2,T:stA?A:B})}
   if(vnA>0){A.vx-=vnA*nx*0.85;A.vz-=vnA*nz*0.85}
   if(vnB<0){B.vx-=vnB*nx*0.85;B.vz-=vnB*nz*0.85}
-  const advA=BEATS[A.def.type]===B.def.type?1.6:1,advB=BEATS[B.def.type]===A.def.type?1.6:1;
+  const advA=BEATS[A.def.type]===B.def.type?1.6:A.def.type==='bal'&&B.def.type==='def'?BALDEF:1,advB=BEATS[B.def.type]===A.def.type?1.6:B.def.type==='bal'&&A.def.type==='def'?BALDEF:1;
   const defA=(0.6+A.def.def*0.12)*(A.shell>0?1.5:1)*bA.def,defB=(0.6+B.def.def*0.12)*(B.shell>0?1.5:1)*bB.def;
   const atkA=(1+0.04*(A.def.wt-5))*(0.3+A.def.atk*0.12)*(A.def.type==='atk'?1.55:A.def.type==='bal'?1.4:1)*bA.atk*(A.def.id==='b_suzaku'&&spA?0.7:1),atkB=(1+0.04*(B.def.wt-5))*(0.3+B.def.atk*0.12)*(B.def.type==='atk'?1.55:B.def.type==='bal'?1.4:1)*bB.atk*(B.def.id==='b_suzaku'&&spB?0.7:1);
   const gA=spGuard(A),gB=spGuard(B),pA=impact*atkB*advB/(mA*defA)*gA,pB=impact*atkA*advA/(mB*defB)*gB;
