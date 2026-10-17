@@ -427,7 +427,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.20.1</div>
+  <div class="ver">v1.21.0</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -479,30 +479,30 @@ function T_(id,name,tier,series,type,glyph,color,accent,st,blades,style,motif,ti
   Object.assign(d,x||{});d.bolts=[accent].concat(SERIES_BOLTS[series]||[]);return d}
 const TOPS=[
  // ===== 宇宙：星神（最高等級：雙耐久條、覺醒、二段必殺、專屬被動） =====
- T_('u_nova','超新星','cos','cosmos','atk','新',0x1a0630,0xff7a3d,[10,5,6,6],3,'claw','rune','flat','超新星爆裂','star6','恆星爆炸的衝擊。被動「新星」：必殺氣累積 ×1.3',{pas:'nova'}),
- T_('u_comet','彗星王','cos','cosmos','atk','彗',0x06142e,0x5fe0ff,[10,4,7,5],3,'arrow','thunder','flat','彗星衝擊','bolt7','拖著長尾的彗星。被動「彗尾」：衝刺與最高速度更快',{pas:'comet'}),
- T_('u_saber','銀河劍','cos','cosmos','atk','劍',0x0a0a22,0xc8b6ff,[10,5,7,5],2,'katana','rune','flat','銀河一閃','slash3','斬開銀河的光劍。被動「吸能」：撞擊時吸回轉速',{pas:'leech'}),
- T_('u_neutron','中子星','cos','cosmos','def','中',0x101626,0x9fe8ff,[5,10,6,9],6,'bump','hex','ball','中子壓縮','fx:quake','密度極高的星核。被動「重質」：更重、更難被撞開',{pas:'mass'}),
- T_('u_halo','星環盾','cos','cosmos','def','環',0x14102a,0xffd23d,[5,9,7,8],5,'gear','rune','ball','星環結界','fx:barrier','行星環化成的盾。被動「反震」：被撞時反扣對手轉速',{pas:'reflect'}),
- T_('u_bastion','隕石堡','cos','cosmos','def','堡',0x221a14,0xff8a5a,[6,9,6,8],6,'scale','hex','ball','隕石壁壘','fx:flame','隕石堆成的堡壘。被動「再生」：耐久會慢慢回復',{pas:'regen'}),
+ T_('u_nova','超新星','cos','cosmos','atk','新',0x1a0630,0xff7a3d,[10,6,7,6],3,'claw','rune','flat','超新星爆裂','star6','恆星爆炸的衝擊。被動「新星」：必殺氣累積 ×1.3',{pas:'nova'}),
+ T_('u_comet','彗星王','cos','cosmos','atk','彗',0x06142e,0x5fe0ff,[10,5,8,5],3,'arrow','thunder','flat','彗星衝擊','bolt7','拖著長尾的彗星。被動「彗尾」：衝刺與最高速度更快',{pas:'comet'}),
+ T_('u_saber','銀河劍','cos','cosmos','atk','劍',0x0a0a22,0xc8b6ff,[10,6,8,5],2,'katana','rune','flat','銀河一閃','slash3','斬開銀河的光劍。被動「吸能」：撞擊時吸回轉速',{pas:'leech'}),
+ T_('u_neutron','中子星','cos','cosmos','def','中',0x101626,0x9fe8ff,[6,10,7,9],6,'bump','hex','ball','中子壓縮','fx:quake','密度極高的星核。被動「重質」：更重、更難被撞開',{pas:'mass'}),
+ T_('u_halo','星環盾','cos','cosmos','def','環',0x14102a,0xffd23d,[6,9,8,8],5,'gear','rune','ball','星環結界','fx:barrier','行星環化成的盾。被動「反震」：被撞時反扣對手轉速',{pas:'reflect'}),
+ T_('u_bastion','隕石堡','cos','cosmos','def','堡',0x221a14,0xff8a5a,[7,9,7,8],6,'scale','hex','ball','隕石壁壘','fx:flame','隕石堆成的堡壘。被動「再生」：耐久會慢慢回復',{pas:'regen'}),
  T_('u_nebula','星雲','cos','cosmos','bal','雲',0x1c0a34,0xff8fe0,[8,7,6,6],5,'petal','swirl','semi','星雲漩渦','spiral','流動的彩色星雲。被動「環繞」：操控更靈活',{pas:'orbit'}),
  T_('u_aurora','極光','cos','cosmos','bal','極',0x061e24,0x5dffb0,[7,7,7,6],4,'wing','swirl','semi','極光之舞','star5','夜空的光之帶。被動「日蝕」：覺醒時必殺氣大量回復並張開護盾',{pas:'eclipse'}),
  T_('u_sirius','天狼','cos','cosmos','bal','狼',0x0c1430,0xe8f1ff,[8,7,6,6],4,'shuriken','gem','semi','天狼星陣','star6','夜空最亮的星。被動「虛化」：有機率完全閃過耐久傷害',{pas:'phase'}),
- T_('u_hole','黑洞','cos','cosmos','sta','洞',0x050308,0xb24bff,[5,5,10,6],2,'crescent','eye','sharp','事件視界','fx:eye','連光都逃不出去。被動「引力」：把附近的對手吸過來',{pas:'gravity'}),
- T_('u_pulsar','脈衝星','cos','cosmos','sta','脈',0x0a1028,0x4fd8ff,[5,5,9,6],4,'star','bolt','sharp','脈衝波','fx:swirl','規律閃爍的中子星。被動「脈衝」：每 6 秒放出震波推開對手',{pas:'pulse'}),
- T_('u_eternal','永恆星','cos','cosmos','sta','恆',0x1a1406,0xfff2a0,[6,5,9,5],4,'zodiac','gem','sharp','永恆之光','fx:moon','永遠不會熄滅的星。被動「星盾」：每局第一次重擊完全擋下',{pas:'shield'}),
- T_('u_quasar','類星體','cos','cosmos','atk','類',0x14061e,0xff4bd8,[10,5,6,6],3,'saw','rune','flat','類星噴流','cross','宇宙最亮的光源。被動「脈衝」：每 6 秒放出震波推開對手',{pas:'pulse'}),
- T_('u_gamma','伽瑪射線','cos','cosmos','atk','伽',0x061a10,0x7dff5a,[10,4,7,6],3,'arrow','thunder','flat','伽瑪爆發','weave4','一瞬間的高能閃光。被動「新星」：必殺氣累積 ×1.3',{pas:'nova'}),
- T_('u_mars','火星','cos','cosmos','atk','火',0x3a0a04,0xff6a1a,[10,5,6,7],3,'claw','stripe','flat','戰神火球','katana','紅色的戰鬥之星。被動「再生」：耐久會慢慢回復',{pas:'regen'}),
- T_('u_saturn','土星','cos','cosmos','def','土',0x2a2010,0xffd27a,[5,10,6,9],6,'bump','hex','ball','土星光環','fx:shell','戴著光環的巨星。被動「環繞」：操控更靈活',{pas:'orbit'}),
- T_('u_jupiter','木星','cos','cosmos','def','木',0x2a160a,0xff9a5a,[6,9,6,10],6,'scale','swirl','ball','大紅斑','fx:quake','最大的行星。被動「引力」：把附近的對手吸過來',{pas:'gravity'}),
- T_('u_dwarf','白矮星','cos','cosmos','def','矮',0xe8ecf4,0x7be0ff,[5,10,7,8],5,'gear','gem','ball','白矮守護','fx:holy','小而堅硬的星核。被動「星盾」：每局第一次重擊完全擋下',{pas:'shield'}),
+ T_('u_hole','黑洞','cos','cosmos','sta','洞',0x050308,0xb24bff,[4,4,8,6],2,'crescent','eye','sharp','事件視界','fx:eye','連光都逃不出去。被動「引力」：把附近的對手吸過來',{pas:'gravity'}),
+ T_('u_pulsar','脈衝星','cos','cosmos','sta','脈',0x0a1028,0x4fd8ff,[4,4,7,6],4,'star','bolt','sharp','脈衝波','fx:swirl','規律閃爍的中子星。被動「脈衝」：每 6 秒放出震波推開對手',{pas:'pulse'}),
+ T_('u_eternal','永恆星','cos','cosmos','sta','恆',0x1a1406,0xfff2a0,[5,4,7,5],4,'zodiac','gem','sharp','永恆之光','fx:moon','永遠不會熄滅的星。被動「星盾」：每局第一次重擊完全擋下',{pas:'shield'}),
+ T_('u_quasar','類星體','cos','cosmos','atk','類',0x14061e,0xff4bd8,[10,6,7,6],3,'saw','rune','flat','類星噴流','cross','宇宙最亮的光源。被動「脈衝」：每 6 秒放出震波推開對手',{pas:'pulse'}),
+ T_('u_gamma','伽瑪射線','cos','cosmos','atk','伽',0x061a10,0x7dff5a,[10,5,8,6],3,'arrow','thunder','flat','伽瑪爆發','weave4','一瞬間的高能閃光。被動「新星」：必殺氣累積 ×1.3',{pas:'nova'}),
+ T_('u_mars','火星','cos','cosmos','atk','火',0x3a0a04,0xff6a1a,[10,6,7,7],3,'claw','stripe','flat','戰神火球','katana','紅色的戰鬥之星。被動「再生」：耐久會慢慢回復',{pas:'regen'}),
+ T_('u_saturn','土星','cos','cosmos','def','土',0x2a2010,0xffd27a,[6,10,7,9],6,'bump','hex','ball','土星光環','fx:shell','戴著光環的巨星。被動「環繞」：操控更靈活',{pas:'orbit'}),
+ T_('u_jupiter','木星','cos','cosmos','def','木',0x2a160a,0xff9a5a,[7,9,7,10],6,'scale','swirl','ball','大紅斑','fx:quake','最大的行星。被動「引力」：把附近的對手吸過來',{pas:'gravity'}),
+ T_('u_dwarf','白矮星','cos','cosmos','def','矮',0xe8ecf4,0x7be0ff,[6,10,8,8],5,'gear','gem','ball','白矮守護','fx:holy','小而堅硬的星核。被動「星盾」：每局第一次重擊完全擋下',{pas:'shield'}),
  T_('u_moon','月神','cos','cosmos','bal','月',0x101830,0xcfe3ff,[8,7,6,6],2,'crescent','eye','semi','滿月之輪','tri','守護夜空的月。被動「吸能」：撞擊時吸回轉速',{pas:'leech'}),
  T_('u_andromeda','仙女星系','cos','cosmos','bal','仙',0x180a2a,0xc78bff,[7,8,6,7],5,'petal','swirl','semi','星系迴旋','star5','旋轉的鄰居星系。被動「重質」：更重、更難被撞開',{pas:'mass'}),
  T_('u_string','宇宙弦','cos','cosmos','bal','弦',0x0a0a14,0x39e6ff,[8,6,7,6],4,'shuriken','bolt','semi','弦振斬','slash2','貫穿宇宙的能量之弦。被動「彗尾」：衝刺與最高速度更快',{pas:'comet'}),
- T_('u_sun','太陽','cos','cosmos','sta','陽',0x3a1a00,0xffd23d,[6,5,9,6],4,'star','rune','sharp','日冕烈焰','fx:dragon','燃燒不息的恆星。被動「日蝕」：覺醒時必殺氣大量回復並張開護盾',{pas:'eclipse'}),
- T_('u_dark','暗物質','cos','cosmos','sta','暗',0x08060c,0x8a5cf0,[5,6,10,5],3,'crescent','eye','sharp','暗影吞噬','fx:eye','看不見的神秘質量。被動「虛化」：有機率完全閃過耐久傷害',{pas:'phase'}),
- T_('u_dust','星塵','cos','cosmos','sta','塵',0x1a1626,0xffb7d5,[5,5,10,6],5,'petal','gem','sharp','星塵風暴','fx:swirl','閃閃發光的星屑。被動「反震」：被撞時反扣對手轉速',{pas:'reflect'}),
+ T_('u_sun','太陽','cos','cosmos','sta','陽',0x3a1a00,0xffd23d,[5,4,7,6],4,'star','rune','sharp','日冕烈焰','fx:dragon','燃燒不息的恆星。被動「日蝕」：覺醒時必殺氣大量回復並張開護盾',{pas:'eclipse'}),
+ T_('u_dark','暗物質','cos','cosmos','sta','暗',0x08060c,0x8a5cf0,[4,5,8,5],3,'crescent','eye','sharp','暗影吞噬','fx:eye','看不見的神秘質量。被動「虛化」：有機率完全閃過耐久傷害',{pas:'phase'}),
+ T_('u_dust','星塵','cos','cosmos','sta','塵',0x1a1626,0xffb7d5,[4,4,8,6],5,'petal','gem','sharp','星塵風暴','fx:swirl','閃閃發光的星屑。被動「反震」：被撞時反扣對手轉速',{pas:'reflect'}),
  // ===== 神聖：機甲 =====
  T_('m_ares','戰神機甲','div','mecha','atk','戰',0x1a0a12,0xff3b3b,[10,5,6,6],3,'mecha','thunder','flat','戰神十字斬','cross','紅色機甲，十字斬貫穿全場'),
  T_('m_titan','泰坦機甲','div','mecha','def','泰',0x1b2230,0xffb02e,[5,10,6,9],4,'arrow','hex','ball','泰坦震地','fx:quake','超重裝甲，震波彈開對手'),
@@ -562,6 +562,11 @@ const TOPS=[
 ];
 const TYPE_NAME={atk:'攻擊',def:'防禦',sta:'耐久',bal:'平衡'};
 TOPS.forEach(d=>d.typeName=TYPE_NAME[d.type]);
+{const CI={u_nova:['sun','stripe'],u_comet:['fang2','flame'],u_saber:['blade5','twin'],u_quasar:['flame','dots'],u_gamma:['shark','stripe'],u_mars:['dragon','flame'],
+  u_neutron:['gear','check'],u_halo:['crown','stars'],u_bastion:['saw','scale'],u_saturn:['turbine','twin'],u_jupiter:['blade','wave'],u_dwarf:['shuriken','dots'],
+  u_nebula:['cloud','wave'],u_aurora:['wave','stars'],u_sirius:['star','dots'],u_moon:['moon','twin'],u_andromeda:['spiral','stars'],u_string:['bolt','stripe'],
+  u_hole:['spiral','check'],u_pulsar:['bolt','dots'],u_eternal:['petal','stars'],u_sun:['sun','flame'],u_dark:['fang','scale'],u_dust:['petal','dots']};
+ for(const d of TOPS)if(CI[d.id])d.inner={s:CI[d.id][0],w:3,c:'#'+d.accent.toString(16).padStart(6,'0'),p:CI[d.id][1],pc:'#ffffff'}}
 const LEFTY=new Set(['u_comet','u_hole','u_aurora','u_gamma','u_moon','u_dark','m_raijin','m_zero','g_gemini','g_scorpio','d_azure','d_black','k_muramasa','k_douji','s_aquila','s_ursa','n_kage','n_rai','n_mizu','b_seiryu','p_white','p_black']);
 TOPS.forEach(d=>d.left=LEFTY.has(d.id));
 {const base={brz:60,leg:260,div:800,cos:3600},step={brz:12,leg:40,div:120,cos:250},cnt={brz:0,leg:0,div:0,cos:0};
@@ -618,7 +623,7 @@ let emit=()=>{};
 function bowlH(r){return 0.03*r*r}
 let BXS=4.5,BALDEF=1;const BX={atk:7.5,bal:1,sta:4,def:1};
 const SPD={atk:1,bal:1.2,sta:1.35,def:1},INIT={atk:1.1,bal:1,sta:1.02,def:0.8};
-const TUNE={"p_red":0.91,"p_blue":1.125,"p_yellow":0.771,"p_green":0.79,"p_white":0.738,"p_black":0.893,"s_lyra":0.9,"s_aquila":1.067,"s_cassio":0.844,"s_orion":0.931,"s_ursa":1.418,"s_cygnus":0.88,"n_kage":1.094,"n_kaze":0.917,"n_hi":0.958,"n_mizu":0.895,"n_tsuchi":1.019,"n_rai":0.811,"phoenix":0.926,"tri_arrow":0.945,"b_seiryu":0.793,"b_byakko":0.921,"b_suzaku":0.914,"b_genbu":0.958,"m_ares":1.034,"m_titan":0.839,"m_raven":0.792,"m_raijin":1.219,"m_aegis":0.913,"m_zero":0.881,"g_aries":0.987,"g_taurus":0.793,"g_gemini":0.837,"g_leo":0.896,"g_scorpio":1.138,"g_sagitt":0.903,"d_red":1.041,"d_azure":0.765,"d_gold":0.802,"d_black":0.908,"d_white":0.88,"d_king":0.703,"k_masamune":0.808,"k_muramasa":1.229,"k_kiku":1.151,"k_onimaru":0.893,"k_monohoshi":0.923,"k_douji":0.909,"u_nova":1.098,"u_comet":1.428,"u_saber":1.124,"u_neutron":1.745,"u_halo":0.991,"u_bastion":1.324,"u_nebula":0.765,"u_aurora":0.591,"u_sirius":0.761,"u_hole":0.892,"u_pulsar":0.817,"u_eternal":0.824,"u_quasar":1.157,"u_gamma":1.056,"u_mars":1.22,"u_saturn":1.9,"u_jupiter":1.896,"u_dwarf":1.212,"u_moon":0.665,"u_andromeda":0.676,"u_string":0.81,"u_sun":0.55,"u_dark":0.827,"u_dust":0.665};
+const TUNE={"p_red":0.91,"p_blue":1.125,"p_yellow":0.771,"p_green":0.79,"p_white":0.738,"p_black":0.893,"s_lyra":0.9,"s_aquila":1.067,"s_cassio":0.844,"s_orion":0.931,"s_ursa":1.418,"s_cygnus":0.88,"n_kage":1.094,"n_kaze":0.917,"n_hi":0.958,"n_mizu":0.895,"n_tsuchi":1.019,"n_rai":0.811,"phoenix":0.926,"tri_arrow":0.945,"b_seiryu":0.793,"b_byakko":0.921,"b_suzaku":0.914,"b_genbu":0.958,"m_ares":1.034,"m_titan":0.839,"m_raven":0.792,"m_raijin":1.219,"m_aegis":0.913,"m_zero":0.881,"g_aries":0.987,"g_taurus":0.793,"g_gemini":0.837,"g_leo":0.896,"g_scorpio":1.138,"g_sagitt":0.903,"d_red":1.041,"d_azure":0.765,"d_gold":0.802,"d_black":0.908,"d_white":0.88,"d_king":0.703,"k_masamune":0.808,"k_muramasa":1.229,"k_kiku":1.151,"k_onimaru":0.893,"k_monohoshi":0.923,"k_douji":0.909,"u_nova":1.222,"u_comet":1.953,"u_saber":1.383,"u_neutron":1.9,"u_halo":1.947,"u_bastion":1.12,"u_nebula":0.941,"u_aurora":0.582,"u_sirius":0.585,"u_hole":0.695,"u_pulsar":0.893,"u_eternal":0.498,"u_quasar":1.615,"u_gamma":0.776,"u_mars":1.716,"u_saturn":1.979,"u_jupiter":1.746,"u_dwarf":0.845,"u_moon":0.918,"u_andromeda":0.64,"u_string":0.9,"u_sun":0.944,"u_dark":0.563,"u_dust":0.615};
 const SPCAP=0.4;/* 單次必殺（含連擊）最多打掉防禦/耐久型這麼多耐久，開場必殺不會直接爆 */
 function spCap(V,X,l){if(V.sp||V.chain||V.capT>0){const id='s'+(V.spId||0);if(V.selfId!==id){V.selfId=id;V.selfTaken=0}const r=Math.max(0,Math.min(l,SPCAP-V.selfTaken));V.selfTaken+=r;l=r}
   if(!((X.sp||X.chain||X.capT>0)&&(V.def.type==='def'||V.def.type==='sta')))return l;const id=X.side+':'+(X.spId||0);if(V.capId!==id){V.capId=id;V.capTaken=0}const r=Math.max(0,Math.min(l,SPCAP-V.capTaken));V.capTaken+=r;return r}
@@ -662,11 +667,11 @@ function spPoints(T,O,mv){
   return pts.map(q=>{const c=clampIn(q[0],q[1],0.9);return [c[0],c[1],q[2],q[3]]});
 }
 /* ---------- 宇宙級：覺醒、雙耐久、被動 ---------- */
-const COSDUR=1.75;let COSKD=0.57,COSKB=0.3;/* 宇宙級整體強度：轉速衰減／耐久（越小越弱） *//* 宇宙級有兩條耐久，每條比較薄 */
+const COSDUR=2.3;let COSKB=0.12;/* 宇宙級整體強度：轉速衰減／耐久（越小越弱） *//* 宇宙級有兩條耐久，每條比較薄 */
 const PAS_NAME={nova:'新星',comet:'彗尾',leech:'吸能',mass:'重質',reflect:'反震',regen:'再生',orbit:'環繞',eclipse:'日蝕',phase:'虛化',gravity:'引力',pulse:'脈衝',shield:'星盾'};
-function awaken(T){if(T.awoke||T.def.tier!=='cos'||T.state!=='spin')return;T.awoke=true;T.s=Math.min(1,T.s+0.15);if(!T.bar2)T.burst=Math.min(1,T.burst+0.12);
+function awaken(T){if(T.awoke||T.def.tier!=='cos'||T.state!=='spin')return;T.awoke=true;T.s=Math.max(T.s,1);if(!T.bar2)T.burst=Math.min(1,T.burst+0.12);
   if(T.def.pas==='eclipse'){T.charge=Math.min(1,T.charge+0.7);T.shell=Math.max(T.shell,1.2)}else T.charge=Math.min(1,T.charge+0.4);emit('awaken',{T})}
-function pasBurst(V,l){if(l<=0)return l;if(V.def.pas==='phase'&&Math.random()<0.18)return 0;if(V.def.pas==='shield'&&!V.shieldUsed&&l>0.06){V.shieldUsed=true;emit('shield',{T:V});return 0}if(V.def.tier!=='cos')return l;l*=COSDUR;return V.bar2?l:Math.min(l,0.45)}/* 第一條耐久不會被一次撞擊打掉一半以上 */
+function pasBurst(V,l){if(l<=0)return l;if(V.def.pas==='phase'&&Math.random()<0.18)return 0;if(V.def.pas==='shield'&&!V.shieldUsed&&l>0.06){V.shieldUsed=true;emit('shield',{T:V});return 0}if(V.def.tier!=='cos')return l;l*=COSDUR;return V.bar2?l:Math.min(l,0.65)}/* 第一條耐久不會被一次撞擊打掉一半以上 */
 /* ---------- 戰鬥盤效果 ---------- */
 const FIELDS={blackhole:['黑洞引力','中心有黑洞，會把陀螺往中間吸，太靠近會掉轉速'],shrink:['縮圈','戰鬥盤會越來越小，逼大家互撞'],rotwall:['旋轉牆','外牆和缺口會慢慢旋轉'],spring:['彈簧牆','牆壁會把陀螺大力彈回來'],ice:['冰面','地面很滑，很難停下來'],lava:['熔岩區','踩到紅色熔岩會一直掉轉速'],wind:['星際風','強風推著陀螺跑，每 6 秒換風向'],meteor:['隕石雨','隕石會落下，紅圈內會被炸飛'],boost:['加速環','踩到加速環會往前猛衝']};
 let FIELD=null,fieldT=0,meteors=[],metClock=5;
@@ -790,7 +795,7 @@ function stepPhysics(A,B,h){
     const sp=Math.hypot(T.vx,T.vz),cap=T.sp&&T.sp.kind==='path'?46:T.dash>0?(T.def.pas==='comet'?29:24):T.onTrack>0?17:MAXV+(T.def.pas==='comet'?2.5:0);if(sp>cap){T.vx*=cap/sp;T.vz*=cap/sp}
     T.x+=T.vx*h;T.z+=T.vz*h;
     let decay=0.014*(1.1-T.def.def*0.012)*(1.12-T.def.wt*0.025)*(1+0.05*(T.def.atk-5))+0.006*T.s+sm*0.006
-    decay*=(DECM[T.def.type]||1)/((TUNE[T.def.id]||1)*(T.def.tier==='cos'?COSKD:1));
+    decay*=(DECM[T.def.type]||1)/(T.def.tier==='cos'?Math.max(1,TUNE[T.def.id]||1):(TUNE[T.def.id]||1));/* 宇宙級轉速只會調慢、不會調快 */
     if(T.moon>0)decay*=0.4;
     if(T.awoke)decay*=0.9;
     T.s-=decay*h;T.charge=Math.min(1,T.charge+0.0175*h*chgMul(T)*passX);
@@ -1367,7 +1372,7 @@ function patternTex(def){
   circ(1.3,C);
   // radial stripes
   for(let i=0;i<N*4;i++){const a=i/(N*4)*Math.PI*2;g.save();g.rotate(a);g.fillStyle=i%2?'rgba(0,0,0,.22)':'rgba(255,255,255,.12)';g.beginPath();g.moveTo(0.45,0);g.lineTo(1.3,-0.08);g.lineTo(1.3,0.08);g.closePath();g.fill();g.restore()}
-  circ(0.6,D);ringLine(0.6,0.035,A);ringLine(0.68,0.03,'#fff');if(def.pat||def.pat2)drawPats(g,def);{const io=inS[def.id];if(io)drawInner(g,io,'#11131c')}
+  circ(0.6,D);ringLine(0.6,0.035,A);ringLine(0.68,0.03,'#fff');if(def.pat||def.pat2)drawPats(g,def);{const io=inS[def.id]||def.inner;if(io)drawInner(g,io,'#11131c')}
   const tip={claw:0.84,bump:0.5,crescent:0.5,wing:0.68,saw:0.85,gear:0.5,petal:0.5,star:0.5,mecha:0.5,arrow:0.5,katana:0.8,shuriken:0.5,scale:0.6,zodiac:0.5}[def.style]??0.5;const mo=def.motif;
   if(mo==='zodiac'){ringLine(0.78,0.02,A);ringLine(1.12,0.02,A);const r=rng(def.id.length*7+N);for(let k=0;k<12;k++){const q=k/12*Math.PI*2;g.save();g.rotate(q);g.fillStyle=A;g.fillRect(1.06,-0.012,0.1,0.024);g.restore()}
     const st=[];for(let k=0;k<14;k++){const q=r()*Math.PI*2,rr=0.72+r()*0.42;st.push([Math.cos(q)*rr,Math.sin(q)*rr])}g.lineWidth=0.012;g.strokeStyle='rgba(255,255,255,.7)';g.beginPath();st.forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.stroke();
@@ -1495,7 +1500,17 @@ function makeModel(def){
      const orb=new THREE.Mesh(new THREE.TorusGeometry(0.98,0.025,6,48),ringM);orb.rotation.x=Math.PI/2+0.32;orb.position.y=0.9;add(orb);
      const orb2=new THREE.Mesh(new THREE.TorusGeometry(0.74,0.02,6,40),new THREE.MeshBasicMaterial({color:0xffffff}));orb2.rotation.x=Math.PI/2-0.4;orb2.rotation.y=0.6;orb2.position.y=0.92;add(orb2);
      around(3,(pv,i)=>{const p=new THREE.Mesh(new THREE.SphereGeometry(0.08+0.03*i,10,8),i===1?ringM:acM);p.position.set(0,0.9+(i-1)*0.12,0.98);pv.add(p)});
-     const gem=new THREE.Mesh(new THREE.OctahedronGeometry(0.13),ringM);gem.position.y=1.12;gem.scale.y=1.6;add(gem)}
+     const gem=new THREE.Mesh(new THREE.OctahedronGeometry(0.13),ringM);gem.position.y=1.12;gem.scale.y=1.6;add(gem);
+     /* 雙外環戰刃：大刃＋小鉤刃兩層 */
+     const bladeM=new THREE.MeshStandardMaterial({color:0xe8ecf6,metalness:0.85,roughness:0.18,flatShading:true}),darkB=new THREE.MeshStandardMaterial({color:def.color,metalness:0.7,roughness:0.3,flatShading:true});
+     const NB=def.type==='atk'?3:def.type==='def'?6:4,NS=NB*2;
+     for(let i=0;i<NB;i++){const pv=new THREE.Group();pv.rotation.y=(i+0.25)/NB*Math.PI*2;
+       const bl=triMesh([0.62,-0.2,1.1,-0.16,1.46,0.04,1.12,0.2,0.62,0.18],0.07,bladeM);bl.rotation.x=-Math.PI/2;bl.position.y=0.74;pv.add(bl);
+       const ed=triMesh([0.9,-0.05,1.4,0.03,1.1,0.1],0.03,acM);ed.rotation.x=-Math.PI/2;ed.position.y=0.815;pv.add(ed);
+       pv.updateMatrixWorld(true);for(const ch of [...pv.children]){const w=ch.clone();ch.getWorldPosition(w.position);ch.getWorldQuaternion(w.quaternion);add(w)}}
+     for(let i=0;i<NS;i++){const pv=new THREE.Group();pv.rotation.y=(i+0.75)/NS*Math.PI*2;
+       const hk=triMesh([0.78,-0.06,1.18,-0.02,1.3,0.14,1.08,0.09,0.78,0.07],0.05,i%2?darkB:ringM);hk.rotation.x=-Math.PI/2;hk.position.y=0.86;pv.add(hk);
+       pv.updateMatrixWorld(true);for(const ch of [...pv.children]){const w=ch.clone();ch.getWorldPosition(w.position);ch.getWorldQuaternion(w.quaternion);add(w)}}}
    else if(se==='dragon'||def.id==='b_seiryu'){for(const sg of [-1,1]){const h=new THREE.Mesh(new THREE.ConeGeometry(0.08,0.5,6),gold);h.position.set(sg*0.24,1.12,-0.1);h.rotation.set(-0.5,0,sg*-0.5);add(h)}
      around(def.blades>6?8:6,pv=>{const sp=new THREE.Mesh(new THREE.ConeGeometry(0.07,0.3,4),acM);sp.position.set(0,0.78,1.02);sp.rotation.x=Math.PI/2-0.3;pv.add(sp)})}
    else if(se==='katana'){const blade=new THREE.MeshStandardMaterial({color:0xf0f4fa,metalness:1,roughness:0.08});
@@ -1805,7 +1820,7 @@ function hudTick(){
 
 /* ---------- menu ---------- */
 function drawIcon(c,def){
-  const g=c.getContext('2d'),w=c.width,r=w*0.44;g.clearRect(0,0,w,w);g.save();g.translate(w/2,w/2);
+  const g=c.getContext('2d'),w=c.width,r=w*(def.series==='cosmos'?0.37:0.44);g.clearRect(0,0,w,w);g.save();g.translate(w/2,w/2);
   g.beginPath();for(let i=0;i<=160;i++){const th=i/160*Math.PI*2,rr=ringR(def,th)/1.2*r;i?g.lineTo(Math.cos(th)*rr,Math.sin(th)*rr):g.moveTo(Math.cos(th)*rr,Math.sin(th)*rr)}
   g.closePath();g.fillStyle=hex(def.color);g.fill();g.lineWidth=w*0.025;g.strokeStyle=hex(def.accent);g.stroke();
   const cosm=def.series==='cosmos';
@@ -1813,12 +1828,16 @@ function drawIcon(c,def){
     const sr=rng(def.id.length*31+def.blades);for(let i=0;i<26;i++){const a=sr()*6.283,d=r*(0.6+sr()*0.6),z=w*(0.006+sr()*0.012);g.fillStyle=i%5?'#ffffff':hex(def.accent);g.globalAlpha=0.5+sr()*0.5;g.beginPath();g.arc(Math.cos(a)*d,Math.sin(a)*d,z,0,7);g.fill()}g.globalAlpha=1;g.restore()}
   if(def.pat||def.pat2){g.save();g.beginPath();for(let i=0;i<=160;i++){const th=i/160*Math.PI*2,rr=ringR(def,th)/1.2*r;i?g.lineTo(Math.cos(th)*rr,Math.sin(th)*rr):g.moveTo(Math.cos(th)*rr,Math.sin(th)*rr)}g.closePath();g.clip();g.scale(r/1.2,-r/1.2);drawPats(g,def);g.restore()}
   {const rm=rimOf(def);if(rm){g.save();g.scale(r/1.2,r/1.2);drawRim(g,def,rm.k,rm.c);g.restore()}}
-  {const io=inS[def.id];if(io){g.save();g.scale(r/1.2,r/1.2);drawInner(g,io,'#b9c1da');g.restore()}else{g.beginPath();g.arc(0,0,r*0.62,0,7);g.fillStyle='#b9c1da';g.fill()}}
+  {const io=inS[def.id]||def.inner;if(io){g.save();g.scale(r/1.2,r/1.2);drawInner(g,io,'#b9c1da');g.restore()}else{g.beginPath();g.arc(0,0,r*0.62,0,7);g.fillStyle='#b9c1da';g.fill()}}
   if(def.edgy){const N=def.blades;for(let i=0;i<N;i++){const a=(i+0.5)/N*Math.PI*2;g.save();g.rotate(-a);
     g.beginPath();g.moveTo(r*0.42,-r*0.2);g.lineTo(r*1.0,0);g.lineTo(r*0.42,r*0.2);g.closePath();g.fillStyle='#e6eaf2';g.fill();g.lineWidth=w*0.02;g.strokeStyle='#ffc83d';g.stroke();
     g.beginPath();g.moveTo(r*0.55,-r*0.08);g.lineTo(r*0.8,0);g.lineTo(r*0.55,r*0.08);g.closePath();g.fillStyle=hex(def.accent);g.fill();g.restore()}}
   const orbit=(half)=>{g.save();g.rotate(-0.45);g.shadowColor=hex(def.accent);g.shadowBlur=w*0.04;g.strokeStyle=hex(def.accent);g.lineWidth=w*0.022;g.beginPath();g.ellipse(0,0,r*1.08,r*0.36,0,half?0:Math.PI,half?Math.PI:Math.PI*2);g.stroke();g.shadowBlur=0;
     if(half){for(const [t,z,c] of [[0.35,0.075,hex(def.accent)],[2.5,0.055,'#ffffff']]){g.fillStyle=c;g.beginPath();g.arc(Math.cos(t)*r*1.08,Math.sin(t)*r*0.36,w*z,0,7);g.fill()}}g.restore()};
+  if(cosm){const NB=def.type==='atk'?3:def.type==='def'?6:4,NS=NB*2,P=(pts)=>{g.beginPath();pts.forEach((p,i)=>i?g.lineTo(p[0]*r/1.2,p[1]*r/1.2):g.moveTo(p[0]*r/1.2,p[1]*r/1.2));g.closePath()};
+    for(let i=0;i<NS;i++){g.save();g.rotate(-(i+0.75)/NS*Math.PI*2);P([[0.78,-0.06],[1.18,-0.02],[1.3,0.14],[1.08,0.09],[0.78,0.07]]);g.fillStyle=i%2?hex(def.color):hex(def.accent);g.fill();g.lineWidth=w*0.01;g.strokeStyle='#ffffff';g.stroke();g.restore()}
+    for(let i=0;i<NB;i++){g.save();g.rotate(-(i+0.25)/NB*Math.PI*2);P([[0.62,-0.2],[1.1,-0.16],[1.46,0.04],[1.12,0.2],[0.62,0.18]]);g.fillStyle='#e8ecf6';g.fill();g.lineWidth=w*0.015;g.strokeStyle=hex(def.accent);g.stroke();
+      P([[0.9,-0.05],[1.4,0.03],[1.1,0.1]]);g.fillStyle=hex(def.accent);g.fill();g.restore()}}
   if(cosm)orbit(false);
   g.beginPath();g.arc(0,0,r*0.42,0,7);g.fillStyle=hex(def.color);g.fill();
   if(cosm){g.lineWidth=w*0.018;g.strokeStyle=hex(def.accent);g.stroke()}
@@ -2603,7 +2622,7 @@ rule:`<div class="hcard"><h4>怎麼贏</h4>每一局兩顆陀螺在戰鬥盤上�
 <div class="hcard"><h4>兩條血：轉速與耐久</h4><b>轉速</b>：會自己慢慢掉，被撞也會掉，歸零就停轉。<br><b>耐久</b>：撞擊很重（超過一定力道）時才會扣，歸零就會爆裂。<br>轉速越低，耐久越容易被打掉。吃到「耐久修復」或「轉速」道具可以補回來。</div>
 <div class="hcard"><h4>必殺技</h4>必殺氣會自己慢慢增加，被撞、點擊必殺鈕、長按鈕也能加快。到 100% 就<b>自動發動</b>（AI 和雙人對戰也一樣，不會忘記放）。<br>必殺<b>期間會減傷</b>（攻擊型最多），所以開場放必殺不容易兩敗俱傷。<br>對防禦型、耐久型，一次必殺最多只能打掉他們 40% 的耐久；任何型態自己放必殺時，一次也最多損失 40% 耐久，不會因為衝撞反擊而自爆。<br><b>平衡型</b>撞到對手，會扣掉對手一小段必殺氣。</div>
 <div class="hcard"><h4>四種型態互相剋制</h4><b>攻擊</b> 剋 <b>耐久</b>　<b>耐久</b> 剋 <b>防禦</b>　<b>防禦</b> 剋 <b>攻擊</b><br>被剋制的一方吃到的傷害 ×1.6。<b>平衡型</b>不剋也不被剋。<br>攻擊型打耐久型，耐久型的耐久損耗再多 25%。</div>
-<div class="hcard" style="border-color:#9f7bff"><h4 style="color:#c78bff">宇宙級陀螺（最高等級）</h4><b>兩條耐久</b>：第一條（藍紫色）被打破後，才開始扣第二條（橘色）。每條比一般陀螺薄一點。<br><b>覺醒</b>：轉速低於 30%，或第一條耐久被打破時，會覺醒一次：補回轉速、攻擊變強、轉速掉得更慢、必殺氣大增，身上會發出紫光。<br><b>二段必殺</b>：必殺結束後會自動再追擊一次。<br><b>專屬被動</b>：每顆都有一個特性（新星、彗尾、吸能、重質、反震、再生、環繞、日蝕、虛化、引力、脈衝、星盾），寫在陀螺介紹裡。<br>宇宙陀螺比神聖強，但神聖陀螺還是有機會打贏，所以神聖陀螺也能挑戰宇宙盃。</div>
+<div class="hcard" style="border-color:#9f7bff"><h4 style="color:#c78bff">宇宙級陀螺（最高等級）</h4><b>兩條耐久</b>：第一條（藍紫色）被打破後，才開始扣第二條（橘色）。每條比一般陀螺薄一點。<br><b>覺醒</b>：轉速低於 30%，或第一條耐久被打破時，會覺醒一次：轉速直接補滿、攻擊變強、轉速掉得更慢、必殺氣大增，身上會發出紫光。<br><b>二段必殺</b>：必殺結束後會自動再追擊一次。<br><b>專屬被動</b>：每顆都有一個特性（新星、彗尾、吸能、重質、反震、再生、環繞、日蝕、虛化、引力、脈衝、星盾），寫在陀螺介紹裡。<br>宇宙陀螺比神聖強，但神聖陀螺還是有機會打贏，所以神聖陀螺也能挑戰宇宙盃。</div>
 <div class="hcard"><h4>戰鬥盤效果</h4>有些戰鬥盤有特殊效果，發射前會提示：<br>${Object.values(FIELDS).map(f=>'<b>'+f[0]+'</b>：'+f[1]).join('<br>')}</div>
 <div class="hcard"><h4>戰鬥盤與牆</h4>戰鬥盤會浮出<b>特殊軌道</b>，踩上去會被加速、拉著走（平衡型不受軌道吸引）。<br>四周的牆會慢慢降下，從降下的地方最容易被撞出場。盤面形狀、牆的高度每個場地都不同。</div>
 <div class="hcard"><h4>賽制</h4><b>積分淘汰</b>：32 位參賽者抽籤對戰，打贏 5 關就是冠軍。<br><b>三戰兩勝</b>：8 強淘汰賽，每一關三戰兩勝，獎勵是 32 強淘汰賽的 2 倍。<br><b>自由練習</b>：隨便打，不影響成績。<br>盃賽分青銅、傳說、神聖、宇宙四級，對手會用同等級的陀螺；等級不夠的盃賽會鎖住。<br>可以用<b>低一級的陀螺</b>挑戰高級盃賽：打完獎勵再 ×1.5（以下剋上）。<br>雙人模式：兩人共用一支手機，畫面上下兩半各自操控。</div>`,
@@ -2723,14 +2742,14 @@ function renderStyle(box){
     h+='<div class="pset">'+pb('rim','none','無',!rm)+RIMS.filter(x=>x[0]!=='none').map(([x,n])=>pb('rim',x,n,!!rm&&rm.k===x)).join('')+'</div>';
     if(rm)h+='<div class="shH">邊緣裝飾顏色</div>'+swH('rimc',rm.c,'#ffd23d');
     h+='<div class="note" style="font-size:12px">邊緣裝飾畫在外環內側的一圈；3D 對戰時要重新開始一場才會看到新顏色。</div>'}
-  else if(k===4){const io=inS[def.id]||{};
+  else if(k===4){const io=inS[def.id]||def.inner||{};
     h+='<div class="pset">'+INSHAPES.map(([x,n])=>pb('ins',x,n,(io.s||'circle')===x)).join('')+'</div><div class="note" style="font-size:12px">內圈會畫在陀螺中間，3D 對戰時被中心蓋蓋住的部分看不到，外緣的造型會露出來。</div>'}
-  else if(k===5){const io=inS[def.id]||{};
+  else if(k===5){const io=inS[def.id]||def.inner||{};
     h+='<div class="pset">'+['很細','細','粗','很粗'].map((n,i)=>pb('inw',i+1,n,(io.w||2)===i+1)).join('')+'</div>'}
-  else if(k===6){const io=inS[def.id]||{};
+  else if(k===6){const io=inS[def.id]||def.inner||{};
     h+='<div class="pset">'+INPATS.map(([x,n])=>pb('inp',x,n,(io.p||'none')===x)).join('')+'</div>';
     if(io.p&&io.p!=='none')h+='<div class="shH">花紋顏色</div>'+swH('inpc',io.pc,'#ffffff')}
-  else if(k===7){const io=inS[def.id]||{};
+  else if(k===7){const io=inS[def.id]||def.inner||{};
     h+='<div class="pset">'+pb('inr','none','預設色',!io.c)+'</div>'+swH('inr',io.c,'')}
   else if(k===8){
     h+='<div class="pset">'+pb('stk','none','不貼（顯示原本的字）',!cs)+STK.map(([x,n])=>pb('stk',x,n,!!cs&&cs.k===x)).join('')+'</div>';
@@ -2779,7 +2798,7 @@ shBody.addEventListener('click',e=>{
       if(def.custom){const ci=customs.find(c=>c.sid===def.sp.sid);if(ci){ci.pat=ci.pat2=null;delete ci.patC;delete ci.patC2;const cur=TOPS[pick];loadCustoms();const ni=TOPS.indexOf(cur);pick=ni>=0?ni:TOPS.findIndex(owns)}}else{delete patS[def.id];applyPatS()}
       for(const k of Object.keys(patCache))delete patCache[k];wz.step=1;refreshGlyphs();savePrefs();shMsg='已還原「'+def.name+'」的預設造型'}}
   else if(a==='wzgo'){if(id==='done'){wz.step=0;shMsg='✓ 「'+(TOPS.find(t=>t.id===wz.id)||{name:''}).name+'」改造完成，可以再選另一顆'}else wz.step=Math.max(0,wz.step+ +id)}
-  else if(a==='ins'||a==='inw'||a==='inp'||a==='inpc'||a==='inr'){const def=TOPS[stkTop],o=inS[def.id]=inS[def.id]||{};
+  else if(a==='ins'||a==='inw'||a==='inp'||a==='inpc'||a==='inr'){const def=TOPS[stkTop],o=inS[def.id]=inS[def.id]||Object.assign({},def.inner||{});
     if(a==='ins')o.s=id==='circle'?null:id;else if(a==='inw')o.w=+id===2?null:+id;else if(a==='inp'){o.p=id==='none'?null:id;if(id!=='none'&&!o.pc)o.pc='#ffffff'}else if(a==='inpc'){o.pc=id}else o.c=id==='none'?null:id;
     for(const k of ['s','w','p','pc','c'])if(o[k]==null)delete o[k];if(!o.p)delete o.pc;if(!Object.keys(o).length)delete inS[def.id];delete patCache[def.id];savePrefs()}
   else if(a==='wzreset'){const def=TOPS[stkTop],k=+id;if(k===3){delete rimS[def.id];delete patCache[def.id]}else if(k>=4&&k<=7){const o=inS[def.id];if(o){if(k===4)delete o.s;else if(k===5)delete o.w;else if(k===6){delete o.p;delete o.pc}else delete o.c;if(!Object.keys(o).length)delete inS[def.id]}delete patCache[def.id]}else if(k===8){delete stk[def.id];refreshGlyphs()}else if(k===9&&stk[def.id]){delete stk[def.id].k2;delete stk[def.id].c2;refreshGlyphs()}savePrefs()}
