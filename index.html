@@ -412,7 +412,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.14</div>
+  <div class="ver">v1.14.1</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -562,7 +562,7 @@ function loadCustoms(){for(let i=TOPS.length-1;i>=0;i--)if(TOPS[i].custom)TOPS.s
 loadCustoms();
 const owns=d=>d.custom||ownedTops.has(d.id);
 function boostOf(id){return boosts[id]||{atk:0,def:0,sta:0,wt:0}}
-const BOLT_COLORS=[['white','白電','#ffffff',0],['gold','金電','#ffc83d',1500],['red','赤電','#ff3b2f',1500],['orange','橙電','#ff8a1f',1500],['green','翠電','#3dff7a',1500],['cyan','青電','#39e6ff',1500],['blue','藍電','#3b7bff',1500],['purple','紫電','#b24bff',1500],['pink','粉電','#ff5ab4',1500]];
+const BOLT_COLORS=[['white','白電','#ffffff',0],['gold','金電','#ffc83d',500],['red','赤電','#ff3b2f',500],['orange','橙電','#ff8a1f',500],['green','翠電','#3dff7a',500],['cyan','青電','#39e6ff',500],['blue','藍電','#3b7bff',500],['purple','紫電','#b24bff',500],['pink','粉電','#ff5ab4',500]];
 let boltS=load('v2bolt')||{own:['white'],slots:1,equip:[]};if(!boltS.own||!boltS.own.includes('white'))boltS.own=['white'].concat(boltS.own||[]);
 const boltHex=id=>{const c=BOLT_COLORS.find(x=>x[0]===id);return parseInt((c||BOLT_COLORS[0])[2].slice(1),16)};
 function withBoost(def){
@@ -1067,7 +1067,7 @@ function ringGeo(def){
 }
 const glyphCanvases=[];
 
-const STK=[['blank','素面'],['star','星星'],['heart','愛心'],['flame','火焰'],['bolt','閃電'],['crown','皇冠'],['moon','月亮'],['sun','太陽'],['flower','花朵'],['paw','肉球'],['smile','笑臉'],['eye','魔眼'],['spiral','漩渦'],['shield','盾牌'],['rainbow','彩虹圈'],['yin','太極'],['clover','四葉草'],['target','靶心'],['gem','寶石'],['ghost','小幽靈']];
+const STK=[['blank','素面'],['star','星星'],['heart','愛心'],['flame','火焰'],['bolt','閃電'],['crown','皇冠'],['moon','月亮'],['sun','太陽'],['flower','花朵'],['paw','肉球'],['smile','笑臉'],['eye','魔眼'],['spiral','漩渦'],['shield','盾牌'],['rainbow','彩虹圈'],['yin','太極'],['clover','四葉草'],['target','靶心'],['gem','寶石'],['ghost','小幽靈'],['asanoha','麻の葉'],['ichimatsu','市松'],['uroko','鱗紋'],['seigaiha','青海波'],['shippo','七寶'],['butterfly','蝴蝶'],['fuji','藤花'],['nichirin','日輪'],['inazuma','稻妻'],['shuriken','手裏劍'],['magatama','勾玉'],['kitsune','狐面'],['oni','鬼面'],['katana','交叉刀']];
 let stk=load('v2stk')||{};
 function drawSticker(g,k,col,cx,cy,r){
   g.save();g.translate(cx,cy);g.scale(r,r);g.lineJoin='round';g.lineCap='round';g.fillStyle=col;g.strokeStyle='#1b1630';g.lineWidth=0.07;
@@ -1092,6 +1092,20 @@ function drawSticker(g,k,col,cx,cy,r){
   else if(k==='target'){['#fff',col,'#fff',col].forEach((c,i)=>{g.fillStyle=c;g.beginPath();g.arc(0,0,0.95-i*0.24,0,TAU);g.fill();g.stroke()})}
   else if(k==='gem'){poly([[-0.55,-0.55],[0.55,-0.55],[0.95,-0.1],[0,0.95],[-0.95,-0.1]]);g.strokeStyle='rgba(255,255,255,.8)';g.lineWidth=0.05;g.beginPath();g.moveTo(-0.95,-0.1);g.lineTo(0.95,-0.1);g.moveTo(-0.3,-0.1);g.lineTo(0,0.95);g.moveTo(0.3,-0.1);g.lineTo(0,0.95);g.moveTo(-0.3,-0.1);g.lineTo(-0.55,-0.55);g.moveTo(0.3,-0.1);g.lineTo(0.55,-0.55);g.stroke()}
   else if(k==='ghost'){g.beginPath();g.moveTo(-0.75,0.85);g.lineTo(-0.75,-0.1);g.arc(0,-0.1,0.75,Math.PI,0);g.lineTo(0.75,0.85);g.lineTo(0.45,0.6);g.lineTo(0.15,0.85);g.lineTo(-0.15,0.6);g.lineTo(-0.45,0.85);g.closePath();g.fill();g.stroke();g.fillStyle='#1b1630';g.beginPath();g.arc(-0.25,-0.15,0.11,0,TAU);g.arc(0.25,-0.15,0.11,0,TAU);g.fill()}
+  else if(k==='asanoha'){g.beginPath();g.arc(0,0,0.92,0,TAU);g.fill();g.stroke();g.strokeStyle='#fff';g.lineWidth=0.05;g.beginPath();for(let q=0;q<6;q++){const t=q/6*TAU-Math.PI/2;q?g.lineTo(Math.cos(t)*0.78,Math.sin(t)*0.78):g.moveTo(Math.cos(t)*0.78,Math.sin(t)*0.78)}g.closePath();g.stroke();for(let q=0;q<3;q++){const t=q/3*Math.PI-Math.PI/2;g.beginPath();g.moveTo(Math.cos(t)*0.78,Math.sin(t)*0.78);g.lineTo(-Math.cos(t)*0.78,-Math.sin(t)*0.78);g.stroke()}for(let q=0;q<6;q++){const t=q/6*TAU-Math.PI/2,t2=(q+1)/6*TAU-Math.PI/2,m=(t+t2)/2;g.beginPath();g.moveTo(Math.cos(t)*0.78,Math.sin(t)*0.78);g.lineTo(Math.cos(m)*0.39,Math.sin(m)*0.39);g.lineTo(Math.cos(t2)*0.78,Math.sin(t2)*0.78);g.stroke()}}
+  else if(k==='ichimatsu'){g.save();g.beginPath();g.arc(0,0,0.92,0,TAU);g.clip();for(let i=-4;i<4;i++)for(let j=-4;j<4;j++){g.fillStyle=(i+j)%2?'#1b1630':col;g.fillRect(i*0.26,j*0.26,0.26,0.26)}g.restore();g.beginPath();g.arc(0,0,0.92,0,TAU);g.stroke()}
+  else if(k==='uroko'){g.save();g.beginPath();g.arc(0,0,0.92,0,TAU);g.clip();g.fillStyle='#1b1630';g.fillRect(-1,-1,2,2);g.fillStyle=col;const z=0.3;for(let j=-4;j<4;j++)for(let i=-4;i<4;i++){const x=i*z+(j&1?z/2:0),y=j*z*0.87;g.beginPath();g.moveTo(x,y-z*0.45);g.lineTo(x+z/2,y+z*0.42);g.lineTo(x-z/2,y+z*0.42);g.closePath();g.fill()}g.restore();g.beginPath();g.arc(0,0,0.92,0,TAU);g.stroke()}
+  else if(k==='seigaiha'){g.save();g.beginPath();g.arc(0,0,0.92,0,TAU);g.clip();g.fillRect(-1,-1,2,2);g.strokeStyle='#fff';g.lineWidth=0.045;for(let j=-4;j<=4;j++)for(let i=-4;i<=4;i++){const x=i*0.44+(j&1?0.22:0),y=j*0.2;for(const rd of [0.22,0.15,0.08]){g.beginPath();g.arc(x,y,rd,Math.PI,TAU);g.stroke()}}g.restore();g.beginPath();g.arc(0,0,0.92,0,TAU);g.stroke()}
+  else if(k==='shippo'){g.beginPath();g.arc(0,0,0.92,0,TAU);g.fill();g.stroke();g.strokeStyle='#fff';g.lineWidth=0.06;for(const [x,y] of [[-0.3,0],[0.3,0],[0,-0.3],[0,0.3]]){g.beginPath();g.arc(x,y,0.42,0,TAU);g.stroke()}}
+  else if(k==='butterfly'){for(const sg of [-1,1]){g.beginPath();g.ellipse(sg*0.4,-0.3,0.42,0.5,sg*0.5,0,TAU);g.fill();g.stroke();g.beginPath();g.ellipse(sg*0.3,0.42,0.28,0.34,-sg*0.4,0,TAU);g.fill();g.stroke()}g.fillStyle='#fff';for(const sg of [-1,1]){g.beginPath();g.arc(sg*0.45,-0.35,0.12,0,TAU);g.fill()}g.fillStyle='#1b1630';g.beginPath();g.ellipse(0,0.05,0.07,0.55,0,0,TAU);g.fill();g.lineWidth=0.04;g.beginPath();g.moveTo(0,-0.5);g.quadraticCurveTo(-0.1,-0.85,-0.3,-0.9);g.moveTo(0,-0.5);g.quadraticCurveTo(0.1,-0.85,0.3,-0.9);g.stroke()}
+  else if(k==='fuji'){g.lineWidth=0.06;g.beginPath();g.moveTo(0,-0.95);g.lineTo(0,-0.6);g.stroke();for(let q=0;q<6;q++){const m=Math.max(1,5-q);for(let w=0;w<m;w++){g.beginPath();g.arc((w-(m-1)/2)*0.28,-0.55+q*0.28,0.15,0,TAU);g.fill();g.stroke()}}}
+  else if(k==='nichirin'){for(let i=0;i<16;i++){g.save();g.rotate(i/16*TAU);g.beginPath();g.moveTo(0.55,-0.08);g.lineTo(i%2?0.98:0.8,0);g.lineTo(0.55,0.08);g.closePath();g.fill();g.stroke();g.restore()}g.beginPath();g.arc(0,0,0.56,0,TAU);g.fill();g.stroke();g.strokeStyle='#fff';g.lineWidth=0.05;g.beginPath();g.arc(0,0,0.38,0,TAU);g.stroke()}
+  else if(k==='inazuma'){poly([[0.3,-0.95],[-0.45,0.05],[0.0,0.05],[-0.35,0.95],[0.6,-0.25],[0.12,-0.25],[0.5,-0.95]]);g.save();g.fillStyle='#fff';g.globalAlpha=0.85;g.lineWidth=0;g.beginPath();g.moveTo(0.22,-0.7);g.lineTo(-0.2,-0.05);g.lineTo(0.1,-0.05);g.lineTo(-0.12,0.55);g.lineTo(0.3,-0.15);g.lineTo(0.02,-0.15);g.lineTo(0.28,-0.7);g.closePath();g.fill();g.restore()}
+  else if(k==='shuriken'){poly([[0,-0.95],[0.22,-0.22],[0.95,0],[0.22,0.22],[0,0.95],[-0.22,0.22],[-0.95,0],[-0.22,-0.22]]);g.fillStyle='#fff';g.beginPath();g.arc(0,0,0.12,0,TAU);g.fill();g.stroke()}
+  else if(k==='magatama'){g.beginPath();g.moveTo(0.5,-0.2);g.bezierCurveTo(0.95,0.5,0.4,0.98,-0.45,0.8);g.bezierCurveTo(0.1,0.72,0.25,0.35,-0.1,0.15);g.closePath();g.fill();g.stroke();g.beginPath();g.arc(0,-0.3,0.52,0,TAU);g.fill();g.stroke();g.fillStyle='#fff';g.beginPath();g.arc(-0.08,-0.34,0.13,0,TAU);g.fill()}
+  else if(k==='kitsune'){poly([[-0.82,-0.5],[-0.62,-0.95],[-0.3,-0.55],[0.3,-0.55],[0.62,-0.95],[0.82,-0.5],[0.52,0.4],[0,0.95],[-0.52,0.4]]);g.fill();g.fillStyle='#fff';g.fill();g.stroke();g.strokeStyle=col;g.lineWidth=0.1;g.beginPath();g.moveTo(-0.62,-0.2);g.lineTo(-0.22,-0.05);g.moveTo(0.62,-0.2);g.lineTo(0.22,-0.05);g.moveTo(-0.7,0.2);g.lineTo(-0.4,0.28);g.moveTo(0.7,0.2);g.lineTo(0.4,0.28);g.moveTo(-0.52,-0.62);g.lineTo(-0.42,-0.4);g.moveTo(0.52,-0.62);g.lineTo(0.42,-0.4);g.stroke();g.fillStyle='#1b1630';g.beginPath();g.ellipse(0,0.6,0.1,0.07,0,0,TAU);g.fill()}
+  else if(k==='oni'){g.beginPath();g.ellipse(0,0.1,0.8,0.78,0,0,TAU);g.fill();g.stroke();for(const sg of [-1,1]){poly([[sg*0.3,-0.55],[sg*0.55,-0.98],[sg*0.62,-0.45]]);g.fillStyle='#fff';g.fill();g.stroke();g.fillStyle=col}g.fillStyle='#fff';for(const sg of [-1,1]){g.beginPath();g.ellipse(sg*0.3,-0.05,0.17,0.12,sg*0.3,0,TAU);g.fill();g.stroke()}g.fillStyle='#1b1630';for(const sg of [-1,1]){g.beginPath();g.arc(sg*0.3,-0.05,0.06,0,TAU);g.fill()}g.fillStyle='#fff';g.beginPath();g.moveTo(-0.45,0.4);g.quadraticCurveTo(0,0.7,0.45,0.4);g.lineTo(0.38,0.58);g.quadraticCurveTo(0,0.85,-0.38,0.58);g.closePath();g.fill();g.stroke()}
+  else if(k==='katana'){for(const sg of [-1,1]){g.save();g.rotate(sg*0.78);g.beginPath();g.moveTo(-0.07,-0.95);g.lineTo(0.07,-0.95);g.lineTo(0.07,0.45);g.lineTo(-0.07,0.45);g.closePath();g.fillStyle='#e8edf5';g.fill();g.stroke();g.beginPath();g.ellipse(0,0.52,0.2,0.07,0,0,TAU);g.fillStyle=col;g.fill();g.stroke();g.beginPath();g.moveTo(-0.07,0.58);g.lineTo(0.07,0.58);g.lineTo(0.07,0.95);g.lineTo(-0.07,0.95);g.closePath();g.fillStyle='#1b1630';g.fill();g.stroke();g.restore()}}
   g.restore();
 }
 function stkOf(def){return stk[def.id]||null}
@@ -1099,7 +1113,7 @@ function refreshGlyphs(){for(const o of glyphCanvases){drawGlyph(o.c,o.def);o.t.
 function drawGlyph(c,def){const g=c.getContext('2d'),w=c.width;g.clearRect(0,0,w,w);
   g.fillStyle=hex(def.color);g.beginPath();g.arc(w/2,w/2,w/2,0,7);g.fill();
   g.strokeStyle=hex(def.accent);g.lineWidth=w*0.06;g.beginPath();g.arc(w/2,w/2,w*0.42,0,7);g.stroke();
-  const sk=stkOf(def);if(sk){drawSticker(g,sk.k,sk.c,w/2,w/2,w*0.37);return}
+  const sk=stkOf(def);if(sk){drawSticker(g,sk.k,sk.c,w/2,w/2,w*0.37);if(sk.k2)drawSticker(g,sk.k2,sk.c2||'#ffffff',w/2,w/2,w*0.2);return}
   g.fillStyle=inkOn(def.color);g.font=`900 ${w*0.5}px "Noto Sans TC","PingFang TC",sans-serif`;g.textAlign='center';g.textBaseline='middle';
   g.shadowColor='rgba(0,0,0,.5)';g.shadowBlur=w*0.04;g.fillText(def.glyph,w/2,w*0.53)}
 function glyphTex(def){const c=document.createElement('canvas');c.width=c.height=128;drawGlyph(c,def);const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;glyphCanvases.push({c,def,t});return t}
@@ -1579,7 +1593,7 @@ function drawIcon(c,def){
     g.beginPath();g.moveTo(r*0.42,-r*0.2);g.lineTo(r*1.0,0);g.lineTo(r*0.42,r*0.2);g.closePath();g.fillStyle='#e6eaf2';g.fill();g.lineWidth=w*0.02;g.strokeStyle='#ffc83d';g.stroke();
     g.beginPath();g.moveTo(r*0.55,-r*0.08);g.lineTo(r*0.8,0);g.lineTo(r*0.55,r*0.08);g.closePath();g.fillStyle=hex(def.accent);g.fill();g.restore()}}
   g.beginPath();g.arc(0,0,r*0.42,0,7);g.fillStyle=hex(def.color);g.fill();
-  {const sk=stkOf(def);if(sk)drawSticker(g,sk.k,sk.c,0,0,r*0.36);else{g.fillStyle=inkOn(def.color);g.font=`900 ${r*0.5}px "Noto Sans TC","PingFang TC",sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(def.glyph,0,r*0.04)}}g.restore();
+  {const sk=stkOf(def);if(sk){drawSticker(g,sk.k,sk.c,0,0,r*0.36);if(sk.k2)drawSticker(g,sk.k2,sk.c2||'#ffffff',0,0,r*0.2)}else{g.fillStyle=inkOn(def.color);g.font=`900 ${r*0.5}px "Noto Sans TC","PingFang TC",sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(def.glyph,0,r*0.04)}}g.restore();
 }
 const pickEl=$('pick'),detailEl=$('detail'),filtersEl=$('filters');let topFilter='mine';
 {const sv=load('top');if(Number.isInteger(sv)&&sv>=0&&sv<TOPS.length)pick=sv;if(!owns(TOPS[pick]))pick=TOPS.findIndex(owns)}
@@ -1748,12 +1762,12 @@ const HAIRC=['#1d1d26','#5a3a22','#f2c94c','#e04a3a','#3b6fe0','#2fb36a','#ff8fc
 const CLOTHC=['#e53935','#ff8a1f','#ffd23d','#3fb950','#1fb5c9','#2f6bff','#7b4dff','#ff5ab4','#f4f4f4','#333846','#8a5a3a','#5c6b2e'];
 const OPT={
  gender:{label:'性別',items:['男孩','女孩']},
- hat:{label:'帽子',items:['不戴','棒球帽','反戴帽','毛線帽','頭帶','護目鏡','貓耳'],color:'hatC'},
- hair:{label:'髮型',items:['刺刺頭','蓬鬆頭','平頭','長直髮','雙馬尾','馬尾','丸子頭','鮑伯頭']},
+ hat:{label:'帽子',items:['不戴','棒球帽','反戴帽','毛線帽','頭帶','護目鏡','貓耳','機甲頭盔','龍角冠','星座髮冠','武士鉢巻','忍者頭巾','鳳凰羽冠'],color:'hatC'},
+ hair:{label:'髮型',items:['刺刺頭','蓬鬆頭','平頭','長直髮','雙馬尾','馬尾','丸子頭','鮑伯頭','武士髻','星座長捲髮','龍焰刺髮','忍者高馬尾']},
  hairC:{label:'髮色',swatchOnly:true},
  face:{label:'臉型',items:['圓臉','鵝蛋臉','尖下巴','方臉'],color:'skin'},
  expr:{label:'表情',items:['自信','熱血','酷酷','開心','生氣','調皮']},
- top:{label:'上衣',items:['T恤','連帽衫','夾克','背心','運動服','道服'],color:'topC'},
+ top:{label:'上衣',items:['T恤','連帽衫','夾克','背心','運動服','道服','機甲戰衣','星座聖衣','武士羽織','忍者裝','龍紋長袍'],color:'topC'},
  bottom:{label:'褲裝裙裝',items:['長褲','短褲','工作褲','百褶裙','短裙內搭'],color:'bottomC'},
  glove:{label:'戰鬥手套',items:['不戴','露指手套','拳擊手套','機械手套','繃帶'],color:'gloveC'},
  launcher:{label:'發射器',items:['標準型','握把型','龍頭型','雙翼型','星砲型'],color:'launcherC'},
@@ -1764,8 +1778,8 @@ const DEFAULT_AV={gender:0,hat:1,hatC:5,hair:0,hairC:0,face:0,skin:0,expr:1,top:
 const RIVAL_NAMES=['阿烈','小雷','星野','莉莉','阿凱','小翼','夜月','千夏','大熊','迅風','小葵','龍介'];
 function randomAvatar(){
   const r=n=>Math.floor(Math.random()*n),girl=Math.random()<0.5;
-  const av={gender:girl?1:0,hat:Math.random()<0.4?0:r(7),hatC:r(12),hair:girl?[3,4,5,6,7,1][r(6)]:[0,1,2,0,5,1][r(6)],hairC:r(9),face:r(4),skin:r(5),expr:r(6),
-    top:r(6),topC:r(12),bottom:girl&&Math.random()<0.6?3+r(2):r(3),bottomC:r(12),glove:r(5),gloveC:r(12),launcher:r(5),launcherC:r(12),shoes:r(4),shoesC:r(12)};
+  const av={gender:girl?1:0,hat:Math.random()<0.4?0:r(13),hatC:r(12),hair:girl?[3,4,5,6,7,1,9,11][r(8)]:[0,1,2,0,5,1,8,10][r(8)],hairC:r(9),face:r(4),skin:r(5),expr:r(6),
+    top:r(11),topC:r(12),bottom:girl&&Math.random()<0.6?3+r(2):r(3),bottomC:r(12),glove:r(5),gloveC:r(12),launcher:r(5),launcherC:r(12),shoes:r(4),shoesC:r(12)};
   if(av.bottomC===av.topC)av.bottomC=(av.bottomC+4)%12;
   return av;
 }
@@ -1781,7 +1795,7 @@ const lerp=(a,b,t)=>a+(b-a)*t;
 function armPts(side,a1,a2){const sx=side*0.31,sy=-1.5;const ex=sx+side*Math.sin(a1)*0.36,ey=sy+Math.cos(a1)*0.36;return [sx,sy,ex,ey,ex+side*Math.sin(a2)*0.34,ey+Math.cos(a2)*0.34]}
 function partial(p,f){const[x0,y0,x1,y1,x2,y2]=p;// cut polyline at fraction f of forearm (f in 0..2 over two segments)
   if(f<=1)return [x0,y0,lerp(x0,x1,f),lerp(y0,y1,f)];return [x0,y0,x1,y1,lerp(x1,x2,f-1),lerp(y1,y2,f-1)]}
-const SLEEVE=[ [0.75,0.2],[1.85,0.24],[1.85,0.25],[0,0],[1.85,0.24],[0.9,0.32] ];
+const SLEEVE=[ [0.75,0.2],[1.85,0.24],[1.85,0.25],[0,0],[1.85,0.24],[0.9,0.32],[0.8,0.3],[0.5,0.28],[1.85,0.32],[1.85,0.22],[1.85,0.3] ];
 
 /* arms + hands + gloves */
 function drawArm(g,av,p,skin,top){
@@ -1899,6 +1913,10 @@ function hairBack(g,av,t){
   if(h===4)for(const s of [-1,1]){const sw=Math.sin(t*3+s)*0.05;g.beginPath();g.moveTo(s*0.45,-0.35);g.bezierCurveTo(s*1.15,-0.3,s*(1.05+sw),0.5,s*(0.9+sw),1.05);g.bezierCurveTo(s*0.8,0.6,s*0.65,0.3,s*0.48,-0.05);g.closePath();fo(g,hc);ell(g,s*0.5,-0.28,0.07,0.07,'#ff4b6a',0.025)}
   if(h===5){const sw=Math.sin(t*3)*0.06;g.beginPath();g.moveTo(0.2,-0.55);g.bezierCurveTo(1.0,-0.6,0.95+sw,0.3,0.85+sw,0.95);g.bezierCurveTo(0.7,0.5,0.6,0.1,0.4,-0.3);g.closePath();fo(g,hc);ell(g,0.33,-0.48,0.07,0.07,'#ff4b6a',0.025)}
   if(h===6){ell(g,0,-0.66,0.22,0.2,hc)}
+  if(h===8){ell(g,0,-0.74,0.11,0.17,hc);g.lineWidth=0.05;g.strokeStyle='#e0303a';g.beginPath();g.moveTo(-0.11,-0.62);g.lineTo(0.11,-0.62);g.stroke()}
+  if(h===9){g.beginPath();g.moveTo(-0.6,-0.1);g.bezierCurveTo(-0.92,0.3,-0.66,0.7,-0.88,1.1);g.bezierCurveTo(-0.5,1.28,-0.2,1.0,0,1.22);g.bezierCurveTo(0.2,1.0,0.5,1.28,0.88,1.1);g.bezierCurveTo(0.66,0.7,0.92,0.3,0.6,-0.1);g.closePath();fo(g,hc)}
+  if(h===10){g.beginPath();const n=7;for(let i=0;i<=n*2;i++){const a=-Math.PI-0.15+(Math.PI+0.3)*i/(n*2),r=i%2?0.62:1.32;g.lineTo(Math.cos(a)*r,-0.1+Math.sin(a)*r*0.95)}g.closePath();fo(g,hc)}
+  if(h===11){const sw=Math.sin(t*3)*0.07;g.beginPath();g.moveTo(0,-0.62);g.bezierCurveTo(0.9+sw,-1.05,1.15+sw,0.1,0.8+sw,1.0);g.bezierCurveTo(0.7,0.25,0.45,-0.35,0,-0.48);g.closePath();fo(g,hc);ell(g,0.05,-0.58,0.08,0.06,'#e0303a',0.025)}
   if(h===7){g.beginPath();g.moveTo(-0.6,-0.1);g.lineTo(-0.62,0.42);g.quadraticCurveTo(-0.5,0.56,-0.3,0.5);g.lineTo(0.3,0.5);g.quadraticCurveTo(0.5,0.56,0.62,0.42);g.lineTo(0.6,-0.1);g.closePath();fo(g,hc)}
 }
 const BANGS=[
@@ -1910,6 +1928,11 @@ const BANGS=[
  [0.52,0.12,0.44,-0.1,0.2,-0.18,0.02,-0.04,-0.15,-0.22,-0.34,-0.05,-0.5,0.12],
  [0.52,0.1,0.38,-0.14,0.16,-0.06,-0.04,-0.18,-0.24,-0.06,-0.42,-0.14,-0.5,0.1],
  [0.56,0.44,0.46,-0.08,-0.46,-0.08,-0.56,0.44],
+ [0.52,0.02,0.36,-0.2,0.2,-0.12,0,-0.2,-0.2,-0.12,-0.36,-0.2,-0.52,0.02],
+ [0.52,0.28,0.4,-0.14,0.2,-0.02,0.0,-0.18,-0.18,-0.02,-0.4,-0.14,-0.52,0.28],
+ [0.52,0.05,0.44,-0.36,0.28,-0.04,0.12,-0.4,-0.02,-0.02,-0.18,-0.38,-0.34,-0.04,-0.48,-0.32,-0.52,0.06],
+ [0.52,0.1,0.38,-0.14,0.16,-0.06,-0.04,-0.18,-0.24,-0.06,-0.42,-0.14,-0.5,0.1],
+
 ];
 function hairFront(g,av){
   const hc=HAIRC[av.hairC],b=BANGS[av.hair];
@@ -1919,7 +1942,7 @@ function hairFront(g,av){
 }
 function hatBack(g,av,t){
   const c=CLOTHC[av.hatC];
-  if(av.hat===4){const f=Math.sin(t*6)*0.05;g.beginPath();g.moveTo(0.48,-0.3);g.quadraticCurveTo(0.8,-0.35+f,1.05,-0.15+f);g.lineTo(1.0,-0.05+f);g.quadraticCurveTo(0.75,-0.22,0.48,-0.2);g.closePath();fo(g,c);
+  if(av.hat===4||av.hat===10||av.hat===11){const f=Math.sin(t*6)*0.05;g.beginPath();g.moveTo(0.48,-0.3);g.quadraticCurveTo(0.8,-0.35+f,1.05,-0.15+f);g.lineTo(1.0,-0.05+f);g.quadraticCurveTo(0.75,-0.22,0.48,-0.2);g.closePath();fo(g,c);
     g.beginPath();g.moveTo(0.48,-0.25);g.quadraticCurveTo(0.75,-0.1-f,0.95,0.12-f);g.lineTo(0.86,0.18-f);g.quadraticCurveTo(0.7,-0.02,0.48,-0.17);g.closePath();fo(g,shade(c,-0.15))}
   if(av.hat===6)for(const s of [-1,1]){poly(g,[s*0.18,-0.5,s*0.42,-0.92,s*0.5,-0.36],c);poly(g,[s*0.26,-0.5,s*0.41,-0.78,s*0.45,-0.45],'#ffb3c8',0)}
 }
@@ -1941,6 +1964,19 @@ function hatFront(g,av){
     case 5:g.beginPath();g.moveTo(-0.56,-0.4);g.quadraticCurveTo(0,-0.5,0.56,-0.4);g.lineTo(0.56,-0.32);g.quadraticCurveTo(0,-0.42,-0.56,-0.32);g.closePath();fo(g,'#2a2a34');
       for(const s of [-1,1]){ell(g,s*0.2,-0.42,0.16,0.13,c);const gr=g.createLinearGradient(0,-0.52,0,-0.32);gr.addColorStop(0,'#bff6ff');gr.addColorStop(1,'#2f8fd0');ell(g,s*0.2,-0.42,0.11,0.09,gr,0.02);ell(g,s*0.2-0.04,-0.45,0.03,0.02,'#fff',0)}
       poly(g,[-0.05,-0.44,0.05,-0.44,0.05,-0.4,-0.05,-0.4],c,0.015);break;
+    case 7:g.beginPath();g.ellipse(0,-0.24,0.6,0.52,0,Math.PI,Math.PI*2);g.closePath();fo(g,c);
+      poly(g,[-0.58,-0.42,0.58,-0.42,0.56,-0.3,-0.56,-0.3],'#1d2a44',0.025);poly(g,[-0.4,-0.4,0.4,-0.4,0.36,-0.32,-0.36,-0.32],'#39e6ff',0);
+      for(const sg of [-1,1]){ell(g,sg*0.6,-0.12,0.07,0.13,shade(c,-0.2),0.03)}
+      poly(g,[0,-0.36,-0.14,-0.82,-0.02,-0.58,0.02,-0.58,0.14,-0.82],'#ffc83d',0.025);ell(g,0,-0.52,0.045,0.045,'#e0303a',0.015);break;
+    case 8:g.lineWidth=0.02;for(const sg of [-1,1]){g.beginPath();g.moveTo(sg*0.2,-0.52);g.bezierCurveTo(sg*0.5,-0.62,sg*0.6,-0.9,sg*0.46,-1.12);g.bezierCurveTo(sg*0.44,-0.88,sg*0.32,-0.74,sg*0.12,-0.66);g.closePath();fo(g,'#f4ecd8')}
+      poly(g,[-0.56,-0.34,0.56,-0.34,0.54,-0.24,-0.54,-0.24],c,0.03);ell(g,0,-0.3,0.06,0.06,'#e0303a',0.02);break;
+    case 9:poly(g,[-0.5,-0.3,-0.36,-0.62,-0.18,-0.4,0,-0.76,0.18,-0.4,0.36,-0.62,0.5,-0.3],c,0.03);ell(g,0,-0.5,0.05,0.05,'#fff',0.015);ell(g,-0.3,-0.4,0.03,0.03,'#fff',0.01);ell(g,0.3,-0.4,0.03,0.03,'#fff',0.01);break;
+    case 10:g.beginPath();g.moveTo(-0.55,-0.34);g.quadraticCurveTo(0,-0.46,0.55,-0.34);g.lineTo(0.55,-0.2);g.quadraticCurveTo(0,-0.32,-0.55,-0.2);g.closePath();fo(g,'#f4f4f4');ell(g,0,-0.29,0.07,0.07,'#e0303a',0.015);break;
+    case 11:g.beginPath();g.ellipse(0,-0.24,0.6,0.5,0,Math.PI,Math.PI*2);g.closePath();fo(g,c);
+      poly(g,[-0.56,-0.4,0.56,-0.4,0.56,-0.2,-0.56,-0.2],shade(c,-0.15),0.03);poly(g,[-0.3,-0.38,0.3,-0.38,0.3,-0.22,-0.3,-0.22],'#cfd6e6',0.025);
+      ell(g,0,-0.3,0.055,0.055,'#7a8196',0.015);break;
+    case 12:for(let i=0;i<5;i++){g.save();g.translate(0,-0.46);g.rotate((i-2)*0.4);ell(g,0,-0.3,0.08,0.3,i%2?c:shade(c,0.35),0.03);ell(g,0,-0.34,0.035,0.16,i%2?'#ffd23d':'#e0303a',0);g.restore()}
+      poly(g,[-0.5,-0.34,0.5,-0.34,0.5,-0.24,-0.5,-0.24],'#ffc83d',0.025);break;
   }
 }
 /* legs, bottoms, shoes */
@@ -1986,6 +2022,17 @@ function drawTorso(g,av,skin){
     poly(g,[-0.15,-1.7,0.15,-1.7,0.17,-1.58,-0.17,-1.58],d,0.02)}
   if(t===5){g.lineWidth=0.06;g.strokeStyle='#f4f4f4';g.beginPath();g.moveTo(-0.17,-1.63);g.lineTo(0.08,-1.2);g.moveTo(0.17,-1.63);g.lineTo(-0.04,-1.28);g.stroke();
     poly(g,[-0.31,-1.15,0.31,-1.15,0.3,-1.05,-0.3,-1.05],'#1d1d26',0.02);poly(g,[0.05,-1.12,0.16,-0.92,0.1,-0.9,0.02,-1.08],'#1d1d26',0.015)}
+  if(t===6){poly(g,[-0.3,-1.56,0.3,-1.56,0.24,-1.22,-0.24,-1.22],shade(c,0.3),0.03);g.lineWidth=0.025;g.strokeStyle=d;g.beginPath();g.moveTo(0,-1.56);g.lineTo(0,-1.22);g.moveTo(-0.28,-1.4);g.lineTo(0.28,-1.4);g.stroke();ell(g,0,-1.4,0.07,0.07,'#39e6ff',0.02);
+    for(const sg of [-1,1])poly(g,[sg*0.4,-1.46,sg*0.2,-1.68,sg*0.2,-1.5,sg*0.38,-1.4],d,0.03);poly(g,[-0.3,-1.12,0.3,-1.12,0.3,-1.04,-0.3,-1.04],'#ffc83d',0.02)}
+  if(t===7){poly(g,[-0.3,-1.58,0.3,-1.58,0.25,-1.2,0,-1.05,-0.25,-1.2],shade(c,0.35),0.03);g.beginPath();for(let i=0;i<10;i++){const a=i/10*Math.PI*2-Math.PI/2,r=i%2?0.05:0.12;g.lineTo(Math.cos(a)*r,-1.38+Math.sin(a)*r)}g.closePath();fo(g,'#fff',0.02);
+    for(const sg of [-1,1])ell(g,sg*0.37,-1.56,0.12,0.09,shade(c,0.25),0.03)}
+  if(t===8){g.save();body();g.clip();for(let y=0;y<7;y++)for(let x=0;x<8;x++)if((x+y)%2){g.fillStyle=d;g.fillRect(-0.36+x*0.09,-1.66+y*0.09,0.09,0.09)}g.restore();body();g.lineWidth=0.035;g.strokeStyle=OL;g.stroke();
+    poly(g,[-0.18,-1.64,-0.04,-1.64,0.1,-1.1,-0.02,-1.1],'#f4f4f4',0.02);poly(g,[0.18,-1.64,0.04,-1.64,-0.1,-1.12,0.02,-1.12],'#f4f4f4',0.02)}
+  if(t===9){g.lineWidth=0.05;g.strokeStyle='#cfd6e6';g.beginPath();g.moveTo(-0.3,-1.58);g.lineTo(0.28,-1.08);g.moveTo(0.3,-1.58);g.lineTo(-0.28,-1.08);g.stroke();poly(g,[-0.3,-1.14,0.3,-1.14,0.3,-1.04,-0.3,-1.04],shade(c,-0.4),0.02);
+    poly(g,[-0.2,-1.66,0.2,-1.66,0.16,-1.52,-0.16,-1.52],'#e0303a',0.025)}
+  if(t===10){g.lineWidth=0.03;g.strokeStyle='#ffc83d';g.beginPath();g.moveTo(-0.17,-1.63);g.lineTo(0.08,-1.2);g.moveTo(0.17,-1.63);g.lineTo(-0.04,-1.28);g.stroke();
+    g.lineWidth=0.025;g.beginPath();g.moveTo(-0.2,-1.4);g.bezierCurveTo(-0.1,-1.5,0.1,-1.3,0.2,-1.42);g.moveTo(-0.2,-1.25);g.bezierCurveTo(-0.1,-1.35,0.1,-1.15,0.2,-1.27);g.stroke();
+    poly(g,[-0.31,-1.15,0.31,-1.15,0.3,-1.05,-0.3,-1.05],'#ffc83d',0.02)}
 }
 /* full character. o:{pose:'stand'|'launch'|'shout', t, pull, released, def, hideTop}. returns {topX,topY} */
 function drawChar(g,av,o){
@@ -2374,7 +2421,9 @@ function renderStyle(box){
   {const mine=TOPS.filter(t=>owns(t));if(!mine.includes(TOPS[stkTop]))stkTop=TOPS.indexOf(mine[0]);const tp=TOPS[stkTop],cs=stk[tp.id];
    h+=`<div class="prev"><canvas width="152" height="152" id="stkCv"></canvas><div><b style="font-size:17px">${tp.name}</b><div style="font-size:12px;color:var(--dim)">貼紙：${cs?(STK.find(x=>x[0]===cs.k)||STK[0])[1]:'無（顯示原本的字）'}</div></div></div>`;
    h+='<div class="pset"><button type="button" class="pbtn" data-a="stk" data-id="none" aria-pressed="'+(!cs)+'">不貼</button>'+STK.map(([k,n])=>`<button type="button" class="pbtn" data-a="stk" data-id="${k}" aria-pressed="${!!cs&&cs.k===k}">${n}</button>`).join('')+'</div>';
-   h+='<div class="shH">貼紙顏色</div><div class="pset">'+PCOLS.map(([n,c])=>`<button type="button" class="pbtn" data-a="stkc" data-id="${c}" aria-pressed="${!!cs&&cs.c===c}" style="border-left:8px solid ${c}">${n}</button>`).join('')+'</div>'}
+   h+='<div class="shH">貼紙顏色</div><div class="pset">'+PCOLS.map(([n,c])=>`<button type="button" class="pbtn" data-a="stkc" data-id="${c}" aria-pressed="${!!cs&&cs.c===c}" style="border-left:8px solid ${c}">${n}</button>`).join('')+'</div>';
+   if(cs){h+='<div class="shH">副貼紙（疊在中央、較小）</div><div class="pset"><button type="button" class="pbtn" data-a="stk2" data-id="none" aria-pressed="'+(!cs.k2)+'">不疊</button>'+STK.filter(x=>x[0]!=='blank').map(([k,n])=>`<button type="button" class="pbtn" data-a="stk2" data-id="${k}" aria-pressed="${cs.k2===k}">${n}</button>`).join('')+'</div>';
+    h+='<div class="shH">副貼紙顏色</div><div class="pset">'+PCOLS.map(([n,c])=>`<button type="button" class="pbtn" data-a="stkc2" data-id="${c}" aria-pressed="${(cs.c2||'#ffffff')===c}" style="border-left:8px solid ${c}">${n}</button>`).join('')+'</div>'}}
   h+='<div class="shH">⚡ 必殺技的雷電</div>';
   h+=`<div class="note" style="font-size:12px">放必殺技時，陀螺身邊會出現雷電。買顏色，再升級欄位：每升一級可以多配一種顏色，雷電也更密——1 種顏色 7 道、2 種 11 道、3 種 15 道。沒有配置時，用陀螺原本的雷電色。</div>`;
   h+=`<div class="shr"><div><b>雷電欄位　${boltS.slots}／3　（${[7,11,15][boltS.slots-1]} 道雷電）</b><small>目前配置：${boltS.equip.length?boltS.equip.map(id=>BOLT_COLORS.find(c=>c[0]===id)[1]).join('、'):'（沿用陀螺原本的雷電）'}</small></div>${boltS.slots<3?`<button class="mini ${coins<slotPrice(boltS.slots+1)?'no':''}" data-a="bslot" type="button">升到 ${[7,11,15][boltS.slots]} 道・${boltS.slots+1} 色　${slotPrice(boltS.slots+1)} 幣</button>`:'<span style="color:var(--gold)">已滿</span>'}</div>`;
@@ -2404,6 +2453,7 @@ shBody.addEventListener('click',e=>{
   else if(a==='box'){if(coins<BOX_PRICE)shMsg='商店幣不夠，去打競技大賽吧！';else{coins-=BOX_PRICE;const t=rollTier([['brz',0.5],['leg',0.35],['div',0.15]]),pool=TOPS.filter(d=>!d.custom&&d.tier===t),d=pool[Math.floor(Math.random()*pool.length)],c=CATS[Math.floor(Math.random()*4)],pid=d.id+':'+c;
       if(hasPart(pid)){coins+=20;shMsg=`🎁 ${TIER_NAME[d.tier]}「${d.name}」的${PCAT[c]}（重複，退 20 幣）`}else{ownedParts.add(pid);shMsg=`🎁 抽到 ${TIER_NAME[d.tier]}「${d.name}」的${PCAT[c]}！到「組裝」使用`;sfx.item()}savePrefs()}}
   else if(a==='buyb'){const it=BOOST_ITEMS[id];if(coins<it.pr)shMsg='商店幣不夠，去打競技大賽吧！';else{coins-=it.pr;inv[id]=(inv[id]||0)+1;savePrefs();shMsg='買到了 '+it.n+'！';sfx.ding()}}
+  else if(a==='stk2'||a==='stkc2'){const tp=TOPS[stkTop],o=stk[tp.id];if(o){if(a==='stk2'){if(id==='none'){delete o.k2;delete o.c2}else{o.k2=id;if(!o.c2)o.c2='#ffffff'}}else{o.c2=id;if(!o.k2)o.k2='star'}savePrefs();refreshGlyphs()}}
   else if(a==='stk'||a==='stkc'){const tp=TOPS[stkTop];if(a==='stk'){if(id==='none')delete stk[tp.id];else stk[tp.id]={k:id,c:(stk[tp.id]&&stk[tp.id].c)||'#ffd23d'}}else{const o=stk[tp.id]||{k:'star',c:id};o.c=id;stk[tp.id]=o}savePrefs();refreshGlyphs()}
   else if(a==='stsel'){stSid=+id}
   else if(a==='pat'||a==='patc'||a==='pat2'||a==='patc2'||a==='preset'){const ci=customs.find(c=>c.sid===stSid);if(ci){if(a==='pat'){ci.pat=id==='none'?null:id;if(id!=='none'&&!ci.patC)ci.patC='#ff6a1a'}else if(a==='patc'){ci.patC=id;if(!ci.pat)ci.pat='flame'}else if(a==='pat2'){ci.pat2=id==='none'?null:id;if(id!=='none'&&!ci.patC2)ci.patC2='#ffffff'}else if(a==='patc2'){ci.patC2=id;if(!ci.pat2)ci.pat2='stripe'}else{const p=PRESETS[+id];if(p){ci.pat=p[1];ci.patC=p[2];ci.pat2=p[3];ci.patC2=p[4]}}
