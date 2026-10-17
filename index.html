@@ -425,7 +425,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.19.3</div>
+  <div class="ver">v1.19.4</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2679,7 +2679,8 @@ function simBout(da,db){
 function pairUp(list){const m=[];for(let i=0;i<list.length;i+=2)m.push({a:list[i],b:list[i+1],w:null,sa:0,sb:0});return m}
 function setResult(m,wf,sa,sb){m.w=wf;m.sa=sa;m.sb=sb;const l=wf===m.a?m.b:m.a;l.rank=RANK_OF[tour.round]}
 function cpuAuto(m){const r=simBout(m.a.def,m.b.def),T=TARGET[tour.round],lo=Math.floor(Math.random()*T);r==='A'?setResult(m,m.a,T,lo):setResult(m,m.b,lo,T)}
-function tourOpen(){$('menu').hidden=true;$('tourSetup').hidden=false;mountP1($('p1Slot'));tourSetupUI()}
+const maxCup=()=>['div','leg','brz'].find(c=>lv>=CUP_LV[c])||'brz';
+function tourOpen(){tourCup=maxCup();$('menu').hidden=true;$('tourSetup').hidden=false;mountP1($('p1Slot'));tourSetupUI()}
 function tourSetupUI(){
   [...$('cupRow').children].forEach(b=>{const c=b.dataset.cup,lock=lv<CUP_LV[c];b.setAttribute('aria-pressed',c===tourCup);b.textContent=(lock?'🔒':'')+{brz:'青銅盃',leg:'傳說盃',div:'神聖盃'}[c]});
   const mineOk=TOPS.map((t,i)=>i).filter(i=>owns(TOPS[i])&&fitsCup(TOPS[i]));const eP=effPick(pick);if(!mineOk.includes(p2pick)||p2pick===eP)p2pick=mineOk.find(i=>i!==eP)??mineOk[0];
@@ -2826,7 +2827,7 @@ $('tourEnd').onclick=()=>tourExit();
 /* ---------- 三戰兩勝制 ---------- */
 let b3Cup='brz',b3Slots=[null,null,null],b3Sel=0;
 const b3Fit=d=>TIER_ORD[d.tier]<=TIER_ORD[b3Cup],b3Def=id=>TOPS.find(t=>t.id===id),b3Avail=()=>TOPS.filter(t=>owns(t)&&b3Fit(t)),b3Kind={down:'轉停',out:'撞出場外',burst:'撞爆'};
-function b3Open(){$('menu').hidden=true;$('b3Setup').hidden=false;b3UI()}
+function b3Open(){b3Cup=maxCup();$('menu').hidden=true;$('b3Setup').hidden=false;b3UI()}
 function b3UI(){
   const av=b3Avail();
   [...$('b3Cup').children].forEach(b=>{const c=b.dataset.cup,lock=lv<CUP_LV[c];b.setAttribute('aria-pressed',c===b3Cup);b.textContent=(lock?'🔒':'')+{brz:'青銅盃',leg:'傳說盃',div:'神聖盃'}[c]});
