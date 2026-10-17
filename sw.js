@@ -1,4 +1,4 @@
-const V='shoot-legend-v'+'42'; // 每次改版遞增
+const V='shoot-legend-v'+'43'; // 每次改版遞增
 const THREE_URL='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(['./','./index.html']).then(()=>c.add(new Request(THREE_URL,{mode:'cors'})).catch(()=>{}))).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});

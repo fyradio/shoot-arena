@@ -414,7 +414,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.16.2</div>
+  <div class="ver">v1.16.3</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2442,9 +2442,9 @@ const shopEl=$('shop'),shBody=$('shBody');let shTab='tops',asm={ring:'p_red:ring
 const BOX_PRICE=80;
 function savePrefs(){save('v2rim',rimS);save('v2pat',patS);save('v2inner',inS);save('v2tops',[...ownedTops]);save('v2parts',[...ownedParts]);save('inv',inv);save('v2boost',boosts);save('v2customs',customs);save('coins',coins);save('lv',lv);save('xp',xp);save('v2bolt',boltS);save('v2stk',stk)}
 function shOpen(){audioInit();$('menu').hidden=true;shopEl.hidden=false;shMsg='';shRender()}
-function shClose(){shopEl.hidden=true;$('menu').hidden=false;if(pick>=TOPS.length||!owns(TOPS[pick]))pick=TOPS.findIndex(owns);renderPicker();renderDetail();menuFighter();menuStatus();demoReset()}
+function shClose(){wz.step=0;shopEl.hidden=true;$('menu').hidden=false;if(pick>=TOPS.length||!owns(TOPS[pick]))pick=TOPS.findIndex(owns);renderPicker();renderDetail();menuFighter();menuStatus();demoReset()}
 $('shopBtn').onclick=shOpen;$('shBack').onclick=shClose;
-$('shTabs').onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;shTab=b.dataset.t;shMsg='';shRender()};
+$('shTabs').onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;if(shTab==='style'&&b.dataset.t!=='style')wz.step=0;shTab=b.dataset.t;shMsg='';shRender()};
 function statBars(d,base){let h='<div class="st">';for(const k of ['atk','def','sta','wt']){const v=d[k],bv=base?base[k]:v;h+=`<span>${STAT_N[k]}</span><i><em style="width:${Math.min(100,bv*10)}%"></em>${v>bv?`<em class="b" style="width:${(v-bv)*10}%;margin-top:-6px;margin-left:${bv*10}%"></em>`:''}</i><span>${v}</span>`}return h+'</div>'}
 function shRender(){
   $('shCoin').textContent='商店幣 '+coins;[...$('shTabs').children].forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===shTab));
