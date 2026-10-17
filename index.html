@@ -218,6 +218,7 @@ h1{margin:0;font-weight:900;font-size:clamp(40px,12vw,62px);line-height:1;letter
 .prev{display:grid;grid-template-columns:76px 1fr;gap:10px;align-items:center;background:var(--deck);border:2px solid var(--gold);border-radius:10px;padding:10px}
 .prev canvas{width:76px;height:76px}.prev .st{grid-column:1/-1;display:grid;grid-template-columns:auto 1fr auto;gap:3px 6px;font-size:11px;color:var(--dim);align-items:center}
 .prev .st i{height:6px;border-radius:3px;background:var(--line);overflow:hidden;display:block}.prev .st i em{display:block;height:100%;background:var(--gold)}.prev .st i em.b{background:var(--you)}
+.wznav{grid-column:1/-1;display:flex;gap:8px}.wznav .btn{flex:1}.wzq{margin:10px 0 8px;display:grid;gap:2px}.wzq small{color:var(--gold);font-size:12px}.wzq b{font-size:17px}
 #shBody .prev.stky{position:sticky;top:0;z-index:6;grid-template-columns:100px 1fr;background:#12162a;box-shadow:0 10px 14px -8px rgba(0,0,0,.9)}#shBody .prev.stky canvas{width:100px;height:100px}
 .tp{position:relative}.tp .pin{position:absolute;top:1px;right:2px;font-style:normal;font-size:12px;opacity:.22;padding:2px;filter:grayscale(1)}.tp .pin.on{opacity:1;filter:none}
 .tp.lock{opacity:.4}.tp.lock span::before{content:"🔒"}
@@ -413,7 +414,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.14.6</div>
+  <div class="ver">v1.15.0</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -1164,7 +1165,7 @@ function drawPat(g,k,col){
 }
 
 const RIMS=[['none','無'],['band','實心外圈'],['twin','雙線環'],['dash','虛線跑道'],['studs','鉚釘'],['teeth','鋸齒刃'],['gear','齒輪邊'],['scallop','波浪邊'],['zig','雷電邊'],['flame','火焰邊'],['stars','星點邊'],['chain','鎖鏈'],['diamond','菱形邊'],['glow','發光邊']];
-let rimS=load('v2rim')||{};
+let rimS=load('v2rim')||{};let patS=load('v2pat')||{};function applyPatS(){for(const t of TOPS)if(!t.custom){const o=patS[t.id]||{};t.pat=o.pat||null;t.patC=o.patC||'#ff6a1a';t.pat2=o.pat2||null;t.patC2=o.patC2||'#ffffff'}}applyPatS();
 const rimOf=def=>rimS[def.id]||null;
 function drawRim(g,def,k,col){
   if(!k||k==='none')return;
@@ -2401,7 +2402,7 @@ let last=performance.now();
 /* ---------- workshop (陀螺商店・盲盒・組裝・強化) ---------- */
 const shopEl=$('shop'),shBody=$('shBody');let shTab='tops',asm={ring:'p_red:ring',disc:'p_red:disc',tip:'p_red:tip',emb:'p_red:emb',left:false,name:''},bsSel=0,shMsg='';
 const BOX_PRICE=80;
-function savePrefs(){save('v2rim',rimS);save('v2tops',[...ownedTops]);save('v2parts',[...ownedParts]);save('inv',inv);save('v2boost',boosts);save('v2customs',customs);save('coins',coins);save('lv',lv);save('xp',xp);save('v2bolt',boltS);save('v2stk',stk)}
+function savePrefs(){save('v2rim',rimS);save('v2pat',patS);save('v2tops',[...ownedTops]);save('v2parts',[...ownedParts]);save('inv',inv);save('v2boost',boosts);save('v2customs',customs);save('coins',coins);save('lv',lv);save('xp',xp);save('v2bolt',boltS);save('v2stk',stk)}
 function shOpen(){audioInit();$('menu').hidden=true;shopEl.hidden=false;shMsg='';shRender()}
 function shClose(){shopEl.hidden=true;$('menu').hidden=false;if(pick>=TOPS.length||!owns(TOPS[pick]))pick=TOPS.findIndex(owns);renderPicker();renderDetail();menuFighter();menuStatus();demoReset()}
 $('shopBtn').onclick=shOpen;$('shBack').onclick=shClose;
@@ -2441,40 +2442,50 @@ function renderAsm(box){
   if(customs.length){let l='<div class="shH">我的自組陀螺</div>';for(const c of TOPS.filter(t=>t.custom))l+=`<div class="shr"><div><b>${c.name}</b><small>${TIER_NAME[c.tier]}・${c.typeName}　攻${c.atk} 防${c.def} 久${c.sta} 重${c.wt}　必殺：${c.special}</small></div><button class="mini no" data-a="del" data-id="${c.sp.sid}" type="button">刪除</button></div>`;const w=document.createElement('div');w.style.display='grid';w.style.gap='6px';w.innerHTML=l;box.appendChild(w)}
 }
 
-let stSid=0,stkTop=0;
+let stSid=0,stkTop=0,wz={step:0,id:null};
 const divMax=()=>Math.max(...TOPS.filter(d=>!d.custom&&d.tier==='div').map(d=>d.price)),slotPrice=n=>{const b=Math.ceil((divMax()+300)/100)*100;return n===2?b:b+2000};
-function renderStyle(box){
-  const cs=TOPS.filter(t=>t.custom);let h='<div class="shH">陀螺花紋（畫在自組陀螺的外環上）</div>';
-  if(!cs.length){h+='<div class="note">還沒有自組陀螺。先到「組裝」做一顆，再回來畫花紋。</div>'}
-  else{
-    if(!cs.some(c=>c.sp.sid===stSid))stSid=cs[0].sp.sid;
-    const cur=cs.find(c=>c.sp.sid===stSid),ci=customs.find(c=>c.sid===stSid);
-    h+='<div class="pset">'+cs.map(c=>`<button type="button" class="pbtn" data-a="stsel" data-id="${c.sp.sid}" aria-pressed="${c.sp.sid===stSid}">${c.name}</button>`).join('')+'</div>';
-    h+=`<div class="prev stky"><canvas width="152" height="152" id="stCv"></canvas><div><b style="font-size:17px">${cur.name}</b><div style="font-size:12px;color:var(--dim)">花紋：${(PATS.find(p=>p[0]===(ci.pat||'none'))||PATS[0])[1]}${ci.pat2?' ＋ '+(PATS.find(p=>p[0]===ci.pat2)||PATS[0])[1]:''}</div></div></div>`;
-    h+='<div class="shH">花紋</div><div class="pset">'+PATS.map(([k,n])=>`<button type="button" class="pbtn" data-a="pat" data-id="${k}" aria-pressed="${(ci.pat||'none')===k}">${n}</button>`).join('')+'</div>';
-    h+='<div class="shH">顏色</div><div class="pset">'+PCOLS.map(([n,c])=>`<button type="button" class="pbtn" data-a="patc" data-id="${c}" aria-pressed="${(ci.patC||'#ff6a1a')===c}" style="border-left:8px solid ${c}">${n}</button>`).join('')+'</div>';
-    h+='<div class="shH">一鍵組合（主＋副花紋）</div><div class="pset">'+PRESETS.map((p,k)=>`<button type="button" class="pbtn" data-a="preset" data-id="${k}" style="border-left:8px solid ${p[2]}">${p[0]}</button>`).join('')+'</div>';
-    h+='<div class="shH">副花紋（疊在主花紋上）</div><div class="pset">'+PATS.map(([k,n])=>`<button type="button" class="pbtn" data-a="pat2" data-id="${k}" aria-pressed="${(ci.pat2||'none')===k}">${n}</button>`).join('')+'</div>';
-    h+='<div class="shH">副花紋顏色</div><div class="pset">'+PCOLS.map(([n,c])=>`<button type="button" class="pbtn" data-a="patc2" data-id="${c}" aria-pressed="${(ci.patC2||'#ffffff')===c}" style="border-left:8px solid ${c}">${n}</button>`).join('')+'</div>';
-  }
-
-  h+='<div class="shH">🏷 陀螺貼紙（貼在陀螺中心，可以把字蓋掉）</div><div id="stGrid"></div>';
-  {const mine=TOPS.filter(t=>owns(t));if(!mine.includes(TOPS[stkTop]))stkTop=TOPS.indexOf(mine[0]);const tp=TOPS[stkTop],cs=stk[tp.id];
-   h+=`<div class="prev stky"><canvas width="152" height="152" id="stkCv"></canvas><div><b style="font-size:17px">${tp.name}</b><div style="font-size:12px;color:var(--dim)">貼紙：${cs?(STK.find(x=>x[0]===cs.k)||STK[0])[1]:'無（顯示原本的字）'}</div></div></div>`;
-   h+='<div class="pset"><button type="button" class="pbtn" data-a="stk" data-id="none" aria-pressed="'+(!cs)+'">不貼</button>'+STK.map(([k,n])=>`<button type="button" class="pbtn" data-a="stk" data-id="${k}" aria-pressed="${!!cs&&cs.k===k}">${n}</button>`).join('')+'</div>';
-   h+='<div class="shH">貼紙顏色</div><div class="pset">'+PCOLS.map(([n,c])=>`<button type="button" class="pbtn" data-a="stkc" data-id="${c}" aria-pressed="${!!cs&&cs.c===c}" style="border-left:8px solid ${c}">${n}</button>`).join('')+'</div>';
-   if(cs){h+='<div class="shH">副貼紙（疊在中央、較小）</div><div class="pset"><button type="button" class="pbtn" data-a="stk2" data-id="none" aria-pressed="'+(!cs.k2)+'">不疊</button>'+STK.filter(x=>x[0]!=='blank').map(([k,n])=>`<button type="button" class="pbtn" data-a="stk2" data-id="${k}" aria-pressed="${cs.k2===k}">${n}</button>`).join('')+'</div>';
-    h+='<div class="shH">副貼紙顏色</div><div class="pset">'+PCOLS.map(([n,c])=>`<button type="button" class="pbtn" data-a="stkc2" data-id="${c}" aria-pressed="${(cs.c2||'#ffffff')===c}" style="border-left:8px solid ${c}">${n}</button>`).join('')+'</div>'}
-   {const rm=rimOf(tp);h+='<div class="shH">外環邊緣裝飾（這顆陀螺）</div><div class="pset"><button type="button" class="pbtn" data-a="rim" data-id="none" aria-pressed="'+(!rm)+'">無</button>'+RIMS.filter(x=>x[0]!=='none').map(([k,n])=>`<button type="button" class="pbtn" data-a="rim" data-id="${k}" aria-pressed="${!!rm&&rm.k===k}">${n}</button>`).join('')+'</div>';
-    h+='<div class="shH">外環裝飾顏色</div><div class="pset">'+PCOLS.map(([n,c])=>`<button type="button" class="pbtn" data-a="rimc" data-id="${c}" aria-pressed="${!!rm&&rm.c===c}" style="border-left:8px solid ${c}">${n}</button>`).join('')+'</div>'}}
-  h+='<div class="shH">⚡ 必殺技的雷電</div>';
-  h+=`<div class="note" style="font-size:12px">放必殺技時，陀螺身邊會出現雷電。買顏色，再升級欄位：每升一級可以多配一種顏色，雷電也更密——1 種顏色 7 道、2 種 11 道、3 種 15 道。沒有配置時，用陀螺原本的雷電色。</div>`;
+const WZ=[['選陀螺','想改造哪一顆陀螺？（內建的、自組的都可以）'],['主花紋','想要什麼主花紋？'],['副花紋','要不要再疊一層副花紋？'],['外環邊緣','外環邊緣要加什麼裝飾？'],['貼紙','陀螺中心要貼什麼貼紙？'],['副貼紙','要不要再疊一個小貼紙？'],['雷電','必殺技的雷電要什麼顏色？（所有陀螺共用）']];
+const swH=(act,cur,def)=>'<div class="pset">'+PCOLS.map(([n,c])=>`<button type="button" class="pbtn" data-a="${act}" data-id="${c}" aria-pressed="${(cur||def)===c}" style="border-left:8px solid ${c}">${n}</button>`).join('')+'</div>';
+function boltHTML(){let h=`<div class="note" style="font-size:12px">放必殺技時，陀螺身邊會出現雷電。買顏色，再升級欄位：每升一級可以多配一種顏色，雷電也更密——1 種顏色 7 道、2 種 11 道、3 種 15 道。沒有配置時，用陀螺原本的雷電色。</div>`;
   h+=`<div class="shr"><div><b>雷電欄位　${boltS.slots}／3　（${[7,11,15][boltS.slots-1]} 道雷電）</b><small>目前配置：${boltS.equip.length?boltS.equip.map(id=>BOLT_COLORS.find(c=>c[0]===id)[1]).join('、'):'（沿用陀螺原本的雷電）'}</small></div>${boltS.slots<3?`<button class="mini ${coins<slotPrice(boltS.slots+1)?'no':''}" data-a="bslot" type="button">升到 ${[7,11,15][boltS.slots]} 道・${boltS.slots+1} 色　${slotPrice(boltS.slots+1)} 幣</button>`:'<span style="color:var(--gold)">已滿</span>'}</div>`;
   for(const [id,n,c,pr] of BOLT_COLORS){const own=boltS.own.includes(id),on=boltS.equip.includes(id);
     h+=`<div class="shr"><div style="display:flex;gap:8px;align-items:center"><i style="width:22px;height:22px;border-radius:50%;background:${c};box-shadow:0 0 12px ${c};display:inline-block"></i><div><b>${n}</b><small>${own?(on?'已配置':'已擁有'):'還沒買'}</small></div></div>${own?`<button class="mini" data-a="beq" data-id="${id}" type="button">${on?'卸下':'配置'}</button>`:`<button class="mini ${coins<pr?'no':''}" data-a="bbuy" data-id="${id}" type="button">${pr} 幣</button>`}</div>`}
-  box.innerHTML=h;
-  {const mine=TOPS.filter(t=>owns(t));topGrid(box.querySelector('#stGrid'),{list:mine,sel:TOPS[stkTop],onPick:d=>{stkTop=TOPS.indexOf(d);shRender()}});const c2=box.querySelector('#stkCv');if(c2)drawIcon(c2,TOPS[stkTop])}
-  const cv=box.querySelector('#stCv');if(cv){const cur=TOPS.find(t=>t.custom&&t.sp.sid===stSid);drawIcon(cv,cur)}
+  return h}
+function renderStyle(box){
+  const mine=TOPS.filter(t=>owns(t));
+  if(wz.step>0&&!mine.some(t=>t.id===wz.id))wz.step=0;
+  const nm=k=>(PATS.find(p=>p[0]===k)||PATS[0])[1];
+  let h='';
+  if(wz.step===0){
+    h+=`<div class="wzq"><small>步驟 1／${WZ.length}</small><b>${WZ[0][1]}</b></div><div id="stGrid"></div><div class="note" style="font-size:12px">選好陀螺就會自動進入下一步。之後每一步都能看到預覽，不滿意可以按「上一步」回去改。</div>`;
+    box.innerHTML=h;topGrid(box.querySelector('#stGrid'),{list:mine,sel:TOPS.find(t=>t.id===wz.id)||null,onPick:d=>{wz.id=d.id;wz.step=1;shRender()}});return}
+  const def=TOPS.find(t=>t.id===wz.id);stkTop=TOPS.indexOf(def);
+  const cs=stk[def.id],rm=rimOf(def),k=wz.step;
+  const sum=[`花紋：${def.pat?nm(def.pat):'無'}${def.pat2?' ＋ '+nm(def.pat2):''}`,`邊緣：${rm?(RIMS.find(x=>x[0]===rm.k)||RIMS[0])[1]:'無'}`,`貼紙：${cs?(STK.find(x=>x[0]===cs.k)||STK[0])[1]+(cs.k2?' ＋ '+(STK.find(x=>x[0]===cs.k2)||STK[0])[1]:''):'無'}`].join('<br>');
+  h+=`<div class="prev stky wz"><canvas width="152" height="152" id="stCv"></canvas><div><b style="font-size:17px">${def.name}</b><div style="font-size:12px;color:var(--dim);line-height:1.5">${sum}</div></div><div class="wznav"><button type="button" class="btn ghost small" data-a="wzgo" data-id="-1">← 上一步</button>${k<WZ.length-1?'<button type="button" class="btn small" data-a="wzgo" data-id="1">下一步 →</button>':'<button type="button" class="btn small" data-a="wzgo" data-id="done">完成 ✓</button>'}</div></div>`;
+  h+=`<div class="wzq"><small>步驟 ${k+1}／${WZ.length}・${WZ[k][0]}</small><b>${WZ[k][1]}</b></div>`;
+  const pb=(a,id,n,on)=>`<button type="button" class="pbtn" data-a="${a}" data-id="${id}" aria-pressed="${on}">${n}</button>`;
+  if(k===1){
+    h+='<div class="pset">'+pb('pat','none','不要',!def.pat)+PATS.filter(p=>p[0]!=='none').map(([x,n])=>pb('pat',x,n,def.pat===x)).join('')+'</div>';
+    if(def.pat)h+='<div class="shH">花紋顏色</div>'+swH('patc',def.patC,'#ff6a1a');
+    h+='<div class="shH">或者直接套用一鍵組合（主＋副花紋）</div><div class="pset">'+PRESETS.map((p,i)=>`<button type="button" class="pbtn" data-a="preset" data-id="${i}" style="border-left:8px solid ${p[2]}">${p[0]}</button>`).join('')+'</div>'}
+  else if(k===2){
+    h+='<div class="pset">'+pb('pat2','none','不疊',!def.pat2)+PATS.filter(p=>p[0]!=='none').map(([x,n])=>pb('pat2',x,n,def.pat2===x)).join('')+'</div>';
+    if(def.pat2)h+='<div class="shH">副花紋顏色</div>'+swH('patc2',def.patC2,'#ffffff')}
+  else if(k===3){
+    h+='<div class="pset">'+pb('rim','none','無',!rm)+RIMS.filter(x=>x[0]!=='none').map(([x,n])=>pb('rim',x,n,!!rm&&rm.k===x)).join('')+'</div>';
+    if(rm)h+='<div class="shH">邊緣裝飾顏色</div>'+swH('rimc',rm.c,'#ffd23d');
+    h+='<div class="note" style="font-size:12px">邊緣裝飾畫在外環內側的一圈；3D 對戰時要重新開始一場才會看到新顏色。</div>'}
+  else if(k===4){
+    h+='<div class="pset">'+pb('stk','none','不貼（顯示原本的字）',!cs)+STK.map(([x,n])=>pb('stk',x,n,!!cs&&cs.k===x)).join('')+'</div>';
+    if(cs)h+='<div class="shH">貼紙顏色</div>'+swH('stkc',cs.c,'#ffd23d')}
+  else if(k===5){
+    if(!cs)h+='<div class="note">還沒貼主貼紙，請按「上一步」先選一個貼紙。</div>';
+    else{h+='<div class="pset">'+pb('stk2','none','不疊',!cs.k2)+STK.filter(x=>x[0]!=='blank').map(([x,n])=>pb('stk2',x,n,cs.k2===x)).join('')+'</div>';
+      if(cs.k2)h+='<div class="shH">副貼紙顏色</div>'+swH('stkc2',cs.c2,'#ffffff')}}
+  else h+=boltHTML();
+  if(k>=1&&k<=5)h+=`<div class="pset" style="margin-top:10px"><button type="button" class="pbtn" data-a="wzreset" data-id="${k}">↺ 這一步全部清除</button></div>`;
+  box.innerHTML=h;drawIcon(box.querySelector('#stCv'),def)
 }
 function renderBoost(box){
   const mine=TOPS.map((t,i)=>[t,i]).filter(([t])=>owns(t));if(!mine.some(([,i])=>i===bsSel))bsSel=mine[0][1];
@@ -2500,8 +2511,14 @@ shBody.addEventListener('click',e=>{
   else if(a==='rim'||a==='rimc'){const tp=TOPS[stkTop];if(a==='rim'){if(id==='none')delete rimS[tp.id];else rimS[tp.id]={k:id,c:(rimS[tp.id]&&rimS[tp.id].c)||'#ffd23d'}}else{const o=rimS[tp.id]||{k:'band',c:id};o.c=id;rimS[tp.id]=o}delete patCache[tp.id];savePrefs()}
   else if(a==='stk'||a==='stkc'){const tp=TOPS[stkTop];if(a==='stk'){if(id==='none')delete stk[tp.id];else stk[tp.id]={k:id,c:(stk[tp.id]&&stk[tp.id].c)||'#ffd23d'}}else{const o=stk[tp.id]||{k:'star',c:id};o.c=id;stk[tp.id]=o}savePrefs();refreshGlyphs()}
   else if(a==='stsel'){stSid=+id}
-  else if(a==='pat'||a==='patc'||a==='pat2'||a==='patc2'||a==='preset'){const ci=customs.find(c=>c.sid===stSid);if(ci){if(a==='pat'){ci.pat=id==='none'?null:id;if(id!=='none'&&!ci.patC)ci.patC='#ff6a1a'}else if(a==='patc'){ci.patC=id;if(!ci.pat)ci.pat='flame'}else if(a==='pat2'){ci.pat2=id==='none'?null:id;if(id!=='none'&&!ci.patC2)ci.patC2='#ffffff'}else if(a==='patc2'){ci.patC2=id;if(!ci.pat2)ci.pat2='stripe'}else{const p=PRESETS[+id];if(p){ci.pat=p[1];ci.patC=p[2];ci.pat2=p[3];ci.patC2=p[4]}}
-      const cur=TOPS[pick];delete patCache['c'+stSid];loadCustoms();const ni=TOPS.indexOf(cur);pick=ni>=0?ni:TOPS.findIndex(owns);for(const k of Object.keys(patCache))if(k[0]==='c')delete patCache[k];savePrefs()}}
+  else if(a==='pat'||a==='patc'||a==='pat2'||a==='patc2'||a==='preset'||a==='wzreset'&&(+id===1||+id===2)){const def=TOPS[stkTop],ci=def.custom?customs.find(c=>c.sid===def.sp.sid):(patS[def.id]=patS[def.id]||{});if(ci){
+      if(a==='wzreset'){if(+id===1){ci.pat=null;ci.pat2=null}else ci.pat2=null}
+      else if(a==='pat'){ci.pat=id==='none'?null:id;if(id!=='none'&&!ci.patC)ci.patC='#ff6a1a'}else if(a==='patc'){ci.patC=id;if(!ci.pat)ci.pat='flame'}else if(a==='pat2'){ci.pat2=id==='none'?null:id;if(id!=='none'&&!ci.patC2)ci.patC2='#ffffff'}else if(a==='patc2'){ci.patC2=id;if(!ci.pat2)ci.pat2='stripe'}else{const p=PRESETS[+id];if(p){ci.pat=p[1];ci.patC=p[2];ci.pat2=p[3];ci.patC2=p[4]}}
+      if(def.custom){const cur=TOPS[pick];loadCustoms();const ni=TOPS.indexOf(cur);pick=ni>=0?ni:TOPS.findIndex(owns);for(const k of Object.keys(patCache))if(k[0]==='c')delete patCache[k]}
+      else{applyPatS();delete patCache[def.id]}
+      savePrefs()}}
+  else if(a==='wzgo'){if(id==='done'){wz.step=0;shMsg='✓ 「'+(TOPS.find(t=>t.id===wz.id)||{name:''}).name+'」改造完成，可以再選另一顆'}else wz.step=Math.max(0,wz.step+ +id)}
+  else if(a==='wzreset'){const def=TOPS[stkTop],k=+id;if(k===3){delete rimS[def.id];delete patCache[def.id]}else if(k===4){delete stk[def.id];refreshGlyphs()}else if(k===5&&stk[def.id]){delete stk[def.id].k2;delete stk[def.id].c2;refreshGlyphs()}savePrefs()}
   else if(a==='bbuy'){const c=BOLT_COLORS.find(x=>x[0]===id);if(coins<c[3])shMsg='商店幣不夠，去打比賽賺吧！';else{coins-=c[3];boltS.own.push(id);if(boltS.equip.length<boltS.slots)boltS.equip.push(id);savePrefs();shMsg='買到了「'+c[1]+'」！';sfx.win()}}
   else if(a==='bslot'){const p=slotPrice(boltS.slots+1);if(coins<p)shMsg='商店幣不夠，去打比賽賺吧！';else{coins-=p;boltS.slots++;savePrefs();shMsg='升級！現在可配 '+boltS.slots+' 種顏色，共 '+[7,11,15][boltS.slots-1]+' 道雷電';sfx.win()}}
   else if(a==='beq'){const i=boltS.equip.indexOf(id);if(i>=0)boltS.equip.splice(i,1);else if(boltS.equip.length>=boltS.slots)shMsg='雷電欄位滿了：先卸下一種，或花錢買新的欄位';else boltS.equip.push(id);savePrefs()}
