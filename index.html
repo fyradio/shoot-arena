@@ -412,7 +412,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.13.3</div>
+  <div class="ver">v1.13.4</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -753,6 +753,7 @@ function collide(A,B,h){
   if(bA.k==='thunder')B.s-=0.04*(A.def.type==='atk'?0.5:1);if(bB.k==='thunder')A.s-=0.04*(B.def.type==='atk'?0.5:1);if(bA.k==='ice')B.s-=impact*0.003;if(bB.k==='ice')A.s-=impact*0.003;
   A.charge=Math.min(1,A.charge+impact*0.009*chgMul(A));B.charge=Math.min(1,B.charge+impact*0.009*chgMul(B));
   emit('hit',{A,B,bA:bA.k,bB:bB.k,impact,x:(A.x+B.x)/2,z:(A.z+B.z)/2});
+  if(A.burst<=0&&B.burst<=0){if(A.burst<=B.burst)B.burst=0.02;else A.burst=0.02}/* 同時爆裂：只爆受損較重的一方 */
   if(A.burst<=0){A.burst=0;A.state='burst';emit('burst',{T:A})}
   if(B.burst<=0){B.burst=0;B.state='burst';emit('burst',{T:B})}
 }
