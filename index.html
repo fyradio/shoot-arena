@@ -413,7 +413,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.14.5</div>
+  <div class="ver">v1.14.6</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -742,7 +742,7 @@ function collide(A,B,h){
   if(vnB<0){B.vx-=vnB*nx*0.85;B.vz-=vnB*nz*0.85}
   const advA=BEATS[A.def.type]===B.def.type?1.6:1,advB=BEATS[B.def.type]===A.def.type?1.6:1;
   const defA=(0.6+A.def.def*0.12)*(A.shell>0?1.5:1)*bA.def,defB=(0.6+B.def.def*0.12)*(B.shell>0?1.5:1)*bB.def;
-  const atkA=(1+0.04*(A.def.wt-5))*(0.3+A.def.atk*0.12)*(A.def.type==='atk'?1.55:A.def.type==='bal'?1.4:1)*bA.atk,atkB=(1+0.04*(B.def.wt-5))*(0.3+B.def.atk*0.12)*(B.def.type==='atk'?1.55:B.def.type==='bal'?1.4:1)*bB.atk;
+  const atkA=(1+0.04*(A.def.wt-5))*(0.3+A.def.atk*0.12)*(A.def.type==='atk'?1.55:A.def.type==='bal'?1.4:1)*bA.atk*(A.def.id==='b_suzaku'&&spA?0.7:1),atkB=(1+0.04*(B.def.wt-5))*(0.3+B.def.atk*0.12)*(B.def.type==='atk'?1.55:B.def.type==='bal'?1.4:1)*bB.atk*(B.def.id==='b_suzaku'&&spB?0.7:1);
   const gA=spGuard(A),gB=spGuard(B),pA=impact*atkB*advB/(mA*defA)*gA,pB=impact*atkA*advA/(mB*defB)*gB;
   const tx=-nz,tz=nx;
   A.vx+=-nx*pA+tx*pA*0.3;A.vz+=-nz*pA+tz*pA*0.3;
