@@ -218,6 +218,7 @@ h1{margin:0;font-weight:900;font-size:clamp(40px,12vw,62px);line-height:1;letter
 .prev{display:grid;grid-template-columns:76px 1fr;gap:10px;align-items:center;background:var(--deck);border:2px solid var(--gold);border-radius:10px;padding:10px}
 .prev canvas{width:76px;height:76px}.prev .st{grid-column:1/-1;display:grid;grid-template-columns:auto 1fr auto;gap:3px 6px;font-size:11px;color:var(--dim);align-items:center}
 .prev .st i{height:6px;border-radius:3px;background:var(--line);overflow:hidden;display:block}.prev .st i em{display:block;height:100%;background:var(--gold)}.prev .st i em.b{background:var(--you)}
+#shBody .prev.stky{position:sticky;top:0;z-index:6;grid-template-columns:100px 1fr;background:#12162a;box-shadow:0 10px 14px -8px rgba(0,0,0,.9)}#shBody .prev.stky canvas{width:100px;height:100px}
 .tp{position:relative}.tp .pin{position:absolute;top:1px;right:2px;font-style:normal;font-size:12px;opacity:.22;padding:2px;filter:grayscale(1)}.tp .pin.on{opacity:1;filter:none}
 .tp.lock{opacity:.4}.tp.lock span::before{content:"🔒"}
 .tp.t-div{background:linear-gradient(160deg,#3a2a06,#141020);box-shadow:inset 0 0 0 1px rgba(255,200,61,.6)}.tp.t-div span{color:#ffe08a}
@@ -412,7 +413,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.14.4</div>
+  <div class="ver">v1.14.5</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2402,7 +2403,7 @@ const shopEl=$('shop'),shBody=$('shBody');let shTab='tops',asm={ring:'p_red:ring
 const BOX_PRICE=80;
 function savePrefs(){save('v2rim',rimS);save('v2tops',[...ownedTops]);save('v2parts',[...ownedParts]);save('inv',inv);save('v2boost',boosts);save('v2customs',customs);save('coins',coins);save('lv',lv);save('xp',xp);save('v2bolt',boltS);save('v2stk',stk)}
 function shOpen(){audioInit();$('menu').hidden=true;shopEl.hidden=false;shMsg='';shRender()}
-function shClose(){shopEl.hidden=true;$('menu').hidden=false;if(pick>=TOPS.length||!owns(TOPS[pick]))pick=TOPS.findIndex(owns);renderPicker();renderDetail();menuFighter();menuStatus()}
+function shClose(){shopEl.hidden=true;$('menu').hidden=false;if(pick>=TOPS.length||!owns(TOPS[pick]))pick=TOPS.findIndex(owns);renderPicker();renderDetail();menuFighter();menuStatus();demoReset()}
 $('shopBtn').onclick=shOpen;$('shBack').onclick=shClose;
 $('shTabs').onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;shTab=b.dataset.t;shMsg='';shRender()};
 function statBars(d,base){let h='<div class="st">';for(const k of ['atk','def','sta','wt']){const v=d[k],bv=base?base[k]:v;h+=`<span>${STAT_N[k]}</span><i><em style="width:${Math.min(100,bv*10)}%"></em>${v>bv?`<em class="b" style="width:${(v-bv)*10}%;margin-top:-6px;margin-left:${bv*10}%"></em>`:''}</i><span>${v}</span>`}return h+'</div>'}
@@ -2449,7 +2450,7 @@ function renderStyle(box){
     if(!cs.some(c=>c.sp.sid===stSid))stSid=cs[0].sp.sid;
     const cur=cs.find(c=>c.sp.sid===stSid),ci=customs.find(c=>c.sid===stSid);
     h+='<div class="pset">'+cs.map(c=>`<button type="button" class="pbtn" data-a="stsel" data-id="${c.sp.sid}" aria-pressed="${c.sp.sid===stSid}">${c.name}</button>`).join('')+'</div>';
-    h+=`<div class="prev"><canvas width="152" height="152" id="stCv"></canvas><div><b style="font-size:17px">${cur.name}</b><div style="font-size:12px;color:var(--dim)">花紋：${(PATS.find(p=>p[0]===(ci.pat||'none'))||PATS[0])[1]}${ci.pat2?' ＋ '+(PATS.find(p=>p[0]===ci.pat2)||PATS[0])[1]:''}</div></div></div>`;
+    h+=`<div class="prev stky"><canvas width="152" height="152" id="stCv"></canvas><div><b style="font-size:17px">${cur.name}</b><div style="font-size:12px;color:var(--dim)">花紋：${(PATS.find(p=>p[0]===(ci.pat||'none'))||PATS[0])[1]}${ci.pat2?' ＋ '+(PATS.find(p=>p[0]===ci.pat2)||PATS[0])[1]:''}</div></div></div>`;
     h+='<div class="shH">花紋</div><div class="pset">'+PATS.map(([k,n])=>`<button type="button" class="pbtn" data-a="pat" data-id="${k}" aria-pressed="${(ci.pat||'none')===k}">${n}</button>`).join('')+'</div>';
     h+='<div class="shH">顏色</div><div class="pset">'+PCOLS.map(([n,c])=>`<button type="button" class="pbtn" data-a="patc" data-id="${c}" aria-pressed="${(ci.patC||'#ff6a1a')===c}" style="border-left:8px solid ${c}">${n}</button>`).join('')+'</div>';
     h+='<div class="shH">一鍵組合（主＋副花紋）</div><div class="pset">'+PRESETS.map((p,k)=>`<button type="button" class="pbtn" data-a="preset" data-id="${k}" style="border-left:8px solid ${p[2]}">${p[0]}</button>`).join('')+'</div>';
@@ -2459,7 +2460,7 @@ function renderStyle(box){
 
   h+='<div class="shH">🏷 陀螺貼紙（貼在陀螺中心，可以把字蓋掉）</div><div id="stGrid"></div>';
   {const mine=TOPS.filter(t=>owns(t));if(!mine.includes(TOPS[stkTop]))stkTop=TOPS.indexOf(mine[0]);const tp=TOPS[stkTop],cs=stk[tp.id];
-   h+=`<div class="prev"><canvas width="152" height="152" id="stkCv"></canvas><div><b style="font-size:17px">${tp.name}</b><div style="font-size:12px;color:var(--dim)">貼紙：${cs?(STK.find(x=>x[0]===cs.k)||STK[0])[1]:'無（顯示原本的字）'}</div></div></div>`;
+   h+=`<div class="prev stky"><canvas width="152" height="152" id="stkCv"></canvas><div><b style="font-size:17px">${tp.name}</b><div style="font-size:12px;color:var(--dim)">貼紙：${cs?(STK.find(x=>x[0]===cs.k)||STK[0])[1]:'無（顯示原本的字）'}</div></div></div>`;
    h+='<div class="pset"><button type="button" class="pbtn" data-a="stk" data-id="none" aria-pressed="'+(!cs)+'">不貼</button>'+STK.map(([k,n])=>`<button type="button" class="pbtn" data-a="stk" data-id="${k}" aria-pressed="${!!cs&&cs.k===k}">${n}</button>`).join('')+'</div>';
    h+='<div class="shH">貼紙顏色</div><div class="pset">'+PCOLS.map(([n,c])=>`<button type="button" class="pbtn" data-a="stkc" data-id="${c}" aria-pressed="${!!cs&&cs.c===c}" style="border-left:8px solid ${c}">${n}</button>`).join('')+'</div>';
    if(cs){h+='<div class="shH">副貼紙（疊在中央、較小）</div><div class="pset"><button type="button" class="pbtn" data-a="stk2" data-id="none" aria-pressed="'+(!cs.k2)+'">不疊</button>'+STK.filter(x=>x[0]!=='blank').map(([k,n])=>`<button type="button" class="pbtn" data-a="stk2" data-id="${k}" aria-pressed="${cs.k2===k}">${n}</button>`).join('')+'</div>';
