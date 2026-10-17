@@ -412,7 +412,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.14.2</div>
+  <div class="ver">v1.14.3</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -1345,7 +1345,7 @@ function makeModel(def){
   {orbit=new THREE.Group();
     const NB=def.boltN||7,NS=34,n=NB*NS;
     for(const core of [false,true]){const gg=new THREE.BufferGeometry();gg.setAttribute('position',new THREE.BufferAttribute(new Float32Array(n*3),3));gg.setAttribute('color',new THREE.BufferAttribute(new Float32Array(n*3),3));
-      const pt=new THREE.Points(gg,new THREE.PointsMaterial({size:core?0.18:0.42,map:glowTex,vertexColors:true,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));pt.frustumCulled=false;pt.userData={core};orbit.add(pt)}
+      const pt=new THREE.Points(gg,new THREE.PointsMaterial({size:core?0.18:0.42,map:glowTex,vertexColors:true,transparent:true,opacity:core?1:0.8,blending:core?THREE.AdditiveBlending:THREE.NormalBlending,depthWrite:false}));pt.frustumCulled=false;pt.userData={core};orbit.add(pt)}
     orbit.userData={NB,NS,pal:(def.bolts||[def.accent]).map(c=>new THREE.Color(c))};
     orbit.visible=false;root.add(orbit);
     glowL=new THREE.PointLight(def.accent,0,7,2);glowL.position.y=0.8;root.add(glowL)}
@@ -2344,7 +2344,7 @@ function updateModel(T,dt,rdt){
         for(let i=0;i<NS;i++){const f=i/(NS-1)*8,k=Math.min(7,Math.floor(f)),u=f-k,o=k*3;
           const x=cp[o]+(cp[o+3]-cp[o])*u,y=cp[o+1]+(cp[o+4]-cp[o+1])*u,z=cp[o+2]+(cp[o+5]-cp[o+2])*u;
           pos[v]=x;pos[v+1]=y;pos[v+2]=z;cpos[v]=x;cpos[v+1]=y;cpos[v+2]=z;
-          col[v]=c.r*0.85*fl;col[v+1]=c.g*0.85*fl;col[v+2]=c.b*0.85*fl;ccol[v]=(0.3+c.r*0.7)*fl;ccol[v+1]=(0.3+c.g*0.7)*fl;ccol[v+2]=(0.3+c.b*0.7)*fl;v+=3}}
+          col[v]=c.r*fl;col[v+1]=c.g*fl;col[v+2]=c.b*fl;ccol[v]=(0.12+c.r*0.88)*fl;ccol[v+1]=(0.12+c.g*0.88)*fl;ccol[v+2]=(0.12+c.b*0.88)*fl;v+=3}}
       for(const ch of M.orbit.children){ch.geometry.attributes.position.needsUpdate=true;ch.geometry.attributes.color.needsUpdate=true}
       M.glowL.color.copy(pal[Math.floor(now*6)%pal.length]);M.glowL.intensity=1.2+Math.random()*1.2}
     else M.glowL.intensity=0}
