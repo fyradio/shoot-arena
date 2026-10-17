@@ -414,7 +414,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.16.1</div>
+  <div class="ver">v1.16.2</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2500,7 +2500,7 @@ function renderStyle(box){
   const def=TOPS.find(t=>t.id===wz.id);stkTop=TOPS.indexOf(def);
   const cs=stk[def.id],rm=rimOf(def),k=wz.step;
   const sum=[`花紋：${def.pat?nm(def.pat):'無'}${def.pat2?' ＋ '+nm(def.pat2):''}`,`邊緣：${rm?(RIMS.find(x=>x[0]===rm.k)||RIMS[0])[1]:'無'}`,`內圈：${(()=>{const o=inS[def.id];return o?(INSHAPES.find(x=>x[0]===(o.s||'circle'))[1]+(o.p?'・'+INPATS.find(x=>x[0]===o.p)[1]:'')):'預設'})()}`,`貼紙：${cs?(STK.find(x=>x[0]===cs.k)||STK[0])[1]+(cs.k2?' ＋ '+(STK.find(x=>x[0]===cs.k2)||STK[0])[1]:''):'無'}`].join('<br>');
-  h+=`<div class="prev stky wz"><canvas width="152" height="152" id="stCv"></canvas><div><b style="font-size:17px">${def.name}</b><div style="font-size:12px;color:var(--dim);line-height:1.5">${sum}</div></div><div class="wznav"><button type="button" class="btn ghost small" data-a="wzgo" data-id="-1">← 上一步</button>${k<WZ.length-1?'<button type="button" class="btn small" data-a="wzgo" data-id="1">下一步 →</button>':'<button type="button" class="btn small" data-a="wzgo" data-id="done">完成 ✓</button>'}</div></div>`;
+  h+=`<div class="prev stky wz"><canvas width="152" height="152" id="stCv"></canvas><div><b style="font-size:17px">${def.name}</b><div style="font-size:12px;color:var(--dim);line-height:1.5">${sum}</div></div><div class="wznav"><button type="button" class="btn ghost small" data-a="wzdef" data-id="0">↺ 還原預設</button><button type="button" class="btn ghost small" data-a="wzgo" data-id="-1">← 上一步</button>${k<WZ.length-1?'<button type="button" class="btn small" data-a="wzgo" data-id="1">下一步 →</button>':'<button type="button" class="btn small" data-a="wzgo" data-id="done">完成 ✓</button>'}</div></div>`;
   h+=`<div class="wzq"><small>步驟 ${k+1}／${WZ.length}・${WZ[k][0]}</small><b>${WZ[k][1]}</b></div>`;
   const pb=(a,id,n,on)=>`<button type="button" class="pbtn" data-a="${a}" data-id="${id}" aria-pressed="${on}">${n}</button>`;
   if(k===1){
@@ -2564,6 +2564,10 @@ shBody.addEventListener('click',e=>{
       if(def.custom){const cur=TOPS[pick];loadCustoms();const ni=TOPS.indexOf(cur);pick=ni>=0?ni:TOPS.findIndex(owns);for(const k of Object.keys(patCache))if(k[0]==='c')delete patCache[k]}
       else{applyPatS();delete patCache[def.id]}
       savePrefs()}}
+  else if(a==='wzdef'){const def=TOPS[stkTop];if(confirm('把「'+def.name+'」的花紋、邊緣、內圈、貼紙全部還原成預設？')){
+      delete rimS[def.id];delete inS[def.id];delete stk[def.id];
+      if(def.custom){const ci=customs.find(c=>c.sid===def.sp.sid);if(ci){ci.pat=ci.pat2=null;delete ci.patC;delete ci.patC2;const cur=TOPS[pick];loadCustoms();const ni=TOPS.indexOf(cur);pick=ni>=0?ni:TOPS.findIndex(owns)}}else{delete patS[def.id];applyPatS()}
+      for(const k of Object.keys(patCache))delete patCache[k];wz.step=1;refreshGlyphs();savePrefs();shMsg='已還原「'+def.name+'」的預設造型'}}
   else if(a==='wzgo'){if(id==='done'){wz.step=0;shMsg='✓ 「'+(TOPS.find(t=>t.id===wz.id)||{name:''}).name+'」改造完成，可以再選另一顆'}else wz.step=Math.max(0,wz.step+ +id)}
   else if(a==='ins'||a==='inw'||a==='inp'||a==='inpc'||a==='inr'){const def=TOPS[stkTop],o=inS[def.id]=inS[def.id]||{};
     if(a==='ins')o.s=id==='circle'?null:id;else if(a==='inw')o.w=+id===2?null:+id;else if(a==='inp'){o.p=id==='none'?null:id;if(id!=='none'&&!o.pc)o.pc='#ffffff'}else if(a==='inpc'){o.pc=id}else o.c=id==='none'?null:id;
