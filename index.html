@@ -414,7 +414,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.16.3</div>
+  <div class="ver">v1.16.4</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2626,7 +2626,12 @@ $('p2NameIn').addEventListener('input',e=>{p2Name=e.target.value.trim().slice(0,
 
 $('p2Rand').onclick=()=>{p2Av=randomAvatar();save('p2av',p2Av);tourSetupUI()};
 $('tBack').onclick=()=>{$('tourSetup').hidden=true;$('menu').hidden=false;menuEnter()};
-$('tDraw').onclick=()=>{audioInit();if(!cupOk()){$('cupNote').style.color='var(--rival)';return}$('cupNote').style.color='';tourStart()};
+function cupAsk(){
+  let o=$('cupAsk');if(!o){o=document.createElement('div');o.id='cupAsk';o.style.cssText='position:fixed;inset:0;z-index:60;background:rgba(5,7,16,.82);display:flex;align-items:center;justify-content:center;padding:20px';document.body.appendChild(o)}
+  const nm={brz:'青銅盃',leg:'傳說盃',div:'神聖盃'},top=TOPS[effPick(pick)];
+  o.innerHTML=`<div style="width:100%;max-width:420px;background:#12162a;border:2px solid var(--gold);border-radius:16px;padding:20px;display:grid;gap:12px"><b style="font-size:20px">要打哪一級盃賽？</b><div style="font-size:13px;color:var(--dim)">${tourN===2?'雙人':'單人'}・P1 陀螺：${top.name}（${TIER_NAME[top.tier]}）<br>選好就會直接抽籤開始。對手會用同等級的陀螺。</div>${['brz','leg','div'].map(c=>{const lock=lv<CUP_LV[c];return `<button type="button" class="btn ${c===tourCup?'':'ghost'}" data-c="${c}" ${lock?'disabled style="opacity:.4"':''}>${lock?'🔒 ':''}${nm[c]}${lock?'（Lv '+CUP_LV[c]+' 解鎖）':c===tourCup?'　← 目前':''}</button>`}).join('')}<button type="button" class="btn ghost small" data-c="x">取消，回去再看看</button></div>`;
+  o.hidden=false;o.onclick=e=>{const b=e.target.closest('[data-c]');if(!b){if(e.target===o)o.hidden=true;return}if(b.dataset.c==='x'){o.hidden=true;return}tourCup=b.dataset.c;o.hidden=true;tourSetupUI();$('cupNote').style.color='';tourStart()}}
+$('tDraw').onclick=()=>{audioInit();cupAsk()};
 function tourStart(){
   markPlayed();
   const hs=[mkF(withBoost(TOPS[effPick(pick)]),pName,pAv,1)];if(tourN===2)hs.push(mkF(withBoost(TOPS[p2pick]),p2Name,p2Av,2));
