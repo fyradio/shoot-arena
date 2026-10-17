@@ -414,7 +414,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.15.0</div>
+  <div class="ver">v1.15.1</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -1165,7 +1165,7 @@ function drawPat(g,k,col){
 }
 
 const RIMS=[['none','無'],['band','實心外圈'],['twin','雙線環'],['dash','虛線跑道'],['studs','鉚釘'],['teeth','鋸齒刃'],['gear','齒輪邊'],['scallop','波浪邊'],['zig','雷電邊'],['flame','火焰邊'],['stars','星點邊'],['chain','鎖鏈'],['diamond','菱形邊'],['glow','發光邊']];
-let rimS=load('v2rim')||{};let patS=load('v2pat')||{};function applyPatS(){for(const t of TOPS)if(!t.custom){const o=patS[t.id]||{};t.pat=o.pat||null;t.patC=o.patC||'#ff6a1a';t.pat2=o.pat2||null;t.patC2=o.patC2||'#ffffff'}}applyPatS();
+let rimS=load('v2rim')||{};let patS=load('v2pat')||{},inS=load('v2inner')||{};function applyPatS(){for(const t of TOPS)if(!t.custom){const o=patS[t.id]||{};t.pat=o.pat||null;t.patC=o.patC||'#ff6a1a';t.pat2=o.pat2||null;t.patC2=o.patC2||'#ffffff'}}applyPatS();
 const rimOf=def=>rimS[def.id]||null;
 function drawRim(g,def,k,col){
   if(!k||k==='none')return;
@@ -1192,7 +1192,7 @@ function patternTex(def){
   if(patCache[def.id])return patCache[def.id];
   const w=512,c=document.createElement('canvas');c.width=c.height=w;const g=c.getContext('2d');
   g.translate(w/2,w/2);g.scale(w/2.4,-w/2.4);
-  const C=hex(def.color),A=hex(def.accent),D='#11131c',N=def.blades;
+  const C=hex(def.color),A=hex(def.accent),D=inS[def.id]||'#11131c',N=def.blades;
   const circ=(r,col)=>{g.beginPath();g.arc(0,0,r,0,7);g.fillStyle=col;g.fill()};
   const ringLine=(r,lw,col)=>{g.beginPath();g.arc(0,0,r,0,7);g.lineWidth=lw;g.strokeStyle=col;g.stroke()};
   circ(1.3,C);
@@ -1630,7 +1630,7 @@ function drawIcon(c,def){
   g.closePath();g.fillStyle=hex(def.color);g.fill();g.lineWidth=w*0.025;g.strokeStyle=hex(def.accent);g.stroke();
   if(def.pat||def.pat2){g.save();g.beginPath();for(let i=0;i<=160;i++){const th=i/160*Math.PI*2,rr=ringR(def,th)/1.2*r;i?g.lineTo(Math.cos(th)*rr,Math.sin(th)*rr):g.moveTo(Math.cos(th)*rr,Math.sin(th)*rr)}g.closePath();g.clip();g.scale(r/1.2,-r/1.2);drawPats(g,def);g.restore()}
   {const rm=rimOf(def);if(rm){g.save();g.scale(r/1.2,r/1.2);drawRim(g,def,rm.k,rm.c);g.restore()}}
-  g.beginPath();g.arc(0,0,r*0.62,0,7);g.fillStyle='#b9c1da';g.fill();
+  g.beginPath();g.arc(0,0,r*0.62,0,7);g.fillStyle=inS[def.id]||'#b9c1da';g.fill();
   if(def.edgy){const N=def.blades;for(let i=0;i<N;i++){const a=(i+0.5)/N*Math.PI*2;g.save();g.rotate(-a);
     g.beginPath();g.moveTo(r*0.42,-r*0.2);g.lineTo(r*1.0,0);g.lineTo(r*0.42,r*0.2);g.closePath();g.fillStyle='#e6eaf2';g.fill();g.lineWidth=w*0.02;g.strokeStyle='#ffc83d';g.stroke();
     g.beginPath();g.moveTo(r*0.55,-r*0.08);g.lineTo(r*0.8,0);g.lineTo(r*0.55,r*0.08);g.closePath();g.fillStyle=hex(def.accent);g.fill();g.restore()}}
@@ -2402,7 +2402,7 @@ let last=performance.now();
 /* ---------- workshop (陀螺商店・盲盒・組裝・強化) ---------- */
 const shopEl=$('shop'),shBody=$('shBody');let shTab='tops',asm={ring:'p_red:ring',disc:'p_red:disc',tip:'p_red:tip',emb:'p_red:emb',left:false,name:''},bsSel=0,shMsg='';
 const BOX_PRICE=80;
-function savePrefs(){save('v2rim',rimS);save('v2pat',patS);save('v2tops',[...ownedTops]);save('v2parts',[...ownedParts]);save('inv',inv);save('v2boost',boosts);save('v2customs',customs);save('coins',coins);save('lv',lv);save('xp',xp);save('v2bolt',boltS);save('v2stk',stk)}
+function savePrefs(){save('v2rim',rimS);save('v2pat',patS);save('v2inner',inS);save('v2tops',[...ownedTops]);save('v2parts',[...ownedParts]);save('inv',inv);save('v2boost',boosts);save('v2customs',customs);save('coins',coins);save('lv',lv);save('xp',xp);save('v2bolt',boltS);save('v2stk',stk)}
 function shOpen(){audioInit();$('menu').hidden=true;shopEl.hidden=false;shMsg='';shRender()}
 function shClose(){shopEl.hidden=true;$('menu').hidden=false;if(pick>=TOPS.length||!owns(TOPS[pick]))pick=TOPS.findIndex(owns);renderPicker();renderDetail();menuFighter();menuStatus();demoReset()}
 $('shopBtn').onclick=shOpen;$('shBack').onclick=shClose;
@@ -2444,7 +2444,7 @@ function renderAsm(box){
 
 let stSid=0,stkTop=0,wz={step:0,id:null};
 const divMax=()=>Math.max(...TOPS.filter(d=>!d.custom&&d.tier==='div').map(d=>d.price)),slotPrice=n=>{const b=Math.ceil((divMax()+300)/100)*100;return n===2?b:b+2000};
-const WZ=[['選陀螺','想改造哪一顆陀螺？（內建的、自組的都可以）'],['主花紋','想要什麼主花紋？'],['副花紋','要不要再疊一層副花紋？'],['外環邊緣','外環邊緣要加什麼裝飾？'],['貼紙','陀螺中心要貼什麼貼紙？'],['副貼紙','要不要再疊一個小貼紙？'],['雷電','必殺技的雷電要什麼顏色？（所有陀螺共用）']];
+const WZ=[['選陀螺','想改造哪一顆陀螺？（內建的、自組的都可以）'],['主花紋','想要什麼主花紋？'],['副花紋','要不要再疊一層副花紋？'],['外環邊緣','外環邊緣要加什麼裝飾？'],['內圈','內圈（中間那一圈）要換成什麼顏色？'],['貼紙','陀螺中心要貼什麼貼紙？'],['副貼紙','要不要再疊一個小貼紙？'],['雷電','必殺技的雷電要什麼顏色？（所有陀螺共用）']];
 const swH=(act,cur,def)=>'<div class="pset">'+PCOLS.map(([n,c])=>`<button type="button" class="pbtn" data-a="${act}" data-id="${c}" aria-pressed="${(cur||def)===c}" style="border-left:8px solid ${c}">${n}</button>`).join('')+'</div>';
 function boltHTML(){let h=`<div class="note" style="font-size:12px">放必殺技時，陀螺身邊會出現雷電。買顏色，再升級欄位：每升一級可以多配一種顏色，雷電也更密——1 種顏色 7 道、2 種 11 道、3 種 15 道。沒有配置時，用陀螺原本的雷電色。</div>`;
   h+=`<div class="shr"><div><b>雷電欄位　${boltS.slots}／3　（${[7,11,15][boltS.slots-1]} 道雷電）</b><small>目前配置：${boltS.equip.length?boltS.equip.map(id=>BOLT_COLORS.find(c=>c[0]===id)[1]).join('、'):'（沿用陀螺原本的雷電）'}</small></div>${boltS.slots<3?`<button class="mini ${coins<slotPrice(boltS.slots+1)?'no':''}" data-a="bslot" type="button">升到 ${[7,11,15][boltS.slots]} 道・${boltS.slots+1} 色　${slotPrice(boltS.slots+1)} 幣</button>`:'<span style="color:var(--gold)">已滿</span>'}</div>`;
@@ -2477,14 +2477,16 @@ function renderStyle(box){
     if(rm)h+='<div class="shH">邊緣裝飾顏色</div>'+swH('rimc',rm.c,'#ffd23d');
     h+='<div class="note" style="font-size:12px">邊緣裝飾畫在外環內側的一圈；3D 對戰時要重新開始一場才會看到新顏色。</div>'}
   else if(k===4){
+    h+='<div class="pset">'+pb('inr','none','預設',!inS[def.id])+'</div>'+swH('inr',inS[def.id],'')}
+  else if(k===5){
     h+='<div class="pset">'+pb('stk','none','不貼（顯示原本的字）',!cs)+STK.map(([x,n])=>pb('stk',x,n,!!cs&&cs.k===x)).join('')+'</div>';
     if(cs)h+='<div class="shH">貼紙顏色</div>'+swH('stkc',cs.c,'#ffd23d')}
-  else if(k===5){
+  else if(k===6){
     if(!cs)h+='<div class="note">還沒貼主貼紙，請按「上一步」先選一個貼紙。</div>';
     else{h+='<div class="pset">'+pb('stk2','none','不疊',!cs.k2)+STK.filter(x=>x[0]!=='blank').map(([x,n])=>pb('stk2',x,n,cs.k2===x)).join('')+'</div>';
       if(cs.k2)h+='<div class="shH">副貼紙顏色</div>'+swH('stkc2',cs.c2,'#ffffff')}}
   else h+=boltHTML();
-  if(k>=1&&k<=5)h+=`<div class="pset" style="margin-top:10px"><button type="button" class="pbtn" data-a="wzreset" data-id="${k}">↺ 這一步全部清除</button></div>`;
+  if(k>=1&&k<=6)h+=`<div class="pset" style="margin-top:10px"><button type="button" class="pbtn" data-a="wzreset" data-id="${k}">↺ 這一步全部清除</button></div>`;
   box.innerHTML=h;drawIcon(box.querySelector('#stCv'),def)
 }
 function renderBoost(box){
@@ -2518,7 +2520,8 @@ shBody.addEventListener('click',e=>{
       else{applyPatS();delete patCache[def.id]}
       savePrefs()}}
   else if(a==='wzgo'){if(id==='done'){wz.step=0;shMsg='✓ 「'+(TOPS.find(t=>t.id===wz.id)||{name:''}).name+'」改造完成，可以再選另一顆'}else wz.step=Math.max(0,wz.step+ +id)}
-  else if(a==='wzreset'){const def=TOPS[stkTop],k=+id;if(k===3){delete rimS[def.id];delete patCache[def.id]}else if(k===4){delete stk[def.id];refreshGlyphs()}else if(k===5&&stk[def.id]){delete stk[def.id].k2;delete stk[def.id].c2;refreshGlyphs()}savePrefs()}
+  else if(a==='inr'){const def=TOPS[stkTop];if(id==='none')delete inS[def.id];else inS[def.id]=id;delete patCache[def.id];savePrefs()}
+  else if(a==='wzreset'){const def=TOPS[stkTop],k=+id;if(k===3){delete rimS[def.id];delete patCache[def.id]}else if(k===4){delete inS[def.id];delete patCache[def.id]}else if(k===5){delete stk[def.id];refreshGlyphs()}else if(k===6&&stk[def.id]){delete stk[def.id].k2;delete stk[def.id].c2;refreshGlyphs()}savePrefs()}
   else if(a==='bbuy'){const c=BOLT_COLORS.find(x=>x[0]===id);if(coins<c[3])shMsg='商店幣不夠，去打比賽賺吧！';else{coins-=c[3];boltS.own.push(id);if(boltS.equip.length<boltS.slots)boltS.equip.push(id);savePrefs();shMsg='買到了「'+c[1]+'」！';sfx.win()}}
   else if(a==='bslot'){const p=slotPrice(boltS.slots+1);if(coins<p)shMsg='商店幣不夠，去打比賽賺吧！';else{coins-=p;boltS.slots++;savePrefs();shMsg='升級！現在可配 '+boltS.slots+' 種顏色，共 '+[7,11,15][boltS.slots-1]+' 道雷電';sfx.win()}}
   else if(a==='beq'){const i=boltS.equip.indexOf(id);if(i>=0)boltS.equip.splice(i,1);else if(boltS.equip.length>=boltS.slots)shMsg='雷電欄位滿了：先卸下一種，或花錢買新的欄位';else boltS.equip.push(id);savePrefs()}
