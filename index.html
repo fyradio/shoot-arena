@@ -399,7 +399,6 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
       <div class="tbList" id="tbList"></div>
       <button class="btn" id="tNext" type="button">—</button>
       <button class="btn ghost" id="tSkip" type="button" hidden>觀看決賽</button>
-      <button class="btn ghost" id="tQuit" type="button">放棄大賽</button>
     </div>
   </section>
   <section id="shop" class="sheet gut" hidden>
@@ -413,7 +412,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.13.2</div>
+  <div class="ver">v1.13.3</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2485,7 +2484,6 @@ function tourBoard(first){
   else{nx.textContent='結束比賽，領取獎勵';sk.hidden=false;sk.textContent='觀看決賽'}
   nx.onclick=()=>{audioInit();$('tourBoard').hidden=true;const m=humanMatches()[0]||tour.matches.find(x=>!x.w);if(!m)return tourAdvance();if(m.a.h||m.b.h)tourPlay(m);else{cpuAuto(m);tourAdvance()}};
   sk.onclick=()=>{audioInit();$('tourBoard').hidden=true;const m=tour.matches.find(x=>!x.w);if(m)tourWatch(m);else tourAdvance()};
-  $('tQuit').onclick=()=>tourExit();
   if(first){$('tbList').classList.add('draw');setTimeout(()=>$('tbList')&&$('tbList').classList.remove('draw'),1400);sfx.ding()}
 }
 function tourPlay(m){
