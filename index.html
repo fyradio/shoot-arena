@@ -218,6 +218,7 @@ h1{margin:0;font-weight:900;font-size:clamp(40px,12vw,62px);line-height:1;letter
 .prev{display:grid;grid-template-columns:76px 1fr;gap:10px;align-items:center;background:var(--deck);border:2px solid var(--gold);border-radius:10px;padding:10px}
 .prev canvas{width:76px;height:76px}.prev .st{grid-column:1/-1;display:grid;grid-template-columns:auto 1fr auto;gap:3px 6px;font-size:11px;color:var(--dim);align-items:center}
 .prev .st i{height:6px;border-radius:3px;background:var(--line);overflow:hidden;display:block}.prev .st i em{display:block;height:100%;background:var(--gold)}.prev .st i em.b{background:var(--you)}
+.hcard{background:#12162a;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:8px 0;font-size:14px;line-height:1.7}.hcard h4{margin:0 0 6px;font-size:17px}.hcard .pro{color:#7dffb0}.hcard .con{color:#ff9a8a}.hcard i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
 .wznav{grid-column:1/-1;display:flex;gap:8px}.wznav .btn{flex:1;padding:10px 4px;font-size:14px;white-space:nowrap}.wzq{margin:10px 0 8px;display:grid;gap:2px}.wzq small{color:var(--gold);font-size:12px}.wzq b{font-size:17px}
 #shBody .prev.stky{position:sticky;top:0;z-index:6;grid-template-columns:100px 1fr;background:#12162a;box-shadow:0 10px 14px -8px rgba(0,0,0,.9)}#shBody .prev.stky canvas{width:100px;height:100px}
 .tp{position:relative}.tp .pin{position:absolute;top:1px;right:2px;font-style:normal;font-size:12px;opacity:.22;padding:2px;filter:grayscale(1)}.tp .pin.on{opacity:1;filter:none}
@@ -280,6 +281,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
       <button class="btn" id="b3Btn" type="button">三戰兩勝　32強淘汰賽</button>
       <button class="btn ghost" id="shopBtn" type="button">工坊　商店・組裝・強化</button>
       <button class="btn ghost" id="go" type="button">自由練習</button>
+      <button class="btn ghost" id="helpBtn" type="button">遊戲說明　規則・道具・四種陀螺</button>
       <button class="btn ghost" id="menuBack" type="button">回標題</button>
     </div>
   </section>
@@ -403,6 +405,15 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
       <button class="btn ghost" id="tSkip" type="button" hidden>觀看決賽</button>
     </div>
   </section>
+  <section id="help" class="sheet gut" hidden>
+    <div class="inner">
+      <div class="eyebrow">遊戲說明</div>
+      <div class="filters" id="hpTabs"><button type="button" data-t="rule" aria-pressed="true">戰鬥規則</button><button type="button" data-t="item" aria-pressed="false">道具說明</button><button type="button" data-t="type" aria-pressed="false">四種陀螺</button><button type="button" data-t="grow" aria-pressed="false">成長・工坊</button></div>
+      <div id="hpBody"></div>
+      <button class="btn ghost" id="hpBack" type="button">返回</button>
+    </div>
+  </section>
+
   <section id="shop" class="sheet gut" hidden>
     <div class="inner">
       <div class="eyebrow" style="display:flex;align-items:center">工坊<span id="shCoin" style="margin-left:12px;color:var(--ink)">商店幣 0</span></div>
@@ -414,7 +425,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.17.0</div>
+  <div class="ver">v1.18.0</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -576,7 +587,7 @@ let emit=()=>{};
 function bowlH(r){return 0.03*r*r}
 let BXS=4.5,BALDEF=1.18;const BX={atk:7.5,bal:1,sta:4,def:1};
 const SPD={atk:1,bal:1.2,sta:1.35,def:1},INIT={atk:1.1,bal:1,sta:1.02,def:0.8};
-const TUNE={"p_red":0.906,"p_blue":0.873,"p_yellow":0.795,"p_green":0.804,"p_white":0.825,"p_black":0.882,"s_lyra":0.963,"s_aquila":1.089,"s_cassio":0.925,"s_orion":0.984,"s_ursa":1.077,"s_cygnus":0.994,"n_kage":1.08,"n_kaze":0.975,"n_hi":0.979,"n_mizu":0.942,"n_tsuchi":0.819,"n_rai":0.915,"phoenix":1.012,"tri_arrow":0.934,"b_seiryu":0.848,"b_byakko":0.931,"b_suzaku":0.994,"b_genbu":0.743,"m_ares":1.05,"m_titan":0.774,"m_raven":0.837,"m_raijin":1.223,"m_aegis":0.858,"m_zero":0.887,"g_aries":0.864,"g_taurus":0.779,"g_gemini":0.896,"g_leo":0.906,"g_scorpio":1.151,"g_sagitt":0.927,"d_red":1.045,"d_azure":0.825,"d_gold":0.767,"d_black":0.898,"d_white":0.89,"d_king":0.748,"k_masamune":0.813,"k_muramasa":1.208,"k_kiku":1.142,"k_onimaru":0.838,"k_monohoshi":0.986,"k_douji":0.899};
+const TUNE={"p_red":0.91,"p_blue":1.125,"p_yellow":0.771,"p_green":0.79,"p_white":0.738,"p_black":0.893,"s_lyra":0.9,"s_aquila":1.067,"s_cassio":0.844,"s_orion":0.931,"s_ursa":1.418,"s_cygnus":0.88,"n_kage":1.094,"n_kaze":0.917,"n_hi":0.958,"n_mizu":0.895,"n_tsuchi":1.019,"n_rai":0.811,"phoenix":0.926,"tri_arrow":0.945,"b_seiryu":0.793,"b_byakko":0.921,"b_suzaku":0.914,"b_genbu":0.958,"m_ares":1.034,"m_titan":0.839,"m_raven":0.792,"m_raijin":1.219,"m_aegis":0.913,"m_zero":0.881,"g_aries":0.987,"g_taurus":0.793,"g_gemini":0.837,"g_leo":0.896,"g_scorpio":1.138,"g_sagitt":0.903,"d_red":1.041,"d_azure":0.765,"d_gold":0.802,"d_black":0.908,"d_white":0.88,"d_king":0.703,"k_masamune":0.808,"k_muramasa":1.229,"k_kiku":1.151,"k_onimaru":0.893,"k_monohoshi":0.923,"k_douji":0.909};
 const SPCAP=0.4;/* 單次必殺（含連擊）最多打掉防禦/耐久型這麼多耐久，開場必殺不會直接爆 */
 function spCap(V,X,l){if(!((X.sp||X.chain||X.capT>0)&&(V.def.type==='def'||V.def.type==='sta')))return l;const id=X.side+':'+(X.spId||0);if(V.capId!==id){V.capId=id;V.capTaken=0}const r=Math.max(0,Math.min(l,SPCAP-V.capTaken));V.capTaken+=r;return r}
 const durMod=d=>Math.max(0.3,1/((1+0.06*(d.wt-5))*(1+0.05*(d.def-5))*(1+0.08*(d.sta-5)))/(TUNE[d.id]||1));;
@@ -690,7 +701,7 @@ function stepPhysics(A,B,h){
     if(T.state==='out'){T.x+=T.vx*h;T.z+=T.vz*h;T.vy-=22*h;T.y+=T.vy*h;continue}
     if(T.state!=='spin')continue;
     T.dash=Math.max(0,T.dash-h);T.shell=Math.max(0,T.shell-h);T.moon=Math.max(0,T.moon-h);T.buffT=Math.max(0,(T.buffT||0)-h);T.boostCD=Math.max(0,(T.boostCD||0)-h);
-    for(const it of items)if(it.alive&&Math.hypot(it.x-T.x,it.z-T.z)<1.15*(T.def.type==='bal'?1.7:1))pickItem(T,it);
+    for(const it of items)if(it.alive){const dd=Math.hypot(it.x-T.x,it.z-T.z);if(dd<1.15*(T.def.type==='bal'?2.4:1))pickItem(T,it);else if(T.def.type==='bal'&&dd<5){T.vx+=(it.x-T.x)/dd*7*h;T.vz+=(it.z-T.z)/dd*7*h}}
     const d=Math.hypot(T.x,T.z)||1e-6;
     T.storm=Math.max(0,(T.storm||0)-h);
     const spOn=stepSpecial(T,h);
@@ -700,9 +711,9 @@ function stepPhysics(A,B,h){
     const f=T.def.flow*2.2*T.s*Math.min(1,d/1.2)*(T.def.left?-1:1);
     ax+=f*(T.z/d);az+=f*(-T.x/d);
     const sm=Math.min(1,Math.hypot(T.sx,T.sz));
-    const sg=spOn?0:track&&track.on?2.5:7;const sgm=T.def.type==='bal'?1.35:1;ax+=T.sx*sg*sgm;az+=T.sz*sg*sgm;
+    const sg=spOn?0:track&&track.on&&T.def.type!=='bal'?2.5:7;const sgm=T.def.type==="bal"?1.35:1;ax+=T.sx*sg*sgm;az+=T.sz*sg*sgm;
     T.onTrack=Math.max(0,(T.onTrack||0)-h);
-    if(track&&track.on){const tp=trackPull(T);if(tp){if(T.onTrack<=0&&T.boostCD<=0){T.vx=tp[2]*20;T.vz=tp[3]*20;T.dash=0.45;T.boosting=true;T.boostCD=1.1;emit('boost',{T})}ax+=tp[0];az+=tp[1];T.onTrack=0.25;T.s=Math.min(1.05,T.s+0.012*h)}else if(d<3.2){ax-=T.x*4;az-=T.z*4;const tx=T.z/d,tz=-T.x/d,vt=T.vx*tx+T.vz*tz,dmp=vt*(1-Math.exp(-4*h))/h;ax-=tx*dmp;az-=tz*dmp}else{ax-=T.x*1.2;az-=T.z*1.2}}
+    if(track&&track.on&&T.def.type!=='bal'){const tp=trackPull(T);if(tp){if(T.onTrack<=0&&T.boostCD<=0){T.vx=tp[2]*20;T.vz=tp[3]*20;T.dash=0.45;T.boosting=true;T.boostCD=1.1;emit('boost',{T})}ax+=tp[0];az+=tp[1];T.onTrack=0.25;T.s=Math.min(1.05,T.s+0.012*h)}else if(d<3.2){ax-=T.x*4;az-=T.z*4;const tx=T.z/d,tz=-T.x/d,vt=T.vx*tx+T.vz*tz,dmp=vt*(1-Math.exp(-4*h))/h;ax-=tx*dmp;az-=tz*dmp}else{ax-=T.x*1.2;az-=T.z*1.2}}
     if(T.boosting&&(d<1.6||T.dash<=0)){T.boosting=false;if(T.dash>0){T.dash=0.08;T.vx*=0.55;T.vz*=0.55}}
     T.vx+=ax*h;T.vz+=az*h;
     if(T.dash<=0){const fr=Math.exp(-T.def.fric*(T.shell>0?2.2:1)*h);T.vx*=fr;T.vz*=fr}
@@ -756,6 +767,7 @@ function collide(A,B,h){
   }
   if(bA.k==='thunder')B.s-=0.04*(A.def.type==='atk'?0.5:1);if(bB.k==='thunder')A.s-=0.04*(B.def.type==='atk'?0.5:1);if(bA.k==='ice')B.s-=impact*0.003;if(bB.k==='ice')A.s-=impact*0.003;
   A.charge=Math.min(1,A.charge+impact*0.009*chgMul(A));B.charge=Math.min(1,B.charge+impact*0.009*chgMul(B));
+  {const dr=Math.min(0.08,0.02+impact*0.003);if(A.def.type==='bal'&&B.state==='spin')B.charge=Math.max(0,B.charge-dr);if(B.def.type==='bal'&&A.state==='spin')A.charge=Math.max(0,A.charge-dr)}
   emit('hit',{A,B,bA:bA.k,bB:bB.k,impact,x:(A.x+B.x)/2,z:(A.z+B.z)/2});
   if(A.burst<=0&&B.burst<=0){if(A.burst<=B.burst)B.burst=0.02;else A.burst=0.02}/* 同時爆裂：只爆受損較重的一方 */
   if(A.burst<=0){A.burst=0;A.state='burst';emit('burst',{T:A})}
@@ -2443,6 +2455,40 @@ const BOX_PRICE=80;
 function savePrefs(){save('v2rim',rimS);save('v2pat',patS);save('v2inner',inS);save('v2tops',[...ownedTops]);save('v2parts',[...ownedParts]);save('inv',inv);save('v2boost',boosts);save('v2customs',customs);save('coins',coins);save('lv',lv);save('xp',xp);save('v2bolt',boltS);save('v2stk',stk)}
 function shOpen(){audioInit();$('menu').hidden=true;shopEl.hidden=false;shMsg='';shRender()}
 function shClose(){wz.step=0;shopEl.hidden=true;$('menu').hidden=false;if(pick>=TOPS.length||!owns(TOPS[pick]))pick=TOPS.findIndex(owns);renderPicker();renderDetail();menuFighter();menuStatus();demoReset()}
+
+/* 遊戲說明 */
+const HELP={
+rule:`<div class="hcard"><h4>怎麼贏</h4>每一局兩顆陀螺在戰鬥盤上互撞，<b>先拿 4 分</b>的人獲勝。<br>轉停（轉速歸零）<b>+1</b>　撞出場 <b>+2</b>　撞爆（耐久歸零） <b>+3</b>。</div>
+<div class="hcard"><h4>操作</h4>往下拉再放開發射，拉得越滿轉速越高；剛好放在最準的位置有「完美射擊」加成。<br>對戰時手指在畫面上拖，可以推著陀螺跑。必殺鈕亮了（100%）就按。</div>
+<div class="hcard"><h4>兩條血：轉速與耐久</h4><b>轉速</b>：會自己慢慢掉，被撞也會掉，歸零就停轉。<br><b>耐久</b>：撞擊很重（超過一定力道）時才會扣，歸零就會爆裂。<br>轉速越低，耐久越容易被打掉。吃到「耐久修復」或「轉速」道具可以補回來。</div>
+<div class="hcard"><h4>必殺技</h4>必殺氣會自己慢慢增加，被撞、點擊必殺鈕、長按鈕也能加快。滿了之後按鈕亮起，按下就發動。<br>必殺<b>期間會減傷</b>（攻擊型最多），所以開場放必殺不容易兩敗俱傷。<br>對防禦型、耐久型，一次必殺最多只能打掉他們 40% 的耐久。<br><b>平衡型</b>撞到對手，會扣掉對手一小段必殺氣。</div>
+<div class="hcard"><h4>四種型態互相剋制</h4><b>攻擊</b> 剋 <b>耐久</b>　<b>耐久</b> 剋 <b>防禦</b>　<b>防禦</b> 剋 <b>攻擊</b><br>被剋制的一方吃到的傷害 ×1.6。<b>平衡型</b>不剋也不被剋，不過打防禦型時傷害有 ×1.18。<br>攻擊型打耐久型，耐久型的耐久損耗再多 25%。</div>
+<div class="hcard"><h4>戰鬥盤與牆</h4>戰鬥盤會浮出<b>特殊軌道</b>，踩上去會被加速、拉著走（平衡型不受軌道吸引）。<br>四周的牆會慢慢降下，從降下的地方最容易被撞出場。盤面形狀、牆的高度每個場地都不同。</div>
+<div class="hcard"><h4>賽制</h4><b>積分淘汰</b>：32 位參賽者抽籤對戰，打贏 5 關就是冠軍。<br><b>三戰兩勝</b>：32 強淘汰賽，每場三戰兩勝。<br><b>自由練習</b>：隨便打，不影響成績。<br>盃賽分青銅、傳說、神聖三級，對手會用同等級的陀螺；等級不夠的盃賽會鎖住。<br>雙人模式：兩人共用一支手機，畫面上下兩半各自操控。</div>`,
+item:`<div class="note" style="font-size:12px">戰鬥盤上會隨機出現道具，用陀螺碰到就能吃。有人快沒轉速或耐久時，補給道具會出現得更多，讓落後的人有翻盤機會。增益類道具持續 <b>8 秒</b>（平衡型 ×1.4）。</div>`+[
+['spin','#5dff8a','轉速提升','立刻補回一段轉速（約 30%）。'],
+['rush','#7dffe4','轉速爆發','大量補回轉速（約 55%），快停下來時的救星。'],
+['heal','#ff6aa8','耐久修復','補回 40% 耐久，被打得快爆時吃它。'],
+['charge','#ffd23d','必殺能量','必殺氣直接充滿，馬上可以放必殺。'],
+['fire','#ff6a1a','烈焰之力','8 秒內攻擊力 ×1.6，而且更容易把對手撞爆（爆裂傷害 ×1.7）。'],
+['thunder','#4fd8ff','雷電之力','8 秒內攻擊力 ×1.35。'],
+['steel','#c4cbe0','鋼鐵鎧甲','8 秒內防禦 ×2.2、更重，受到的耐久傷害只剩 40%。'],
+['ice','#9fe8ff','冰晶鎧甲','8 秒內防禦 ×1.8，受到的耐久傷害減半。'],
+['light','#ffe9a0','光之護盾','8 秒內防禦 ×1.6，而且完全不會被扣耐久（打不爆）。']
+].map(([k,c,n,d])=>`<div class="hcard"><h4><i style="background:${c};box-shadow:0 0 8px ${c}"></i>${n}</h4>${d}</div>`).join('')+`<div class="hcard"><h4>平衡型的道具優勢</h4>吃道具的範圍最大，靠近道具時還會被輕輕吸過去，增益時間也比較長。</div>`,
+type:`<div class="hcard" style="border-color:#ff6a4a"><h4 style="color:#ff8a6a">攻擊型</h4>剋制：<b>耐久型</b>　被剋：防禦型<br><span class="pro">優點：</span>起始轉速最高、攻擊力最大，撞爆能力極強（爆裂傷害最高）；必殺期間幾乎不受傷。<br><span class="con">缺點：</span>轉速掉得最快、自己的耐久也最脆弱，拖久了會輸；碰到防禦型很吃虧。<br>打法：搶先手、集中火力快速撞爆對手，別拖。</div>
+<div class="hcard" style="border-color:#7dd0ff"><h4 style="color:#7dd0ff">平衡型</h4>不剋也不被剋（打防禦型傷害 ×1.18）<br><span class="pro">優點：</span>操控最靈活，不受戰鬥盤軌道吸引；吃道具範圍最大、增益時間長；撞到對手會扣對手必殺氣，讓他放不出必殺；基礎防禦稍高。<br><span class="con">缺點：</span>攻擊、耐久都普通，沒有剋制關係可以靠，單純硬碰硬不強。<br>打法：靈活走位、搶道具、擾亂對手的必殺節奏。</div>
+<div class="hcard" style="border-color:#5dff8a"><h4 style="color:#5dff8a">耐久型</h4>剋制：<b>防禦型</b>　被剋：攻擊型<br><span class="pro">優點：</span>轉速掉得最慢，能撐最久；撞擊會大幅削減對手轉速；自己的耐久損耗很少；必殺時還會補一點轉速和耐久。<br><span class="con">缺點：</span>撞爆能力弱，不容易在短時間內打倒人；遇到攻擊型耐久會被多扣 25%。<br>打法：撐到對手自己停轉，專門磨防禦型。</div>
+<div class="hcard" style="border-color:#ffd23d"><h4 style="color:#ffd23d">防禦型</h4>剋制：<b>攻擊型</b>　被剋：耐久型<br><span class="pro">優點：</span>防禦力最高，被撞很不容易動；平時轉速掉得慢；必殺時會回補轉速，必殺期間受傷減半；一次必殺最多被打掉 40% 耐久，開場不會被秒。<br><span class="con">缺點：</span>起始轉速最低，起步慢；攻擊力普通；被耐久型磨轉速、被平衡型針對時比較辛苦。<br>打法：站穩擋住攻擊型，等對手消耗光再反擊。</div>
+<div class="note" style="font-size:12px">另外還有「特色陀螺」（青龍、白虎、朱雀、玄武等神獸，以及星座、忍者、鬼滅風格的陀螺），各自有獨特的必殺技。每顆陀螺的外環、重量盤、軸心都有素質，到工坊可以自己組裝。</div>`,
+grow:`<div class="hcard"><h4>商店幣與等級</h4>打比賽會得到商店幣和經驗值，等級提高可以參加更高級的盃賽（傳說盃 Lv 3、神聖盃 Lv 6）。<br>名次越高、打得越遠，獎勵越多。</div>
+<div class="hcard"><h4>工坊</h4><b>陀螺</b>：用商店幣買新陀螺。<br><b>盲盒・道具</b>：抽零件盲盒、買能力增幅道具、買雷電顏色和升級雷電欄位。<br><b>組裝</b>：用零件自己組一顆陀螺（外環、重量盤、軸心、紋章）。<br><b>造型</b>：一步一步改花紋、外環邊緣、內圈、貼紙，並裝備雷電顏色。<br><b>強化</b>：用增幅道具替單顆陀螺加點（攻、防、耐、重）。</div>
+<div class="hcard"><h4>捏臉</h4>在選單點「捏臉」可以改你的鬥士外觀；對戰時必殺吶喊的畫面會用到。</div>`};
+let hpTab='rule';
+function hpRender(){[...$('hpTabs').children].forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===hpTab));$('hpBody').innerHTML=HELP[hpTab]}
+$('hpTabs').onclick=e=>{const b=e.target.closest('[data-t]');if(b){hpTab=b.dataset.t;hpRender();window.scrollTo(0,0)}};
+$('helpBtn').onclick=()=>{$('menu').hidden=true;$('help').hidden=false;hpTab='rule';hpRender();sfx.ding&&sfx.ding()};
+$('hpBack').onclick=()=>{$('help').hidden=true;$('menu').hidden=false};
 $('shopBtn').onclick=shOpen;$('shBack').onclick=shClose;
 $('shTabs').onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;if(shTab==='style'&&b.dataset.t!=='style')wz.step=0;shTab=b.dataset.t;shMsg='';shRender()};
 function statBars(d,base){let h='<div class="st">';for(const k of ['atk','def','sta','wt']){const v=d[k],bv=base?base[k]:v;h+=`<span>${STAT_N[k]}</span><i><em style="width:${Math.min(100,bv*10)}%"></em>${v>bv?`<em class="b" style="width:${(v-bv)*10}%;margin-top:-6px;margin-left:${bv*10}%"></em>`:''}</i><span>${v}</span>`}return h+'</div>'}
