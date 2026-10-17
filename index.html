@@ -425,7 +425,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.19.2</div>
+  <div class="ver">v1.19.3</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2705,11 +2705,21 @@ $('tDraw').onclick=()=>{audioInit();cupAsk()};
 function buffAsk(fit,cb){
   tourBuff=null;if(!(inv.buff25>0)){cb();return}
   let o=$('buffAsk');if(!o){o=document.createElement('div');o.id='buffAsk';o.style.cssText='position:fixed;inset:0;z-index:61;background:rgba(5,7,16,.88);display:flex;align-items:center;justify-content:center;padding:16px';document.body.appendChild(o)}
-  const list=TOPS.filter(t=>owns(t)&&fit(t));let sel=null;
-  const draw=()=>{o.innerHTML=`<div style="width:100%;max-width:460px;max-height:92vh;overflow:auto;background:#12162a;border:2px solid var(--gold);border-radius:16px;padding:18px;display:grid;gap:12px"><b style="font-size:20px">使用全能力強化券？</b><div style="font-size:13px;color:var(--dim);line-height:1.6">你有 ${inv.buff25} 張。選一顆陀螺，這次淘汰賽中它的攻擊、防禦、耐久、重量全部 +25%。一次只能選一顆，用了會消耗一張。</div><div id="bfGrid"></div><button type="button" class="btn" id="bfYes" style="${sel?'':'opacity:.4'}">${sel?'使用在「'+sel.name+'」':'先選一顆陀螺'}</button><button type="button" class="btn ghost" id="bfNo">不使用，直接開始</button></div>`;
-    topGrid(o.querySelector('#bfGrid'),{list,sel,onPick:d=>{sel=d;draw()}});
-    o.querySelector('#bfYes').onclick=()=>{if(!sel)return;inv.buff25--;tourBuff=sel.id;savePrefs();o.hidden=true;cb()};
-    o.querySelector('#bfNo').onclick=()=>{o.hidden=true;cb()}};
+  const list=TOPS.filter(t=>owns(t)&&fit(t)),lastId=load('buffLast'),last=list.find(t=>t.id===lastId);let sel=null,pickMode=false;
+  const use=d=>{inv.buff25--;tourBuff=d.id;save('buffLast',d.id);savePrefs();o.hidden=true;cb()};
+  const box=h=>`<div style="width:100%;max-width:460px;max-height:92vh;overflow:auto;background:#12162a;border:2px solid var(--gold);border-radius:16px;padding:18px;display:grid;gap:12px"><b style="font-size:20px">使用全能力強化券？</b><div style="font-size:13px;color:var(--dim);line-height:1.6">你有 ${inv.buff25} 張。用了之後，這次淘汰賽中被選的那顆陀螺攻擊、防禦、耐久、重量全部 +25%，並消耗一張。</div>${h}</div>`;
+  const draw=()=>{
+    if(!pickMode){
+      o.innerHTML=box((last?`<button type="button" class="btn" id="bfLast">使用強化券：${last.name}（上次用的）</button>`:'')+`<button type="button" class="btn ${last?'ghost':''}" id="bfNew">使用強化券：選新陀螺</button><button type="button" class="btn ghost" id="bfNo">不使用，直接開始</button>`);
+      if(last)o.querySelector('#bfLast').onclick=()=>use(last);
+      o.querySelector('#bfNew').onclick=()=>{pickMode=true;draw()};
+    }else{
+      o.innerHTML=box(`<div class="note" style="font-size:12px">選一顆陀螺，一次只能選一顆。</div><div id="bfGrid"></div><button type="button" class="btn" id="bfYes" style="${sel?'':'opacity:.4'}">${sel?'使用在「'+sel.name+'」':'先選一顆陀螺'}</button><button type="button" class="btn ghost" id="bfBack">← 回上一步</button>`);
+      topGrid(o.querySelector('#bfGrid'),{list,sel,onPick:d=>{sel=d;draw()}});
+      o.querySelector('#bfYes').onclick=()=>{if(sel)use(sel)};
+      o.querySelector('#bfBack').onclick=()=>{pickMode=false;draw()};
+    }
+    const no=o.querySelector('#bfNo');if(no)no.onclick=()=>{o.hidden=true;cb()}};
   o.hidden=false;draw()}
 function tourStart(){
   markPlayed();
