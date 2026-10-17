@@ -413,7 +413,7 @@ button,.tops,.arenas,#app{touch-action:manipulation}
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.13</div>
+  <div class="ver">v1.13.1</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -456,7 +456,7 @@ const SERIES_NAME={mecha:'機甲',gold:'黃金星座',dragon:'聖龍',katana:'�
 const TIPP={flat:[1.0,0.35],semi:[0.6,0.5],ball:[0.35,0.6],sharp:[0.15,0.9]};
 const SERIES_BOLTS={mecha:[0xffffff,0xb24bff],gold:[0xffd23d,0xffffff,0xff8a1f],dragon:[0xff3b1f,0xffd23d],katana:[0xffffff,0x9fe8ff],silver:[0xe6eaf2,0x9fe8ff],ninja:[0xb24bff,0x39ffb0],phoenix:[0xff3b1f,0xffd23d,0xff8a1f],arrow:[0xffe14a,0x4fd8ff,0xffffff],beast:[0xffffff],primary:[]};
 function T_(id,name,tier,series,type,glyph,color,accent,st,blades,style,motif,tip,special,sp,desc,x){
-  let [atk,def,sta,wt]=st;const [flow,fric]=TIPP[tip];if(type==='sta'){atk=Math.min(10,atk+2);def=Math.min(10,def+2)}
+  let [atk,def,sta,wt]=st;const [flow,fric]=TIPP[tip];if(type==='sta'){atk=Math.min(10,atk+2);def=Math.min(10,def+2)}if(type==='bal')def=Math.min(10,def+1);
   const d={id,name,tier,series,type,glyph,color,accent,atk,def,sta,wt,blades,style,motif,tip,flow:flow*(type==='atk'?1.1:1),fric,special,desc,edgy:series==='mecha'||series==='arrow',mv:null,fx:null};
   if(sp.startsWith('fx:'))d.fx=sp.slice(3);else d.mv=sp;
   d.metal=series==='gold'?'gold':series==='silver'?'silver':null;
@@ -575,12 +575,12 @@ let emit=()=>{};
 function bowlH(r){return 0.03*r*r}
 let BXS=4.5;const BX={atk:7.5,bal:1,sta:4,def:1};
 const SPD={atk:1,bal:1.2,sta:1.35,def:1},INIT={atk:1.1,bal:1,sta:1.02,def:0.8};
-const TUNE={"p_red":0.912,"p_blue":1.193,"p_yellow":0.935,"p_green":0.845,"p_white":1.076,"p_black":0.811,"s_lyra":0.978,"s_aquila":0.992,"s_cassio":1.008,"s_orion":0.984,"s_ursa":1.145,"s_cygnus":1.099,"n_kage":1.011,"n_kaze":1.1,"n_hi":0.975,"n_mizu":0.983,"n_tsuchi":0.857,"n_rai":0.984,"phoenix":1.114,"tri_arrow":0.973,"b_seiryu":0.911,"b_byakko":0.936,"b_suzaku":1.03,"b_genbu":0.802,"m_ares":1.05,"m_titan":0.901,"m_raven":0.913,"m_raijin":1.157,"m_aegis":1.001,"m_zero":0.924,"g_aries":1.153,"g_taurus":0.841,"g_gemini":1.015,"g_leo":0.947,"g_scorpio":1.042,"g_sagitt":0.952,"d_red":1.055,"d_azure":0.883,"d_gold":0.854,"d_black":0.894,"d_white":0.924,"d_king":0.799,"k_masamune":0.923,"k_muramasa":1.153,"k_kiku":1.12,"k_onimaru":0.937,"k_monohoshi":1.006,"k_douji":0.889};
+const TUNE={"p_red":0.918,"p_blue":1.176,"p_yellow":0.859,"p_green":0.829,"p_white":0.916,"p_black":0.827,"s_lyra":0.938,"s_aquila":0.999,"s_cassio":0.904,"s_orion":0.991,"s_ursa":1.364,"s_cygnus":1.006,"n_kage":0.993,"n_kaze":1.007,"n_hi":0.953,"n_mizu":0.989,"n_tsuchi":0.832,"n_rai":0.903,"phoenix":1.014,"tri_arrow":0.955,"b_seiryu":0.833,"b_byakko":0.938,"b_suzaku":1.015,"b_genbu":0.811,"m_ares":1.022,"m_titan":0.867,"m_raven":0.817,"m_raijin":1.143,"m_aegis":0.953,"m_zero":0.9,"g_aries":1.084,"g_taurus":0.803,"g_gemini":0.888,"g_leo":0.959,"g_scorpio":1.029,"g_sagitt":0.918,"d_red":1.038,"d_azure":0.837,"d_gold":0.823,"d_black":0.884,"d_white":0.89,"d_king":0.739,"k_masamune":0.844,"k_muramasa":1.16,"k_kiku":1.094,"k_onimaru":0.89,"k_monohoshi":0.949,"k_douji":0.872};
 const durMod=d=>Math.max(0.3,1/((1+0.06*(d.wt-5))*(1+0.05*(d.def-5))*(1+0.08*(d.sta-5)))/(TUNE[d.id]||1));;
 const MAXC=6,DURM=1/3,DECM={atk:1.2,bal:1,sta:0.78,def:0.74};
 const CHG={atk:1.3,bal:1,sta:0.85,def:0.8},BRK={def:1,bal:0.9,sta:1/1.5,atk:1.25};
 let npcChgX=1,duelX=1,passX=1;
-const chgMul=T=>(CHG[T.def.type]||1)*(T.side==='E'?npcChgX:1)*duelX,spGuard=T=>T.def.type==='atk'&&(T.sp||T.chain)?0.35:T.def.type==='def'?0.8:1;
+const chgMul=T=>(CHG[T.def.type]||1)*(T.side==='E'?npcChgX:1)*duelX,spGuard=T=>{const on=T.sp||T.chain;return T.def.type==='atk'?(on?0.35:1):T.def.type==='def'?(on?0.5:0.8):on?0.5:1};
 function newTop(def,side){return {def,side,sp:null,storm:0,buff:null,buffT:0,boostCD:0,onTrack:0,x:0,z:0,vx:0,vz:0,s:0,burst:1,charge:0,state:'idle',m:0.6+def.wt*0.15,rad:(def.wt>=8?1.18:1.12)*TOPSCALE,dash:0,shell:0,moon:0,sx:0,sz:0,y:0,vy:0}}
 function launchTop(T,pull,aim,perfect){
   const dir=T.side==='P'?-1:1;
