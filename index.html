@@ -425,7 +425,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.19.0</div>
+  <div class="ver">v1.19.1</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2477,7 +2477,7 @@ item:`<div class="note" style="font-size:12px">戰鬥盤上會隨機出現道具
 ['steel','#c4cbe0','鋼鐵鎧甲','8 秒內防禦 ×2.2、更重，受到的耐久傷害只剩 40%。'],
 ['ice','#9fe8ff','冰晶鎧甲','8 秒內防禦 ×1.8，受到的耐久傷害減半。'],
 ['light','#ffe9a0','光之護盾','8 秒內防禦 ×1.6，而且完全不會被扣耐久（打不爆）。']
-].map(([k,c,n,d])=>`<div class="hcard"><h4><i style="background:${c};box-shadow:0 0 8px ${c}"></i>${n}</h4>${d}</div>`).join('')+`<div class="hcard"><h4><i style="background:#ffd23d;box-shadow:0 0 8px #ffd23d"></i>全能力強化券（商店道具）</h4>在工坊「盲盒・道具」用 250 幣購買。開始淘汰賽前（積分淘汰或三戰兩勝）會詢問要不要用：選一顆陀螺，整場淘汰賽中它的攻擊、防禦、耐久、重量全部 +25%。一次只能選一顆，用了消耗一張，也可以不用。</div>`<div class="hcard"><h4>平衡型的道具優勢</h4>吃道具的範圍最大，靠近道具時還會被輕輕吸過去，增益時間也比較長。</div>`,
+].map(([k,c,n,d])=>`<div class="hcard"><h4><i style="background:${c};box-shadow:0 0 8px ${c}"></i>${n}</h4>${d}</div>`).join('')+`<div class="hcard"><h4><i style="background:#ffd23d;box-shadow:0 0 8px #ffd23d"></i>全能力強化券（商店道具）</h4>在工坊「盲盒・道具」用 250 幣購買。開始淘汰賽前（積分淘汰或三戰兩勝）會詢問要不要用：選一顆陀螺，整場淘汰賽中它的攻擊、防禦、耐久、重量全部 +25%。一次只能選一顆，用了消耗一張，也可以不用。</div>`+`<div class="hcard"><h4>平衡型的道具優勢</h4>吃道具的範圍最大，靠近道具時還會被輕輕吸過去，增益時間也比較長。</div>`,
 type:`<div class="hcard" style="border-color:#ff6a4a"><h4 style="color:#ff8a6a">攻擊型</h4>剋制：<b>耐久型</b>　被剋：防禦型<br><span class="pro">優點：</span>起始轉速最高、攻擊力最大，撞爆能力極強（爆裂傷害最高）；必殺期間幾乎不受傷。<br><span class="con">缺點：</span>轉速掉得最快、自己的耐久也最脆弱，拖久了會輸；碰到防禦型很吃虧。<br>打法：搶先手、集中火力快速撞爆對手，別拖。</div>
 <div class="hcard" style="border-color:#7dd0ff"><h4 style="color:#7dd0ff">平衡型</h4>不剋也不被剋<br><span class="pro">優點：</span>操控最靈活，不受戰鬥盤軌道吸引；吃道具範圍最大、增益時間長；撞到對手會扣對手必殺氣，讓他放不出必殺；基礎防禦稍高。<br><span class="con">缺點：</span>攻擊、耐久都普通，沒有剋制關係可以靠，單純硬碰硬不強。<br>打法：靈活走位、搶道具、擾亂對手的必殺節奏。</div>
 <div class="hcard" style="border-color:#5dff8a"><h4 style="color:#5dff8a">耐久型</h4>剋制：<b>防禦型</b>　被剋：攻擊型<br><span class="pro">優點：</span>轉速掉得最慢，能撐最久；撞擊會大幅削減對手轉速；自己的耐久損耗很少；必殺時還會補一點轉速和耐久。<br><span class="con">缺點：</span>撞爆能力弱，不容易在短時間內打倒人；遇到攻擊型耐久會被多扣 25%。<br>打法：撐到對手自己停轉，專門磨防禦型。</div>
