@@ -278,7 +278,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
       <div class="cycle"><b>攻擊</b> 剋 耐久　<b>耐久</b> 剋 防禦　<b>防禦</b> 剋 攻擊　<b>平衡</b> 不剋也不被剋<br>
         轉停 <b>+1</b>　撞出場 <b>+2</b>（牆壁會慢慢降下，從降下的地方最容易）　撞爆 <b>+3</b></div>
       <button class="btn" id="tourBtn" type="button">積分淘汰　32強五關</button>
-      <button class="btn" id="b3Btn" type="button">三戰兩勝　32強淘汰賽</button>
+      <button class="btn" id="b3Btn" type="button">三戰兩勝　8強淘汰賽</button>
       <button class="btn ghost" id="shopBtn" type="button">工坊　商店・組裝・強化</button>
       <button class="btn ghost" id="go" type="button">自由練習</button>
       <button class="btn ghost" id="helpBtn" type="button">遊戲說明　規則・道具・四種陀螺</button>
@@ -314,7 +314,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
       <div id="b3Slots" style="display:grid;gap:8px"></div>
       <div class="secHead"><b>我的陀螺</b><span>📌 可以釘選</span></div>
       <div id="b3Grid"></div>
-      <div class="cycle">三場各派一顆陀螺，依順序出場；32 位選手淘汰賽，共 5 關，每一關都是三戰兩勝：三場各派一顆陀螺，先贏兩場晉級，轉停、出場、爆裂都算贏。<br>三場結束同分就延長賽：每次自己挑一顆陀螺再比一場，直到第 10 場；全部平手就算淘汰。</div>
+      <div class="cycle">三場各派一顆陀螺，依順序出場；8 位選手淘汰賽，共 3 關（8強、4強、決賽），每一關都是三戰兩勝：三場各派一顆陀螺，先贏兩場晉級，轉停、出場、爆裂都算贏。<br>三場結束同分就延長賽：每次自己挑一顆陀螺再比一場，直到第 10 場；全部平手就算淘汰。</div>
       <button class="btn" id="b3Go" type="button">開戰！</button>
       <button class="btn ghost" id="b3Back" type="button">返回</button>
     </div>
@@ -425,7 +425,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.18.0</div>
+  <div class="ver">v1.19.0</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -549,6 +549,7 @@ const CONST={aries:[[-1,0.2],[-0.3,0.45],[0.3,0.35],[0.9,-0.1]],taurus:[[-0.9,0.
 const PCAT={ring:'外環',disc:'重量盤',tip:'軸心',emb:'紋章'},CATS=['ring','disc','tip','emb'],TIPN={flat:'平底',semi:'半圓',ball:'球形',sharp:'尖針'};
 const TOP_BY={};for(const d of TOPS)TOP_BY[d.id]=d;
 const BOOST_MAX=8,BOOST_BUDGET=6;
+const BUFF_PRICE=250,BUFF_PCT=1.25;let tourBuff=null;
 const BOOST_ITEMS={atk:{n:'突擊增幅劑',d:'攻擊剋耐久：攻擊 +1',pr:40},sta:{n:'持久增幅劑',d:'耐久剋防禦：耐久 +1',pr:40},def:{n:'堅盾增幅劑',d:'防禦剋攻擊：防禦 +1',pr:40},wt:{n:'配重增幅劑',d:'重量 +1',pr:60}};
 const STAT_N={atk:'攻',def:'防',sta:'久',wt:'重'};
 const STARTER=TOPS.filter(d=>d.tier==='brz').map(d=>d.id);
@@ -580,12 +581,13 @@ let boltS=load('v2bolt')||{own:['white'],slots:1,equip:[]};if(!boltS.own||!boltS
 const boltHex=id=>{const c=BOLT_COLORS.find(x=>x[0]===id);return parseInt((c||BOLT_COLORS[0])[2].slice(1),16)};
 function withBoost(def){
   def=Object.assign({},def,{boltN:[7,11,15][boltS.slots-1]||7});if(boltS.equip.length)def.bolts=boltS.equip.map(boltHex);
-  const b=boostOf(def.id);if(!b.atk&&!b.def&&!b.sta&&!b.wt)return def;const o=Object.assign({},def);for(const k of ['atk','def','sta','wt'])o[k]=Math.max(def[k],Math.min(BOOST_MAX,def[k]+(b[k]||0)));return o}
+  const b=boostOf(def.id);let o=def;if(b.atk||b.def||b.sta||b.wt){o=Object.assign({},def);for(const k of ['atk','def','sta','wt'])o[k]=Math.max(def[k],Math.min(BOOST_MAX,def[k]+(b[k]||0)))}
+  if(tourBuff&&tourBuff===def.id&&(tour||b3)){o=Object.assign({},o);for(const k of ['atk','def','sta','wt'])o[k]=+(o[k]*BUFF_PCT).toFixed(2)}return o}
 
 const BEATS={atk:'sta',sta:'def',def:'atk'};
 let emit=()=>{};
 function bowlH(r){return 0.03*r*r}
-let BXS=4.5,BALDEF=1.18;const BX={atk:7.5,bal:1,sta:4,def:1};
+let BXS=4.5,BALDEF=1;const BX={atk:7.5,bal:1,sta:4,def:1};
 const SPD={atk:1,bal:1.2,sta:1.35,def:1},INIT={atk:1.1,bal:1,sta:1.02,def:0.8};
 const TUNE={"p_red":0.91,"p_blue":1.125,"p_yellow":0.771,"p_green":0.79,"p_white":0.738,"p_black":0.893,"s_lyra":0.9,"s_aquila":1.067,"s_cassio":0.844,"s_orion":0.931,"s_ursa":1.418,"s_cygnus":0.88,"n_kage":1.094,"n_kaze":0.917,"n_hi":0.958,"n_mizu":0.895,"n_tsuchi":1.019,"n_rai":0.811,"phoenix":0.926,"tri_arrow":0.945,"b_seiryu":0.793,"b_byakko":0.921,"b_suzaku":0.914,"b_genbu":0.958,"m_ares":1.034,"m_titan":0.839,"m_raven":0.792,"m_raijin":1.219,"m_aegis":0.913,"m_zero":0.881,"g_aries":0.987,"g_taurus":0.793,"g_gemini":0.837,"g_leo":0.896,"g_scorpio":1.138,"g_sagitt":0.903,"d_red":1.041,"d_azure":0.765,"d_gold":0.802,"d_black":0.908,"d_white":0.88,"d_king":0.703,"k_masamune":0.808,"k_muramasa":1.229,"k_kiku":1.151,"k_onimaru":0.893,"k_monohoshi":0.923,"k_douji":0.909};
 const SPCAP=0.4;/* 單次必殺（含連擊）最多打掉防禦/耐久型這麼多耐久，開場必殺不會直接爆 */
@@ -2462,9 +2464,9 @@ rule:`<div class="hcard"><h4>怎麼贏</h4>每一局兩顆陀螺在戰鬥盤上�
 <div class="hcard"><h4>操作</h4>往下拉再放開發射，拉得越滿轉速越高；剛好放在最準的位置有「完美射擊」加成。<br>對戰時手指在畫面上拖，可以推著陀螺跑。必殺鈕亮了（100%）就按。</div>
 <div class="hcard"><h4>兩條血：轉速與耐久</h4><b>轉速</b>：會自己慢慢掉，被撞也會掉，歸零就停轉。<br><b>耐久</b>：撞擊很重（超過一定力道）時才會扣，歸零就會爆裂。<br>轉速越低，耐久越容易被打掉。吃到「耐久修復」或「轉速」道具可以補回來。</div>
 <div class="hcard"><h4>必殺技</h4>必殺氣會自己慢慢增加，被撞、點擊必殺鈕、長按鈕也能加快。滿了之後按鈕亮起，按下就發動。<br>必殺<b>期間會減傷</b>（攻擊型最多），所以開場放必殺不容易兩敗俱傷。<br>對防禦型、耐久型，一次必殺最多只能打掉他們 40% 的耐久。<br><b>平衡型</b>撞到對手，會扣掉對手一小段必殺氣。</div>
-<div class="hcard"><h4>四種型態互相剋制</h4><b>攻擊</b> 剋 <b>耐久</b>　<b>耐久</b> 剋 <b>防禦</b>　<b>防禦</b> 剋 <b>攻擊</b><br>被剋制的一方吃到的傷害 ×1.6。<b>平衡型</b>不剋也不被剋，不過打防禦型時傷害有 ×1.18。<br>攻擊型打耐久型，耐久型的耐久損耗再多 25%。</div>
+<div class="hcard"><h4>四種型態互相剋制</h4><b>攻擊</b> 剋 <b>耐久</b>　<b>耐久</b> 剋 <b>防禦</b>　<b>防禦</b> 剋 <b>攻擊</b><br>被剋制的一方吃到的傷害 ×1.6。<b>平衡型</b>不剋也不被剋。<br>攻擊型打耐久型，耐久型的耐久損耗再多 25%。</div>
 <div class="hcard"><h4>戰鬥盤與牆</h4>戰鬥盤會浮出<b>特殊軌道</b>，踩上去會被加速、拉著走（平衡型不受軌道吸引）。<br>四周的牆會慢慢降下，從降下的地方最容易被撞出場。盤面形狀、牆的高度每個場地都不同。</div>
-<div class="hcard"><h4>賽制</h4><b>積分淘汰</b>：32 位參賽者抽籤對戰，打贏 5 關就是冠軍。<br><b>三戰兩勝</b>：32 強淘汰賽，每場三戰兩勝。<br><b>自由練習</b>：隨便打，不影響成績。<br>盃賽分青銅、傳說、神聖三級，對手會用同等級的陀螺；等級不夠的盃賽會鎖住。<br>雙人模式：兩人共用一支手機，畫面上下兩半各自操控。</div>`,
+<div class="hcard"><h4>賽制</h4><b>積分淘汰</b>：32 位參賽者抽籤對戰，打贏 5 關就是冠軍。<br><b>三戰兩勝</b>：8 強淘汰賽，每一關三戰兩勝，獎勵是 32 強淘汰賽的 2 倍。<br><b>自由練習</b>：隨便打，不影響成績。<br>盃賽分青銅、傳說、神聖三級，對手會用同等級的陀螺；等級不夠的盃賽會鎖住。<br>雙人模式：兩人共用一支手機，畫面上下兩半各自操控。</div>`,
 item:`<div class="note" style="font-size:12px">戰鬥盤上會隨機出現道具，用陀螺碰到就能吃。有人快沒轉速或耐久時，補給道具會出現得更多，讓落後的人有翻盤機會。增益類道具持續 <b>8 秒</b>（平衡型 ×1.4）。</div>`+[
 ['spin','#5dff8a','轉速提升','立刻補回一段轉速（約 30%）。'],
 ['rush','#7dffe4','轉速爆發','大量補回轉速（約 55%），快停下來時的救星。'],
@@ -2475,12 +2477,12 @@ item:`<div class="note" style="font-size:12px">戰鬥盤上會隨機出現道具
 ['steel','#c4cbe0','鋼鐵鎧甲','8 秒內防禦 ×2.2、更重，受到的耐久傷害只剩 40%。'],
 ['ice','#9fe8ff','冰晶鎧甲','8 秒內防禦 ×1.8，受到的耐久傷害減半。'],
 ['light','#ffe9a0','光之護盾','8 秒內防禦 ×1.6，而且完全不會被扣耐久（打不爆）。']
-].map(([k,c,n,d])=>`<div class="hcard"><h4><i style="background:${c};box-shadow:0 0 8px ${c}"></i>${n}</h4>${d}</div>`).join('')+`<div class="hcard"><h4>平衡型的道具優勢</h4>吃道具的範圍最大，靠近道具時還會被輕輕吸過去，增益時間也比較長。</div>`,
+].map(([k,c,n,d])=>`<div class="hcard"><h4><i style="background:${c};box-shadow:0 0 8px ${c}"></i>${n}</h4>${d}</div>`).join('')+`<div class="hcard"><h4><i style="background:#ffd23d;box-shadow:0 0 8px #ffd23d"></i>全能力強化券（商店道具）</h4>在工坊「盲盒・道具」用 250 幣購買。開始淘汰賽前（積分淘汰或三戰兩勝）會詢問要不要用：選一顆陀螺，整場淘汰賽中它的攻擊、防禦、耐久、重量全部 +25%。一次只能選一顆，用了消耗一張，也可以不用。</div>`<div class="hcard"><h4>平衡型的道具優勢</h4>吃道具的範圍最大，靠近道具時還會被輕輕吸過去，增益時間也比較長。</div>`,
 type:`<div class="hcard" style="border-color:#ff6a4a"><h4 style="color:#ff8a6a">攻擊型</h4>剋制：<b>耐久型</b>　被剋：防禦型<br><span class="pro">優點：</span>起始轉速最高、攻擊力最大，撞爆能力極強（爆裂傷害最高）；必殺期間幾乎不受傷。<br><span class="con">缺點：</span>轉速掉得最快、自己的耐久也最脆弱，拖久了會輸；碰到防禦型很吃虧。<br>打法：搶先手、集中火力快速撞爆對手，別拖。</div>
-<div class="hcard" style="border-color:#7dd0ff"><h4 style="color:#7dd0ff">平衡型</h4>不剋也不被剋（打防禦型傷害 ×1.18）<br><span class="pro">優點：</span>操控最靈活，不受戰鬥盤軌道吸引；吃道具範圍最大、增益時間長；撞到對手會扣對手必殺氣，讓他放不出必殺；基礎防禦稍高。<br><span class="con">缺點：</span>攻擊、耐久都普通，沒有剋制關係可以靠，單純硬碰硬不強。<br>打法：靈活走位、搶道具、擾亂對手的必殺節奏。</div>
+<div class="hcard" style="border-color:#7dd0ff"><h4 style="color:#7dd0ff">平衡型</h4>不剋也不被剋<br><span class="pro">優點：</span>操控最靈活，不受戰鬥盤軌道吸引；吃道具範圍最大、增益時間長；撞到對手會扣對手必殺氣，讓他放不出必殺；基礎防禦稍高。<br><span class="con">缺點：</span>攻擊、耐久都普通，沒有剋制關係可以靠，單純硬碰硬不強。<br>打法：靈活走位、搶道具、擾亂對手的必殺節奏。</div>
 <div class="hcard" style="border-color:#5dff8a"><h4 style="color:#5dff8a">耐久型</h4>剋制：<b>防禦型</b>　被剋：攻擊型<br><span class="pro">優點：</span>轉速掉得最慢，能撐最久；撞擊會大幅削減對手轉速；自己的耐久損耗很少；必殺時還會補一點轉速和耐久。<br><span class="con">缺點：</span>撞爆能力弱，不容易在短時間內打倒人；遇到攻擊型耐久會被多扣 25%。<br>打法：撐到對手自己停轉，專門磨防禦型。</div>
 <div class="hcard" style="border-color:#ffd23d"><h4 style="color:#ffd23d">防禦型</h4>剋制：<b>攻擊型</b>　被剋：耐久型<br><span class="pro">優點：</span>防禦力最高，被撞很不容易動；平時轉速掉得慢；必殺時會回補轉速，必殺期間受傷減半；一次必殺最多被打掉 40% 耐久，開場不會被秒。<br><span class="con">缺點：</span>起始轉速最低，起步慢；攻擊力普通；被耐久型磨轉速、被平衡型針對時比較辛苦。<br>打法：站穩擋住攻擊型，等對手消耗光再反擊。</div>
-<div class="note" style="font-size:12px">另外還有「特色陀螺」（青龍、白虎、朱雀、玄武等神獸，以及星座、忍者、鬼滅風格的陀螺），各自有獨特的必殺技。每顆陀螺的外環、重量盤、軸心都有素質，到工坊可以自己組裝。</div>`,
+<div class="note" style="font-size:12px">另外還有「特色陀螺」（青龍、白虎、朱雀、玄武等神獸，以及星座、忍者、和風妖怪等各種風格的陀螺），各自有獨特的必殺技。每顆陀螺的外環、重量盤、軸心都有素質，到工坊可以自己組裝。</div>`,
 grow:`<div class="hcard"><h4>商店幣與等級</h4>打比賽會得到商店幣和經驗值，等級提高可以參加更高級的盃賽（傳說盃 Lv 3、神聖盃 Lv 6）。<br>名次越高、打得越遠，獎勵越多。</div>
 <div class="hcard"><h4>工坊</h4><b>陀螺</b>：用商店幣買新陀螺。<br><b>盲盒・道具</b>：抽零件盲盒、買能力增幅道具、買雷電顏色和升級雷電欄位。<br><b>組裝</b>：用零件自己組一顆陀螺（外環、重量盤、軸心、紋章）。<br><b>造型</b>：一步一步改花紋、外環邊緣、內圈、貼紙，並裝備雷電顏色。<br><b>強化</b>：用增幅道具替單顆陀螺加點（攻、防、耐、重）。</div>
 <div class="hcard"><h4>捏臉</h4>在選單點「捏臉」可以改你的鬥士外觀；對戰時必殺吶喊的畫面會用到。</div>`};
@@ -2508,6 +2510,7 @@ function renderBox(box){
   let h=`<div class="shr"><div><b>🎁 零件盲盒</b><small>隨機抽到一顆陀螺的一個零件（外環／重量盤／軸心／紋章）<br>機率：青銅 50%・傳說 35%・神聖 15%；抽到重複退 20 幣</small></div><button class="mini ${coins<BOX_PRICE?'no':''}" data-a="box" type="button">${BOX_PRICE} 幣</button></div>`;
   h+=`<div class="note" style="font-size:12px">已收集零件：${ownedParts.size} 個（擁有的陀螺本身的 4 個零件也能拿來組裝）</div><div class="shH">能力增幅道具</div>`;
   for(const k in BOOST_ITEMS){const it=BOOST_ITEMS[k];h+=`<div class="shr"><div><b>${it.n}　持有 ${inv[k]||0}</b><small>${it.d}　每顆陀螺最多強化 ${BOOST_BUDGET} 點，單項上限 ${BOOST_MAX}</small></div><button class="mini ${coins<it.pr?'no':''}" data-a="buyb" data-id="${k}" type="button">${it.pr} 幣</button></div>`}
+  h+=`<div class="shH">淘汰賽 buff 道具</div><div class="shr"><div><b>全能力強化券　持有 ${inv.buff25||0}</b><small>開始淘汰賽前可以選一顆陀螺使用：整場淘汰賽中，那顆陀螺的攻擊、防禦、耐久、重量全部 +25%。一次只能選一顆，用掉就消耗一張，也可以不用。</small></div><button class="mini ${coins<BUFF_PRICE?'no':''}" data-a="buyff" type="button">${BUFF_PRICE} 幣</button></div>`;
   h+='<div class="shH">⚡ 必殺技雷電（買顏色、升欄位、裝備都在這裡）</div>'+boltHTML();
   box.innerHTML=h}
 function partsOf(cat){const ids=new Set();for(const d of TOPS)if(!d.custom&&hasPart(d.id+':'+cat))ids.add(d.id+':'+cat);return [...ids].sort((a,b)=>TIER_ORD[partTop(a).tier]-TIER_ORD[partTop(b).tier])}
@@ -2619,6 +2622,7 @@ shBody.addEventListener('click',e=>{
   if(a==='buyt'){const d=TOP_BY[id];if(coins<d.price)shMsg='商店幣不夠，去打競技大賽吧！';else{coins-=d.price;ownedTops.add(id);savePrefs();shMsg=`買到了「${d.name}」！到主畫面就能選用`;sfx.win()}}
   else if(a==='box'){if(coins<BOX_PRICE)shMsg='商店幣不夠，去打競技大賽吧！';else{coins-=BOX_PRICE;const t=rollTier([['brz',0.5],['leg',0.35],['div',0.15]]),pool=TOPS.filter(d=>!d.custom&&d.tier===t),d=pool[Math.floor(Math.random()*pool.length)],c=CATS[Math.floor(Math.random()*4)],pid=d.id+':'+c;
       if(hasPart(pid)){coins+=20;shMsg=`🎁 ${TIER_NAME[d.tier]}「${d.name}」的${PCAT[c]}（重複，退 20 幣）`}else{ownedParts.add(pid);shMsg=`🎁 抽到 ${TIER_NAME[d.tier]}「${d.name}」的${PCAT[c]}！到「組裝」使用`;sfx.item()}savePrefs()}}
+  else if(a==='buyff'){if(coins<BUFF_PRICE)shMsg='商店幣不夠，去打比賽賺吧！';else{coins-=BUFF_PRICE;inv.buff25=(inv.buff25||0)+1;savePrefs();shMsg='買到了全能力強化券！淘汰賽開始前可以使用';sfx.ding()}}
   else if(a==='buyb'){const it=BOOST_ITEMS[id];if(coins<it.pr)shMsg='商店幣不夠，去打競技大賽吧！';else{coins-=it.pr;inv[id]=(inv[id]||0)+1;savePrefs();shMsg='買到了 '+it.n+'！';sfx.ding()}}
   else if(a==='stk2'||a==='stkc2'){const tp=TOPS[stkTop],o=stk[tp.id];if(o){if(a==='stk2'){if(id==='none'){delete o.k2;delete o.c2}else{o.k2=id;if(!o.c2)o.c2='#ffffff'}}else{o.c2=id;if(!o.k2)o.k2='star'}savePrefs();refreshGlyphs()}}
   else if(a==='rim'||a==='rimc'){const tp=TOPS[stkTop];if(a==='rim'){if(id==='none')delete rimS[tp.id];else rimS[tp.id]={k:id,c:(rimS[tp.id]&&rimS[tp.id].c)||'#ffd23d'}}else{const o=rimS[tp.id]||{k:'band',c:id};o.c=id;rimS[tp.id]=o}delete patCache[tp.id];savePrefs()}
@@ -2654,7 +2658,7 @@ function menuStatus(){const l=$('coinLbl');if(l)l.textContent=`Lv ${lv}（${xp}/
 
 /* ---------- tournament (競技大賽 32強 五關) ---------- */
 const TOUR_NAMES=['阿烈','小雷','星野','莉莉','阿凱','小翼','夜月','千夏','大熊','迅風','小葵','龍介','雷電','小白','阿虎','美咲','火火','阿海','小櫻','飛飛','阿明','小竹','烈焰','冰冰','阿鐵','小夏','疾風','蒼龍','小草','金剛','阿光','小月','天翔','暴雷','小石','銀狼'];
-const R_NAMES=['32強賽','16強賽','8強賽','4強賽','決賽'],TARGET=[2,3,3,4,5],RANK_OF=['32強','16強','8強','4強','亞軍'],COIN_OF={'冠軍':200,'亞軍':120,'4強':70,'8強':40,'16強':20,'32強':10};
+const B3R=['8強賽','4強賽','決賽'],R_NAMES=['32強賽','16強賽','8強賽','4強賽','決賽'],TARGET=[2,3,3,4,5],RANK_OF=['32強','16強','8強','4強','亞軍'],COIN_OF={'冠軍':200,'亞軍':120,'4強':70,'8強':40,'16強':20,'32強':10};
 let tour=null,curMatch=null,tourN=1,p2pick=1,p2Av=load('p2av')||randomAvatar(),p2Name=load('p2name')||'玩家二',matchTarget=4,aiSkill=0.7,watchFast=false,watchEndT=0,watchM=null;
 let coins=load('coins')||0;if(!Number.isFinite(coins))coins=0;
 function addCoins(n){coins+=n;save('coins',coins);menuStatus()}
@@ -2696,8 +2700,17 @@ function cupAsk(){
   let o=$('cupAsk');if(!o){o=document.createElement('div');o.id='cupAsk';o.style.cssText='position:fixed;inset:0;z-index:60;background:rgba(5,7,16,.82);display:flex;align-items:center;justify-content:center;padding:20px';document.body.appendChild(o)}
   const nm={brz:'青銅盃',leg:'傳說盃',div:'神聖盃'},top=TOPS[effPick(pick)];
   o.innerHTML=`<div style="width:100%;max-width:420px;background:#12162a;border:2px solid var(--gold);border-radius:16px;padding:20px;display:grid;gap:12px"><b style="font-size:20px">要打哪一級盃賽？</b><div style="font-size:13px;color:var(--dim)">${tourN===2?'雙人':'單人'}・P1 陀螺：${top.name}（${TIER_NAME[top.tier]}）<br>選好就會直接抽籤開始。對手會用同等級的陀螺。</div>${['brz','leg','div'].map(c=>{const lock=lv<CUP_LV[c];return `<button type="button" class="btn ${c===tourCup?'':'ghost'}" data-c="${c}" ${lock?'disabled style="opacity:.4"':''}>${lock?'🔒 ':''}${nm[c]}${lock?'（Lv '+CUP_LV[c]+' 解鎖）':c===tourCup?'　← 目前':''}</button>`}).join('')}<button type="button" class="btn ghost small" data-c="x">取消，回去再看看</button></div>`;
-  o.hidden=false;o.onclick=e=>{const b=e.target.closest('[data-c]');if(!b){if(e.target===o)o.hidden=true;return}if(b.dataset.c==='x'){o.hidden=true;return}tourCup=b.dataset.c;o.hidden=true;tourSetupUI();$('cupNote').style.color='';tourStart()}}
+  o.hidden=false;o.onclick=e=>{const b=e.target.closest('[data-c]');if(!b){if(e.target===o)o.hidden=true;return}if(b.dataset.c==='x'){o.hidden=true;return}tourCup=b.dataset.c;o.hidden=true;tourSetupUI();$('cupNote').style.color='';buffAsk(fitsCup,tourStart)}}
 $('tDraw').onclick=()=>{audioInit();cupAsk()};
+function buffAsk(fit,cb){
+  tourBuff=null;if(!(inv.buff25>0)){cb();return}
+  let o=$('buffAsk');if(!o){o=document.createElement('div');o.id='buffAsk';o.style.cssText='position:fixed;inset:0;z-index:61;background:rgba(5,7,16,.88);display:flex;align-items:center;justify-content:center;padding:16px';document.body.appendChild(o)}
+  const list=TOPS.filter(t=>owns(t)&&fit(t));let sel=null;
+  const draw=()=>{o.innerHTML=`<div style="width:100%;max-width:460px;max-height:92vh;overflow:auto;background:#12162a;border:2px solid var(--gold);border-radius:16px;padding:18px;display:grid;gap:12px"><b style="font-size:20px">使用全能力強化券？</b><div style="font-size:13px;color:var(--dim);line-height:1.6">你有 ${inv.buff25} 張。選一顆陀螺，這次淘汰賽中它的攻擊、防禦、耐久、重量全部 +25%。一次只能選一顆，用了會消耗一張。</div><div id="bfGrid"></div><button type="button" class="btn" id="bfYes" style="${sel?'':'opacity:.4'}">${sel?'使用在「'+sel.name+'」':'先選一顆陀螺'}</button><button type="button" class="btn ghost" id="bfNo">不使用，直接開始</button></div>`;
+    topGrid(o.querySelector('#bfGrid'),{list,sel,onPick:d=>{sel=d;draw()}});
+    o.querySelector('#bfYes').onclick=()=>{if(!sel)return;inv.buff25--;tourBuff=sel.id;savePrefs();o.hidden=true;cb()};
+    o.querySelector('#bfNo').onclick=()=>{o.hidden=true;cb()}};
+  o.hidden=false;draw()}
 function tourStart(){
   markPlayed();
   const hs=[mkF(withBoost(TOPS[effPick(pick)]),pName,pAv,1)];if(tourN===2)hs.push(mkF(withBoost(TOPS[p2pick]),p2Name,p2Av,2));
@@ -2809,7 +2822,7 @@ function b3UI(){
   [...$('b3Cup').children].forEach(b=>{const c=b.dataset.cup,lock=lv<CUP_LV[c];b.setAttribute('aria-pressed',c===b3Cup);b.textContent=(lock?'🔒':'')+{brz:'青銅盃',leg:'傳說盃',div:'神聖盃'}[c]});
   b3Slots=b3Slots.map(id=>id&&av.some(t=>t.id===id)?id:null);
   for(let i=0;i<3;i++)if(!b3Slots[i]){const c=av.find(t=>!b3Slots.includes(t.id));if(c)b3Slots[i]=c.id}
-  $('b3Note').textContent=lv<CUP_LV[b3Cup]?`玩家等級 ${CUP_LV[b3Cup]} 才能參加（現在 Lv ${lv}）`:`32 強淘汰，對手都帶三顆${TIER_NAME[b3Cup]}陀螺；獎勵 ×${CUP_I[b3Cup]+1}`;
+  $('b3Note').textContent=lv<CUP_LV[b3Cup]?`玩家等級 ${CUP_LV[b3Cup]} 才能參加（現在 Lv ${lv}）`:`8 強淘汰，對手都帶三顆${TIER_NAME[b3Cup]}陀螺；獎勵是同盃賽 32 強淘汰賽的 2 倍（×${(CUP_I[b3Cup]+1)*2}）`;
   $('b3Name').textContent=pName;drawPortrait($('b3Face'),pAv);
   const box=$('b3Slots');box.innerHTML='';
   b3Slots.forEach((id,i)=>{const d=id&&b3Def(id),r=document.createElement('div');r.className='shr';r.style.cssText='cursor:pointer;border-width:2px;'+(i===b3Sel?'border-color:var(--gold);box-shadow:0 0 10px rgba(255,200,61,.35)':'');
@@ -2822,13 +2835,13 @@ $('b3Btn').onclick=()=>{audioInit();b3Open()};
 $('b3Cup').onclick=e=>{const b=e.target.closest('[data-cup]');if(b){b3Cup=b.dataset.cup;b3UI()}};
 $('b3Edit').onclick=()=>{audioInit();openCreator()};
 $('b3Back').onclick=()=>{$('b3Setup').hidden=true;$('menu').hidden=false;menuEnter()};
-$('b3Go').onclick=()=>{audioInit();if(lv<CUP_LV[b3Cup]||!b3Slots.every(Boolean)||new Set(b3Slots).size<3){$('b3Note').style.color='var(--rival)';return}$('b3Note').style.color='';b3Start()};
+$('b3Go').onclick=()=>{audioInit();if(lv<CUP_LV[b3Cup]||!b3Slots.every(Boolean)||new Set(b3Slots).size<3){$('b3Note').style.color='var(--rival)';return}$('b3Note').style.color='';buffAsk(t=>b3Slots.includes(t.id),b3Start)};
 function b3Trio(pool){return shuf(pool).slice(0,3)}
 function b3Series(){const o=b3.opp;b3.res=[];b3.w={P:0,E:0};b3.ot=false;b3.pick=null;b3.foe=o.trio;b3.fname=o.name;b3.fav=o.av}
 function b3Start(){
   markPlayed();
   const pool=TOPS.filter(d=>!d.custom&&d.tier===b3Cup),names=shuf(TOUR_NAMES);
-  const cpus=[];for(let i=0;i<31;i++)cpus.push({trio:b3Trio(pool),name:names[i%names.length],av:randomAvatar(),h:0});
+  const cpus=[];for(let i=0;i<7;i++)cpus.push({trio:b3Trio(pool),name:names[i%names.length],av:randomAvatar(),h:0});
   const me={trio:null,name:pName,av:pAv,h:1};
   const all=shuf([me].concat(cpus));
   b3={cup:b3Cup,mine:b3Slots.map(b3Def),pool,all,me,rd:0,matches:pairUp(all),res:[],w:{P:0,E:0},ot:false,pick:null};
@@ -2838,8 +2851,8 @@ function b3Start(){
 function b3SimSeries(a,b){let wa=0,wb=0,n=0;while(n<10){const x=n<3?a.trio[n]:a.trio[Math.floor(Math.random()*3)],y=n<3?b.trio[n]:b.trio[Math.floor(Math.random()*3)];const r=simBout(x,y);r==='A'?wa++:wb++;n++;if(wa>=2||wb>=2)break}return wa>wb?a:b}
 function b3Intro(){
   $('b3Board').hidden=false;$('b3PickBox').hidden=true;
-  const n=b3.rd;$('b3Eyebrow').textContent=`三戰兩勝淘汰賽・${TIER_NAME[b3.cup]}盃　${R_NAMES[n]}`;
-  $('b3Title').textContent=`第 ${n+1} 關　${R_NAMES[n]}`;
+  const n=b3.rd;$('b3Eyebrow').textContent=`三戰兩勝淘汰賽・${TIER_NAME[b3.cup]}盃　${B3R[n]}`;
+  $('b3Title').textContent=`第 ${n+1} 關　${B3R[n]}`;
   $('b3Info').innerHTML=`對手：<b>${b3.opp.name}</b><br>${b3.opp.name} 的陀螺：${b3.opp.trio.map(d=>d.name).join('、')}<br>看完對手的陀螺，重新排你的出場順序吧！`;
   $('b3Order').hidden=false;b3Ord();
   const nx=$('b3Next');nx.textContent='開打！';nx.onclick=()=>{audioInit();b3Round()};
@@ -2856,7 +2869,7 @@ function b3Advance(){
 }
 function b3Round(){
   const n=b3.res.length,ci=CUP_I[b3.cup],pd=n<3?b3.mine[n]:b3.pick,fd=n<3?b3.foe[n]:b3.foe[Math.floor(Math.random()*3)];
-  curMatch=null;duel2=false;matchTarget=99;aiSkill=Math.min(0.92,0.5+0.08*ci+0.05*b3.rd+0.02*n);npcChgX=Math.min(2,[1,1.35,1.7][ci]+0.075*b3.rd);duelX=passX=1;
+  curMatch=null;duel2=false;matchTarget=99;aiSkill=Math.min(0.92,0.5+0.08*ci+0.05*(b3.rd+2)+0.02*n);npcChgX=Math.min(2,[1,1.35,1.7][ci]+0.075*(b3.rd+2));duelX=passX=1;
   score={P:b3.w.P,E:b3.w.E};stats={hits:0,max:0,perf:0,sp:0};eAv=b3.fav;eName=b3.fname;b3.cur=[pd,fd];
   applyArena(Math.floor(Math.random()*ARENAS.length));
   setupTops(withBoost(pd),fd);$('b3Board').hidden=true;$('matchEnd').hidden=true;$('hud').hidden=false;hudNames();toLaunch();
@@ -2874,15 +2887,15 @@ function b3Result(){
 function b3Show(end){
   const n=b3.res.length;$('b3Board').hidden=false;$('b3PickBox').hidden=true;$('b3Order').hidden=true;
   let lines=b3.res.map((r,i)=>{const t=r.r==='draw'?'平手（同歸於盡）':r.r==='P'?`<b style="color:var(--gold)">勝</b>（${b3Kind[r.k]}）`:`敗（${b3Kind[r.k]}）`;return `${i<3?'第 '+(i+1)+' 場':'延長 '+(i-2)}：${r.pn} vs ${r.fn}　${t}`}).join('<br>');
-  $('b3Eyebrow').textContent=`三戰兩勝・${R_NAMES[b3.rd]}　對手 ${b3.fname}`;
+  $('b3Eyebrow').textContent=`三戰兩勝・${B3R[b3.rd]}　對手 ${b3.fname}`;
   const nx=$('b3Next');
   if(end){
     const win=end==='win';
-    if(win&&b3.rd<4){
+    if(win&&b3.rd<2){
       $('b3Title').textContent='晉級！';lines+=`<br><br>勝場 ${b3.w.P} : ${b3.w.E}　打贏 ${b3.fname}，進入下一關`;
       nx.textContent='抽下一關對手';nx.onclick=()=>{audioInit();b3Advance()};sfx.ding();
     }else{
-      const rank=win?'冠軍':RANK_OF[b3.rd],ci=CUP_I[b3.cup],c=(COIN_OF[rank]||0)*(ci+1),x=Math.round((XP_OF[rank]||0)*(1+0.25*ci));
+      const rank=win?'冠軍':['8強','4強','亞軍'][b3.rd],ci=CUP_I[b3.cup],c=(COIN_OF[rank]||0)*(ci+1)*2,x=Math.round((XP_OF[rank]||0)*(1+0.25*ci)*2);
       addCoins(c);xp+=x;let up=0;while(xp>=xpNeed(lv)){xp-=xpNeed(lv);lv++;up++}savePrefs();menuStatus();
       $('b3Title').textContent=win?'冠軍！':(n>=10?'延長賽全平手…淘汰':'止步於 '+rank);
       lines+=`<br><br>最終名次：<b>${rank}</b>　+${c} 商店幣　+${x} 經驗${up?`<br>⬆ 升級！玩家等級 Lv ${lv}`:''}`;
