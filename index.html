@@ -414,7 +414,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.16.0</div>
+  <div class="ver">v1.16.1</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -1187,7 +1187,7 @@ function drawRim(g,def,k,col){
   else if(k==='glow'){for(const [lw,al] of [[0.16,0.18],[0.1,0.35],[0.05,0.9]]){g.globalAlpha=al;path(0.07,240);g.lineWidth=lw;g.stroke()}g.globalAlpha=0.9;g.strokeStyle='#fff';path(0.07,240);g.lineWidth=0.014;g.stroke()}
   g.restore();
 }
-const INSHAPES=[['circle','圓環'],['cloud','雲朵'],['flame','火焰紋章'],['star','星形'],['gear','齒輪'],['petal','花瓣'],['wave','波浪'],['bolt','雷電'],['sun','太陽'],['fang','獠牙'],['shuriken','手裏劍'],['crown','皇冠']],
+const INSHAPES=[['circle','圓環'],['cloud','雲朵'],['flame','火焰紋章'],['star','星形'],['gear','齒輪'],['petal','花瓣'],['wave','波浪'],['bolt','雷電'],['sun','太陽'],['fang','獠牙'],['shuriken','手裏劍'],['crown','皇冠'],['saw','鋸齒輪'],['blade','葉片輪'],['turbine','渦輪'],['fang2','雙獠牙'],['dragon','龍牙'],['shark','鯊齒'],['blade5','利刃輪'],['moon','彎月刃'],['spiral','旋刃']],
  INPATS=[['none','無'],['stripe','放射條紋'],['dots','圓點'],['twin','雙線'],['stars','菱星'],['scale','魚鱗'],['wave','水波'],['check','色塊相間'],['flame','小火焰']],INW=[0.6,0.7,0.8,0.9];
 function inR(k,t,R){const T=Math.PI*2,fr=x=>x-Math.floor(x);
   switch(k){
@@ -1201,6 +1201,15 @@ function inR(k,t,R){const T=Math.PI*2,fr=x=>x-Math.floor(x);
    case'sun':return R*(0.86+0.28*Math.pow(Math.max(0,Math.cos(16*t)),5));
    case'fang':{const u=fr(t*6/T);return R*(0.82+0.36*Math.pow(u,2.2))}
    case'shuriken':{const u=fr(t*4/T);return R*(0.74+0.46*Math.pow(1-u,2.6))}
+   case'saw':{const u=fr(t*12/T);return R*(0.82+0.32*u)}
+   case'blade':{const u=fr(t*8/T);return R*(0.76+0.44*Math.pow(u,0.7))}
+   case'turbine':{const u=fr(t*14/T);return R*(0.84+0.3*Math.pow(u,0.45))}
+   case'fang2':{const u=fr(t*8/T);return R*(0.8+0.4*Math.pow(u,3))}
+   case'dragon':{const u=fr(t*5/T),v=fr(t*10/T);return R*(0.78+0.4*Math.pow(u,2.4)+0.1*Math.pow(v,3))}
+   case'shark':{const u=fr(t*14/T);return R*(0.84+0.3*(1-Math.abs(u*2-1)))}
+   case'blade5':{const u=fr(t*5/T);return R*(0.7+0.55*Math.pow(u,1.4)*(u>0.92?(1-u)/0.08:1))}
+   case'moon':{const u=fr(t*4/T);return R*(0.7+0.52*Math.pow(u,2.2))}
+   case'spiral':{const u=fr(t*9/T);return R*(0.78+0.42*Math.pow(u,0.8)*(u<0.88?1:(1-u)/0.12))}
    case'crown':{const u=fr(t*7/T);return R*(0.86+0.26*(u<0.5?Math.pow(u*2,0.6):1-(u-0.5)*2))}
   }return R}
 function drawInner(g,o,fb){const R=INW[(o.w||2)-1],k=o.s||'circle',c=o.c||fb,T=Math.PI*2,A=200;
