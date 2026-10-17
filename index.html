@@ -49,6 +49,7 @@ html,body{height:100%;background:var(--night);color:var(--ink);overflow:hidden;f
 .bar.chgbar.low i{background:linear-gradient(90deg,#b04bff,#ff7ad9)}
 .chgbar.full i{background:#fff27a;box-shadow:0 0 8px #ffe36b}
 .armorbar i{background:linear-gradient(90deg,#ff8a2a,#ffe36b)}
+.armorbar.cos1{background:linear-gradient(90deg,#8a3a10,#8a7a2a)}.bar.armorbar.cos1 i,.bar.armorbar.cos1.low i{background:linear-gradient(90deg,#7a5cff,#5fe0ff);box-shadow:0 0 6px #7a9cff}
 .bar.low i{background:#ff4b4b}
 
 /* special */
@@ -223,6 +224,7 @@ h1{margin:0;font-weight:900;font-size:clamp(40px,12vw,62px);line-height:1;letter
 #shBody .prev.stky{position:sticky;top:0;z-index:6;grid-template-columns:100px 1fr;background:#12162a;box-shadow:0 10px 14px -8px rgba(0,0,0,.9)}#shBody .prev.stky canvas{width:100px;height:100px}
 .tp{position:relative}.tp .pin{position:absolute;top:1px;right:2px;font-style:normal;font-size:12px;opacity:.22;padding:2px;filter:grayscale(1)}.tp .pin.on{opacity:1;filter:none}
 .tp.lock{opacity:.4}.tp.lock span::before{content:"🔒"}
+.tp.t-cos{background:linear-gradient(160deg,#1a0a3a,#06122a 60%,#2a0a30);box-shadow:inset 0 0 0 1px rgba(150,120,255,.85),0 0 10px rgba(120,90,255,.35)}.tp.t-cos span{background:linear-gradient(90deg,#9fe8ff,#c78bff,#ff8fe0);-webkit-background-clip:text;background-clip:text;color:transparent}
 .tp.t-div{background:linear-gradient(160deg,#3a2a06,#141020);box-shadow:inset 0 0 0 1px rgba(255,200,61,.6)}.tp.t-div span{color:#ffe08a}
 .tp.t-leg{background:linear-gradient(160deg,#2a0f3e,#0e1430);box-shadow:inset 0 0 0 1px rgba(200,120,255,.55)}.tp.t-leg span{color:#e6ccff}
 .chip.tc-div{color:#ffd23d}.chip.tc-leg{color:#d9a8ff}.chip.tc-brz{color:#e0a070}
@@ -274,7 +276,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="menu" class="sheet gut" hidden>
     <div class="inner">
       <div class="eyebrow" style="display:flex;align-items:center">選擇賽制<span id="coinLbl" style="margin-left:12px;color:var(--ink)">商店幣 0</span><button class="mini" id="musicBtn" type="button" aria-pressed="true">音樂：開</button></div>
-      <p class="lead">往下拉發射。對戰時手指在畫面上拖可以推著陀螺跑，必殺鈕亮了就按。戰鬥盤會浮出特殊軌道，還會出現道具；四周的牆會慢慢降下。先拿 4 分贏。</p>
+      <p class="lead">往下拉發射。對戰時手指在畫面上拖可以推著陀螺跑，必殺氣滿了會自動放必殺，點必殺鈕可以集氣更快。戰鬥盤會浮出特殊軌道，還會出現道具；四周的牆會慢慢降下。先拿 4 分贏。</p>
       <div class="cycle"><b>攻擊</b> 剋 耐久　<b>耐久</b> 剋 防禦　<b>防禦</b> 剋 攻擊　<b>平衡</b> 不剋也不被剋<br>
         轉停 <b>+1</b>　撞出場 <b>+2</b>（牆壁會慢慢降下，從降下的地方最容易）　撞爆 <b>+3</b></div>
       <button class="btn" id="tourBtn" type="button">積分淘汰　32強五關</button>
@@ -307,7 +309,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
     <div class="inner">
       <div class="eyebrow">三戰兩勝制</div>
       <div class="secHead"><b>盃賽等級</b><span>對手用同等級的陀螺</span></div>
-      <div class="row" id="b3Cup"><button class="btn ghost small" data-cup="brz" type="button">青銅盃</button><button class="btn ghost small" data-cup="leg" type="button">傳說盃</button><button class="btn ghost small" data-cup="div" type="button">神聖盃</button></div>
+      <div class="row" id="b3Cup"><button class="btn ghost small" data-cup="brz" type="button">青銅盃</button><button class="btn ghost small" data-cup="leg" type="button">傳說盃</button><button class="btn ghost small" data-cup="div" type="button">神聖盃</button><button class="btn ghost small" data-cup="cos" type="button">宇宙盃</button></div>
       <div class="note" id="b3Note" style="font-size:12px;color:var(--dim)"></div>
       <div class="fighter"><canvas id="b3Face" width="144" height="144"></canvas><div><b id="b3Name">小鬥士</b><span>你的鬥士</span></div><button class="btn small" id="b3Edit" type="button">捏臉・改名</button></div>
       <div class="secHead"><b>出場順序</b><span>點一格，再從下面選陀螺</span></div>
@@ -380,7 +382,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
     <div class="inner">
       <div class="eyebrow">競技大賽　32強・五關</div>
       <div class="secHead"><b>盃賽</b><span>對手用同等級的陀螺</span></div>
-      <div class="row" id="cupRow"><button class="btn ghost small" data-cup="brz" type="button">青銅盃</button><button class="btn ghost small" data-cup="leg" type="button">傳說盃</button><button class="btn ghost small" data-cup="div" type="button">神聖盃</button></div>
+      <div class="row" id="cupRow"><button class="btn ghost small" data-cup="brz" type="button">青銅盃</button><button class="btn ghost small" data-cup="leg" type="button">傳說盃</button><button class="btn ghost small" data-cup="div" type="button">神聖盃</button><button class="btn ghost small" data-cup="cos" type="button">宇宙盃</button></div>
       <div class="note" id="cupNote" style="font-size:12px;color:var(--dim)"></div>
       <div class="secHead"><b>參賽人數</b></div>
       <div class="row"><button class="btn ghost" id="tn1" type="button" aria-pressed="true">單人</button><button class="btn ghost" id="tn2" type="button" aria-pressed="false">雙人</button></div>
@@ -425,7 +427,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.19.6</div>
+  <div class="ver">v1.20.0</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -447,6 +449,8 @@ const GEOS={
  four:{big:true,circles:[[0,0,12.75]],H:(x,z)=>0.02*(x*x+z*z)+[0,1,2,3].reduce((s,k)=>{const a=Math.PI/4+k*Math.PI/2;return s+mesa(x,z,Math.sin(a)*7.6,Math.cos(a)*7.6,2.3,1.2,1.0)},0)},
  penta:(()=>{const c=[[0,0,7]];for(let i=0;i<5;i++){const a=i*2*Math.PI/5;c.push([Math.sin(a)*7.4,Math.cos(a)*7.4,4.6])}
    return {big:true,circles:c,H:(x,z)=>0.022*(x*x+z*z)+c.slice(1).reduce((s,q)=>s+mesa(x,z,q[0]*1.05,q[1]*1.05,1.9,1.05,0.9),0)}})(),
+ crater:{circles:[[0,0,8.5]],H:(x,z)=>{const r=Math.hypot(x,z);return 0.03*r*r+0.9*smooth((2.4-r)/1.6)}},
+ peanut:{big:true,circles:[[-4.2,0,7.4],[4.2,0,7.4]],H:(x,z)=>0.014*x*x+0.03*z*z},
 };
 let GEO=GEOS.bowl;
 function groundH(x,z){return GEO.H(x,z)}
@@ -463,10 +467,10 @@ function wallReset(){walls.fill(1);const off=Math.floor(Math.random()*WSEG),keep
   const sink=[...Array(WSEG).keys()].filter(k=>!keep.has(k)).sort(()=>Math.random()-.5);wallPlan=sink.map((k,i)=>({k,t0:12+i*8}))}
 function wallTick(t){for(const p of wallPlan)walls[p.k]=Math.max(0,Math.min(1,1-(t-p.t0)/WALL_SINK))}
 function wallAt(th){let a=th%(2*Math.PI);if(a<0)a+=2*Math.PI;return walls[Math.min(WSEG-1,Math.floor(a/(2*Math.PI)*WSEG))]}
-const TIER_NAME={div:'神聖',leg:'傳說',brz:'青銅'},TIER_ORD={brz:0,leg:1,div:2};
-const SERIES_NAME={mecha:'機甲',gold:'黃金星座',dragon:'聖龍',katana:'銘刀',silver:'白銀星座',ninja:'忍者',phoenix:'不死鳥',arrow:'閃電三角箭',beast:'四神獸',primary:'原色'};
+const TIER_NAME={cos:'宇宙',div:'神聖',leg:'傳說',brz:'青銅'},TIER_ORD={brz:0,leg:1,div:2,cos:3};
+const SERIES_NAME={mecha:'機甲',gold:'黃金星座',dragon:'聖龍',katana:'銘刀',silver:'白銀星座',ninja:'忍者',phoenix:'不死鳥',arrow:'閃電三角箭',beast:'四神獸',primary:'原色',cosmos:'宇宙星神'};
 const TIPP={flat:[1.0,0.35],semi:[0.6,0.5],ball:[0.35,0.6],sharp:[0.15,0.9]};
-const SERIES_BOLTS={mecha:[0xffffff,0xb24bff],gold:[0xffd23d,0xffffff,0xff8a1f],dragon:[0xff3b1f,0xffd23d],katana:[0xffffff,0x9fe8ff],silver:[0xe6eaf2,0x9fe8ff],ninja:[0xb24bff,0x39ffb0],phoenix:[0xff3b1f,0xffd23d,0xff8a1f],arrow:[0xffe14a,0x4fd8ff,0xffffff],beast:[0xffffff],primary:[]};
+const SERIES_BOLTS={mecha:[0xffffff,0xb24bff],gold:[0xffd23d,0xffffff,0xff8a1f],dragon:[0xff3b1f,0xffd23d],katana:[0xffffff,0x9fe8ff],silver:[0xe6eaf2,0x9fe8ff],ninja:[0xb24bff,0x39ffb0],phoenix:[0xff3b1f,0xffd23d,0xff8a1f],arrow:[0xffe14a,0x4fd8ff,0xffffff],beast:[0xffffff],primary:[],cosmos:[0xb388ff,0x5fe0ff,0xffffff]};
 function T_(id,name,tier,series,type,glyph,color,accent,st,blades,style,motif,tip,special,sp,desc,x){
   let [atk,def,sta,wt]=st;const [flow,fric]=TIPP[tip];if(type==='sta'){atk=Math.min(10,atk+2);def=Math.min(10,def+2)}if(type==='bal')def=Math.min(10,def+1);
   const d={id,name,tier,series,type,glyph,color,accent,atk,def,sta,wt,blades,style,motif,tip,flow:flow*(type==='atk'?1.1:1),fric,special,desc,edgy:series==='mecha'||series==='arrow',mv:null,fx:null};
@@ -474,6 +478,31 @@ function T_(id,name,tier,series,type,glyph,color,accent,st,blades,style,motif,ti
   d.metal=series==='gold'?'gold':series==='silver'?'silver':null;
   Object.assign(d,x||{});d.bolts=[accent].concat(SERIES_BOLTS[series]||[]);return d}
 const TOPS=[
+ // ===== 宇宙：星神（最高等級：雙耐久條、覺醒、二段必殺、專屬被動） =====
+ T_('u_nova','超新星','cos','cosmos','atk','新',0x1a0630,0xff7a3d,[10,5,6,6],3,'claw','rune','flat','超新星爆裂','star6','恆星爆炸的衝擊。被動「新星」：必殺氣累積 ×1.3',{pas:'nova'}),
+ T_('u_comet','彗星王','cos','cosmos','atk','彗',0x06142e,0x5fe0ff,[10,4,7,5],3,'arrow','thunder','flat','彗星衝擊','bolt7','拖著長尾的彗星。被動「彗尾」：衝刺與最高速度更快',{pas:'comet'}),
+ T_('u_saber','銀河劍','cos','cosmos','atk','劍',0x0a0a22,0xc8b6ff,[10,5,7,5],2,'katana','rune','flat','銀河一閃','slash3','斬開銀河的光劍。被動「吸能」：撞擊時吸回轉速',{pas:'leech'}),
+ T_('u_neutron','中子星','cos','cosmos','def','中',0x101626,0x9fe8ff,[5,10,6,9],6,'bump','hex','ball','中子壓縮','fx:quake','密度極高的星核。被動「重質」：更重、更難被撞開',{pas:'mass'}),
+ T_('u_halo','星環盾','cos','cosmos','def','環',0x14102a,0xffd23d,[5,9,7,8],5,'gear','rune','ball','星環結界','fx:barrier','行星環化成的盾。被動「反震」：被撞時反扣對手轉速',{pas:'reflect'}),
+ T_('u_bastion','隕石堡','cos','cosmos','def','堡',0x221a14,0xff8a5a,[6,9,6,8],6,'scale','hex','ball','隕石壁壘','fx:flame','隕石堆成的堡壘。被動「再生」：耐久會慢慢回復',{pas:'regen'}),
+ T_('u_nebula','星雲','cos','cosmos','bal','雲',0x1c0a34,0xff8fe0,[8,7,6,6],5,'petal','swirl','semi','星雲漩渦','spiral','流動的彩色星雲。被動「環繞」：操控更靈活',{pas:'orbit'}),
+ T_('u_aurora','極光','cos','cosmos','bal','極',0x061e24,0x5dffb0,[7,7,7,6],4,'wing','swirl','semi','極光之舞','star5','夜空的光之帶。被動「日蝕」：覺醒時必殺氣大量回復並張開護盾',{pas:'eclipse'}),
+ T_('u_sirius','天狼','cos','cosmos','bal','狼',0x0c1430,0xe8f1ff,[8,7,6,6],4,'shuriken','gem','semi','天狼星陣','star6','夜空最亮的星。被動「虛化」：有機率完全閃過耐久傷害',{pas:'phase'}),
+ T_('u_hole','黑洞','cos','cosmos','sta','洞',0x050308,0xb24bff,[5,5,10,6],2,'crescent','eye','sharp','事件視界','fx:eye','連光都逃不出去。被動「引力」：把附近的對手吸過來',{pas:'gravity'}),
+ T_('u_pulsar','脈衝星','cos','cosmos','sta','脈',0x0a1028,0x4fd8ff,[5,5,9,6],4,'star','bolt','sharp','脈衝波','fx:swirl','規律閃爍的中子星。被動「脈衝」：每 6 秒放出震波推開對手',{pas:'pulse'}),
+ T_('u_eternal','永恆星','cos','cosmos','sta','恆',0x1a1406,0xfff2a0,[6,5,9,5],4,'zodiac','gem','sharp','永恆之光','fx:moon','永遠不會熄滅的星。被動「星盾」：每局第一次重擊完全擋下',{pas:'shield'}),
+ T_('u_quasar','類星體','cos','cosmos','atk','類',0x14061e,0xff4bd8,[10,5,6,6],3,'saw','rune','flat','類星噴流','cross','宇宙最亮的光源。被動「脈衝」：每 6 秒放出震波推開對手',{pas:'pulse'}),
+ T_('u_gamma','伽瑪射線','cos','cosmos','atk','伽',0x061a10,0x7dff5a,[10,4,7,6],3,'arrow','thunder','flat','伽瑪爆發','weave4','一瞬間的高能閃光。被動「新星」：必殺氣累積 ×1.3',{pas:'nova'}),
+ T_('u_mars','火星','cos','cosmos','atk','火',0x3a0a04,0xff6a1a,[10,5,6,7],3,'claw','stripe','flat','戰神火球','katana','紅色的戰鬥之星。被動「再生」：耐久會慢慢回復',{pas:'regen'}),
+ T_('u_saturn','土星','cos','cosmos','def','土',0x2a2010,0xffd27a,[5,10,6,9],6,'bump','hex','ball','土星光環','fx:shell','戴著光環的巨星。被動「環繞」：操控更靈活',{pas:'orbit'}),
+ T_('u_jupiter','木星','cos','cosmos','def','木',0x2a160a,0xff9a5a,[6,9,6,10],6,'scale','swirl','ball','大紅斑','fx:quake','最大的行星。被動「引力」：把附近的對手吸過來',{pas:'gravity'}),
+ T_('u_dwarf','白矮星','cos','cosmos','def','矮',0xe8ecf4,0x7be0ff,[5,10,7,8],5,'gear','gem','ball','白矮守護','fx:holy','小而堅硬的星核。被動「星盾」：每局第一次重擊完全擋下',{pas:'shield'}),
+ T_('u_moon','月神','cos','cosmos','bal','月',0x101830,0xcfe3ff,[8,7,6,6],2,'crescent','eye','semi','滿月之輪','tri','守護夜空的月。被動「吸能」：撞擊時吸回轉速',{pas:'leech'}),
+ T_('u_andromeda','仙女星系','cos','cosmos','bal','仙',0x180a2a,0xc78bff,[7,8,6,7],5,'petal','swirl','semi','星系迴旋','star5','旋轉的鄰居星系。被動「重質」：更重、更難被撞開',{pas:'mass'}),
+ T_('u_string','宇宙弦','cos','cosmos','bal','弦',0x0a0a14,0x39e6ff,[8,6,7,6],4,'shuriken','bolt','semi','弦振斬','slash2','貫穿宇宙的能量之弦。被動「彗尾」：衝刺與最高速度更快',{pas:'comet'}),
+ T_('u_sun','太陽','cos','cosmos','sta','陽',0x3a1a00,0xffd23d,[6,5,9,6],4,'star','rune','sharp','日冕烈焰','fx:dragon','燃燒不息的恆星。被動「日蝕」：覺醒時必殺氣大量回復並張開護盾',{pas:'eclipse'}),
+ T_('u_dark','暗物質','cos','cosmos','sta','暗',0x08060c,0x8a5cf0,[5,6,10,5],3,'crescent','eye','sharp','暗影吞噬','fx:eye','看不見的神秘質量。被動「虛化」：有機率完全閃過耐久傷害',{pas:'phase'}),
+ T_('u_dust','星塵','cos','cosmos','sta','塵',0x1a1626,0xffb7d5,[5,5,10,6],5,'petal','gem','sharp','星塵風暴','fx:swirl','閃閃發光的星屑。被動「反震」：被撞時反扣對手轉速',{pas:'reflect'}),
  // ===== 神聖：機甲 =====
  T_('m_ares','戰神機甲','div','mecha','atk','戰',0x1a0a12,0xff3b3b,[10,5,6,6],3,'mecha','thunder','flat','戰神十字斬','cross','紅色機甲，十字斬貫穿全場'),
  T_('m_titan','泰坦機甲','div','mecha','def','泰',0x1b2230,0xffb02e,[5,10,6,9],4,'arrow','hex','ball','泰坦震地','fx:quake','超重裝甲，震波彈開對手'),
@@ -533,9 +562,9 @@ const TOPS=[
 ];
 const TYPE_NAME={atk:'攻擊',def:'防禦',sta:'耐久',bal:'平衡'};
 TOPS.forEach(d=>d.typeName=TYPE_NAME[d.type]);
-const LEFTY=new Set(['m_raijin','m_zero','g_gemini','g_scorpio','d_azure','d_black','k_muramasa','k_douji','s_aquila','s_ursa','n_kage','n_rai','n_mizu','b_seiryu','p_white','p_black']);
+const LEFTY=new Set(['u_comet','u_hole','u_aurora','u_gamma','u_moon','u_dark','m_raijin','m_zero','g_gemini','g_scorpio','d_azure','d_black','k_muramasa','k_douji','s_aquila','s_ursa','n_kage','n_rai','n_mizu','b_seiryu','p_white','p_black']);
 TOPS.forEach(d=>d.left=LEFTY.has(d.id));
-{const base={brz:60,leg:260,div:800},step={brz:12,leg:40,div:120},cnt={brz:0,leg:0,div:0};
+{const base={brz:60,leg:260,div:800,cos:3600},step={brz:12,leg:40,div:120,cos:250},cnt={brz:0,leg:0,div:0,cos:0};
  const order=[...TOPS].sort((a,b)=>TIER_ORD[a.tier]-TIER_ORD[b.tier]||(a.atk+a.def+a.sta)-(b.atk+b.def+b.sta));
  for(const d of order)d.price=base[d.tier]+step[d.tier]*(cnt[d.tier]++)}
 const CONST={aries:[[-1,0.2],[-0.3,0.45],[0.3,0.35],[0.9,-0.1]],taurus:[[-0.9,0.8],[-0.25,0.15],[0,-0.1],[0.35,0.1],[1,0.7],[0.1,-0.9]],
@@ -589,19 +618,19 @@ let emit=()=>{};
 function bowlH(r){return 0.03*r*r}
 let BXS=4.5,BALDEF=1;const BX={atk:7.5,bal:1,sta:4,def:1};
 const SPD={atk:1,bal:1.2,sta:1.35,def:1},INIT={atk:1.1,bal:1,sta:1.02,def:0.8};
-const TUNE={"p_red":0.91,"p_blue":1.125,"p_yellow":0.771,"p_green":0.79,"p_white":0.738,"p_black":0.893,"s_lyra":0.9,"s_aquila":1.067,"s_cassio":0.844,"s_orion":0.931,"s_ursa":1.418,"s_cygnus":0.88,"n_kage":1.094,"n_kaze":0.917,"n_hi":0.958,"n_mizu":0.895,"n_tsuchi":1.019,"n_rai":0.811,"phoenix":0.926,"tri_arrow":0.945,"b_seiryu":0.793,"b_byakko":0.921,"b_suzaku":0.914,"b_genbu":0.958,"m_ares":1.034,"m_titan":0.839,"m_raven":0.792,"m_raijin":1.219,"m_aegis":0.913,"m_zero":0.881,"g_aries":0.987,"g_taurus":0.793,"g_gemini":0.837,"g_leo":0.896,"g_scorpio":1.138,"g_sagitt":0.903,"d_red":1.041,"d_azure":0.765,"d_gold":0.802,"d_black":0.908,"d_white":0.88,"d_king":0.703,"k_masamune":0.808,"k_muramasa":1.229,"k_kiku":1.151,"k_onimaru":0.893,"k_monohoshi":0.923,"k_douji":0.909};
+const TUNE={"p_red":0.91,"p_blue":1.125,"p_yellow":0.771,"p_green":0.79,"p_white":0.738,"p_black":0.893,"s_lyra":0.9,"s_aquila":1.067,"s_cassio":0.844,"s_orion":0.931,"s_ursa":1.418,"s_cygnus":0.88,"n_kage":1.094,"n_kaze":0.917,"n_hi":0.958,"n_mizu":0.895,"n_tsuchi":1.019,"n_rai":0.811,"phoenix":0.926,"tri_arrow":0.945,"b_seiryu":0.793,"b_byakko":0.921,"b_suzaku":0.914,"b_genbu":0.958,"m_ares":1.034,"m_titan":0.839,"m_raven":0.792,"m_raijin":1.219,"m_aegis":0.913,"m_zero":0.881,"g_aries":0.987,"g_taurus":0.793,"g_gemini":0.837,"g_leo":0.896,"g_scorpio":1.138,"g_sagitt":0.903,"d_red":1.041,"d_azure":0.765,"d_gold":0.802,"d_black":0.908,"d_white":0.88,"d_king":0.703,"k_masamune":0.808,"k_muramasa":1.229,"k_kiku":1.151,"k_onimaru":0.893,"k_monohoshi":0.923,"k_douji":0.909,"u_nova":1.098,"u_comet":1.428,"u_saber":1.124,"u_neutron":1.745,"u_halo":0.991,"u_bastion":1.324,"u_nebula":0.765,"u_aurora":0.591,"u_sirius":0.761,"u_hole":0.892,"u_pulsar":0.817,"u_eternal":0.824,"u_quasar":1.157,"u_gamma":1.056,"u_mars":1.22,"u_saturn":1.9,"u_jupiter":1.896,"u_dwarf":1.212,"u_moon":0.665,"u_andromeda":0.676,"u_string":0.81,"u_sun":0.55,"u_dark":0.827,"u_dust":0.665};
 const SPCAP=0.4;/* 單次必殺（含連擊）最多打掉防禦/耐久型這麼多耐久，開場必殺不會直接爆 */
 function spCap(V,X,l){if(V.sp||V.chain||V.capT>0){const id='s'+(V.spId||0);if(V.selfId!==id){V.selfId=id;V.selfTaken=0}const r=Math.max(0,Math.min(l,SPCAP-V.selfTaken));V.selfTaken+=r;l=r}
   if(!((X.sp||X.chain||X.capT>0)&&(V.def.type==='def'||V.def.type==='sta')))return l;const id=X.side+':'+(X.spId||0);if(V.capId!==id){V.capId=id;V.capTaken=0}const r=Math.max(0,Math.min(l,SPCAP-V.capTaken));V.capTaken+=r;return r}
-const durMod=d=>Math.max(0.3,1/((1+0.06*(d.wt-5))*(1+0.05*(d.def-5))*(1+0.08*(d.sta-5)))/(TUNE[d.id]||1));;
+const durMod=d=>Math.max(0.3,1/((1+0.06*(d.wt-5))*(1+0.05*(d.def-5))*(1+0.08*(d.sta-5)))/((TUNE[d.id]||1)*(d.tier==='cos'?COSKB:1)));
 const MAXC=6,DURM=1/3,DECM={atk:1.2,bal:1,sta:0.78,def:0.74};
 const CHG={atk:1.3,bal:1,sta:0.85,def:0.8},BRK={def:1,bal:0.9,sta:1/1.5,atk:1.25};
 let npcChgX=1,duelX=1,passX=1;
-const chgMul=T=>(CHG[T.def.type]||1)*(T.side==='E'?npcChgX:1)*duelX,spGuard=T=>{const on=T.sp||T.chain;return T.def.type==='atk'?(on?0.35:1):T.def.type==='def'?(on?0.5:0.8):on?0.5:1};
-function newTop(def,side){return {def,side,sp:null,storm:0,buff:null,buffT:0,boostCD:0,onTrack:0,x:0,z:0,vx:0,vz:0,s:0,burst:1,charge:0,state:'idle',m:0.6+def.wt*0.15,rad:(def.wt>=8?1.18:1.12)*TOPSCALE,dash:0,shell:0,moon:0,sx:0,sz:0,y:0,vy:0}}
+const chgMul=T=>(CHG[T.def.type]||1)*(T.side==='E'?npcChgX:1)*duelX*(T.def.pas==='nova'?1.3:1)*(T.awoke?1.15:1),spGuard=T=>{const on=T.sp||T.chain;return T.def.type==='atk'?(on?0.35:1):T.def.type==='def'?(on?0.5:0.8):on?0.5:1};
+function newTop(def,side){return {def,side,sp:null,storm:0,buff:null,buffT:0,boostCD:0,onTrack:0,x:0,z:0,vx:0,vz:0,s:0,burst:1,charge:0,state:'idle',m:(0.6+def.wt*0.15)*(def.pas==='mass'?1.25:1),rad:(def.wt>=8?1.18:1.12)*TOPSCALE,dash:0,shell:0,moon:0,sx:0,sz:0,y:0,vy:0}}
 function launchTop(T,pull,aim,perfect){
   const dir=T.side==='P'?-1:1;
-  T.state='spin';T.s=Math.min(1.2,(0.5+0.42*pull+(perfect?0.2:0))*(INIT[T.def.type]||1)*(1-0.012*(T.def.wt-5))*(1-0.01*(T.def.sta-5)));T.burst=1;T.charge=0;T.buff=null;T.buffT=0;T.boostCD=0;T.onTrack=0;T.sp=null;T.storm=0;
+  T.state='spin';T.s=Math.min(1.2,(0.5+0.42*pull+(perfect?0.2:0))*(INIT[T.def.type]||1)*(1-0.012*(T.def.wt-5))*(1-0.01*(T.def.sta-5)));T.burst=1;T.charge=0;T.buff=null;T.buffT=0;T.boostCD=0;T.onTrack=0;T.sp=null;T.storm=0;T.awoke=false;T.bar2=false;T.stage2=0;T.pT=0;T.shieldUsed=false;T.chain=null;
   const L0=Math.min(R*0.65,rhoAt(dir<0?0:Math.PI)-1.6);T.x=aim*1.5;T.z=-dir*L0;T.vx=aim*5;T.vz=dir*(2+3*pull);T.dash=T.shell=T.moon=0;T.y=0;T.vy=0;T.sx=T.sz=0;
 }
 function startStrike(T){const O=T.sp.O,dx=(O.state==='spin'?O.x:0)-T.x,dz=(O.state==='spin'?O.z:0)-T.z,d=Math.hypot(dx,dz)||1;
@@ -632,7 +661,34 @@ function spPoints(T,O,mv){
   // 'dash' and anything else: no waypoints → strike right away
   return pts.map(q=>{const c=clampIn(q[0],q[1],0.9);return [c[0],c[1],q[2],q[3]]});
 }
+/* ---------- 宇宙級：覺醒、雙耐久、被動 ---------- */
+const COSDUR=1.75;let COSKD=0.57,COSKB=0.3;/* 宇宙級整體強度：轉速衰減／耐久（越小越弱） *//* 宇宙級有兩條耐久，每條比較薄 */
+const PAS_NAME={nova:'新星',comet:'彗尾',leech:'吸能',mass:'重質',reflect:'反震',regen:'再生',orbit:'環繞',eclipse:'日蝕',phase:'虛化',gravity:'引力',pulse:'脈衝',shield:'星盾'};
+function awaken(T){if(T.awoke||T.def.tier!=='cos'||T.state!=='spin')return;T.awoke=true;T.s=Math.min(1,T.s+0.15);if(!T.bar2)T.burst=Math.min(1,T.burst+0.12);
+  if(T.def.pas==='eclipse'){T.charge=Math.min(1,T.charge+0.7);T.shell=Math.max(T.shell,1.2)}else T.charge=Math.min(1,T.charge+0.4);emit('awaken',{T})}
+function pasBurst(V,l){if(l<=0)return l;if(V.def.pas==='phase'&&Math.random()<0.18)return 0;if(V.def.pas==='shield'&&!V.shieldUsed&&l>0.06){V.shieldUsed=true;emit('shield',{T:V});return 0}if(V.def.tier!=='cos')return l;l*=COSDUR;return V.bar2?l:Math.min(l,0.45)}/* 第一條耐久不會被一次撞擊打掉一半以上 */
+/* ---------- 戰鬥盤效果 ---------- */
+const FIELDS={blackhole:['黑洞引力','中心有黑洞，會把陀螺往中間吸，太靠近會掉轉速'],shrink:['縮圈','戰鬥盤會越來越小，逼大家互撞'],rotwall:['旋轉牆','外牆和缺口會慢慢旋轉'],spring:['彈簧牆','牆壁會把陀螺大力彈回來'],ice:['冰面','地面很滑，很難停下來'],lava:['熔岩區','踩到紅色熔岩會一直掉轉速'],wind:['星際風','強風推著陀螺跑，每 6 秒換風向'],meteor:['隕石雨','隕石會落下，紅圈內會被炸飛'],boost:['加速環','踩到加速環會往前猛衝']};
+let FIELD=null,fieldT=0,meteors=[],metClock=5;
+function mkField(fx){if(!fx)return null;const F={fx,zones:[]},m=GEO.minRho;
+  if(fx==='lava')for(let i=0;i<3;i++){const a=i*2*Math.PI/3+Math.PI/2;F.zones.push([Math.sin(a)*m*0.55,Math.cos(a)*m*0.55,1.8])}
+  if(fx==='boost')for(let i=0;i<4;i++){const a=Math.PI/4+i*Math.PI/2;F.zones.push([Math.sin(a)*m*0.52,Math.cos(a)*m*0.52,1.1])}
+  return F}
+function fieldReset(){fieldT=0;meteors=[];metClock=5}
+function setField(F){FIELD=F;fieldReset()}
+const fieldRot=()=>FIELD&&FIELD.fx==='rotwall'?fieldT*0.35:0;
+const fieldShrink=()=>FIELD&&FIELD.fx==='shrink'?Math.min(0.32,Math.max(0,(fieldT-8)*0.008)):0;
+const windDir=()=>Math.floor(fieldT/6)*2.39+0.7;
+function fieldStep(A,B,h){if(!FIELD)return;fieldT+=h;
+  if(FIELD.fx==='meteor'){metClock-=h;
+    if(metClock<=0){metClock=4.5+Math.random()*3;const tg=Math.random()<0.6?(Math.random()<.5?A:B):null;let x,z;
+      if(tg&&tg.state==='spin'){x=tg.x+(Math.random()-.5)*2.5;z=tg.z+(Math.random()-.5)*2.5}else{const a=Math.random()*6.283,r=Math.random()*GEO.minRho*0.7;x=Math.sin(a)*r;z=Math.cos(a)*r}
+      const c=clampIn(x,z,1);meteors.push({x:c[0],z:c[1],t:1.5,T0:1.5,hit:false,age:0})}
+    for(const m of meteors){if(m.hit){m.age+=h;continue}m.t-=h;if(m.t<=0){m.hit=true;emit('meteor',{x:m.x,z:m.z});
+      for(const T of [A,B])if(T.state==='spin'){const dx=T.x-m.x,dz=T.z-m.z,dd=Math.hypot(dx,dz);if(dd<2.6){const f=1-dd/2.6,n=dd||1;T.vx+=dx/n*16*f;T.vz+=dz/n*16*f;T.s-=0.07*f;T.burst=Math.max(0.02,T.burst-0.05*f);T.dash=Math.max(T.dash,0.2)}}}}
+    meteors=meteors.filter(m=>!m.hit||m.age<1)}}
 function stepSpecial(T,h){
+  if(!T.sp&&!T.chain&&T.stage2>0){T.stage2-=h;if(T.stage2<=0){T.stage2=0;const O=T.stage2O;if(T.state==='spin'&&O&&O.state==='spin'){T.sp={kind:'strike',t:0,O};startStrike(T);emit('stage2',{T})}}}
   if(!T.sp&&T.chain){const c=T.chain;if(T.state!=='spin'||c.O.state!=='spin'||c.left<=0){T.chain=null}
     else{c.left--;c.dir=-c.dir;T.sp={kind:'veer',t:0,O:c.O,dir:c.dir}}}
   const S=T.sp;if(!S)return false;S.t+=h;
@@ -677,6 +733,7 @@ function useSpecial(T,O){
     if(fx==='snow'&&O.state==='spin'){O.vx*=0.5;O.vz*=0.5}
     if(fx==='dragon'&&O.state==='spin'){T.sp={kind:'strike',t:0,O};startStrike(T)}
   }
+  if(T.def.tier==='cos'){T.stage2=0.45;T.stage2O=O}
   emit('special',{T,O});return true;
 }
 let track=null;
@@ -700,6 +757,7 @@ function trackPull(T){
 }
 let pairCool=0;
 function stepPhysics(A,B,h){
+  fieldStep(A,B,h);
   for(const T of [A,B]){T.capT=Math.max(0,(T.capT||0)-h);
     if(T.state==='out'){T.x+=T.vx*h;T.z+=T.vz*h;T.vy-=22*h;T.y+=T.vy*h;continue}
     if(T.state!=='spin')continue;
@@ -714,26 +772,37 @@ function stepPhysics(A,B,h){
     const f=T.def.flow*2.2*T.s*Math.min(1,d/1.2)*(T.def.left?-1:1);
     ax+=f*(T.z/d);az+=f*(-T.x/d);
     const sm=Math.min(1,Math.hypot(T.sx,T.sz));
-    const sg=spOn?0:track&&track.on&&T.def.type!=='bal'?2.5:7;const sgm=T.def.type==="bal"?1.35:1;ax+=T.sx*sg*sgm;az+=T.sz*sg*sgm;
+    const sg=spOn?0:track&&track.on&&T.def.type!=='bal'?2.5:7;const sgm=(T.def.type==="bal"?1.35:1)*(T.def.pas==='orbit'?1.25:1);ax+=T.sx*sg*sgm;az+=T.sz*sg*sgm;
     T.onTrack=Math.max(0,(T.onTrack||0)-h);
     if(track&&track.on&&T.def.type!=='bal'){const tp=trackPull(T);if(tp){if(T.onTrack<=0&&T.boostCD<=0){T.vx=tp[2]*20;T.vz=tp[3]*20;T.dash=0.45;T.boosting=true;T.boostCD=1.1;emit('boost',{T})}ax+=tp[0];az+=tp[1];T.onTrack=0.25;T.s=Math.min(1.05,T.s+0.012*h)}else if(d<3.2){ax-=T.x*4;az-=T.z*4;const tx=T.z/d,tz=-T.x/d,vt=T.vx*tx+T.vz*tz,dmp=vt*(1-Math.exp(-4*h))/h;ax-=tx*dmp;az-=tz*dmp}else{ax-=T.x*1.2;az-=T.z*1.2}}
     if(T.boosting&&(d<1.6||T.dash<=0)){T.boosting=false;if(T.dash>0){T.dash=0.08;T.vx*=0.55;T.vz*=0.55}}
+    if(FIELD){const fx=FIELD.fx;
+      if(fx==='blackhole'){const k=3.4*Math.min(1,d/2);ax-=T.x/d*k;az-=T.z/d*k;if(d<1.4)T.s-=0.03*h}
+      else if(fx==='wind'){const a=windDir();ax+=Math.sin(a)*3.2;az+=Math.cos(a)*3.2}
+      else if(fx==='lava'){for(const z of FIELD.zones)if(Math.hypot(T.x-z[0],T.z-z[1])<z[2])T.s-=0.045*h}
+      else if(fx==='boost'){for(const z of FIELD.zones)if(Math.hypot(T.x-z[0],T.z-z[1])<z[2]&&T.boostCD<=0&&!T.sp){const v=Math.hypot(T.vx,T.vz)||1;T.vx=T.vx/v*20;T.vz=T.vz/v*20;T.dash=0.35;T.boostCD=1.2;emit('boost',{T})}}}
+    {const pas=T.def.pas,O=T===A?B:A;
+      if(pas==='regen')T.burst=Math.min(1,T.burst+0.01*h);
+      else if(pas==='gravity'&&O.state==='spin'){const gx=T.x-O.x,gz=T.z-O.z,gd=Math.hypot(gx,gz)||1;if(gd<6){O.vx+=gx/gd*4*h;O.vz+=gz/gd*4*h}}
+      else if(pas==='pulse'){T.pT=(T.pT||0)+h;if(T.pT>6){T.pT=0;if(O.state==='spin'){const gx=O.x-T.x,gz=O.z-T.z,gd=Math.hypot(gx,gz)||1;if(gd<4.2){const f=1-gd/4.2;O.vx+=gx/gd*14*f;O.vz+=gz/gd*14*f;O.s-=0.03*f;emit('repel',{T,O})}}}}}
     T.vx+=ax*h;T.vz+=az*h;
-    if(T.dash<=0){const fr=Math.exp(-T.def.fric*(T.shell>0?2.2:1)*h);T.vx*=fr;T.vz*=fr}
-    const sp=Math.hypot(T.vx,T.vz),cap=T.sp&&T.sp.kind==='path'?46:T.dash>0?24:T.onTrack>0?17:MAXV;if(sp>cap){T.vx*=cap/sp;T.vz*=cap/sp}
+    if(T.dash<=0){const fr=Math.exp(-T.def.fric*(T.shell>0?2.2:1)*(FIELD&&FIELD.fx==='ice'?0.35:1)*h);T.vx*=fr;T.vz*=fr}
+    const sp=Math.hypot(T.vx,T.vz),cap=T.sp&&T.sp.kind==='path'?46:T.dash>0?(T.def.pas==='comet'?29:24):T.onTrack>0?17:MAXV+(T.def.pas==='comet'?2.5:0);if(sp>cap){T.vx*=cap/sp;T.vz*=cap/sp}
     T.x+=T.vx*h;T.z+=T.vz*h;
     let decay=0.014*(1.1-T.def.def*0.012)*(1.12-T.def.wt*0.025)*(1+0.05*(T.def.atk-5))+0.006*T.s+sm*0.006
-    decay*=(DECM[T.def.type]||1)/(TUNE[T.def.id]||1);
+    decay*=(DECM[T.def.type]||1)/((TUNE[T.def.id]||1)*(T.def.tier==='cos'?COSKD:1));
     if(T.moon>0)decay*=0.4;
+    if(T.awoke)decay*=0.9;
     T.s-=decay*h;T.charge=Math.min(1,T.charge+0.0175*h*chgMul(T)*passX);
-    const bc=bestCircle(T.x,T.z),bdx=T.x-bc[0],bdz=T.z-bc[1],bdd=Math.hypot(bdx,bdz)||1e-6,LIM=bc[2]-0.6;
+    const bc=bestCircle(T.x,T.z),bdx=T.x-bc[0],bdz=T.z-bc[1],bdd=Math.hypot(bdx,bdz)||1e-6,LIM=bc[2]*(1-fieldShrink())-0.6,spr=FIELD&&FIELD.fx==='spring';
     if(bdd>LIM){
       const nx=bdx/bdd,nz=bdz/bdd,vout=T.vx*nx+T.vz*nz,th=Math.atan2(T.x,T.z);
-      const wh=wallAt(th);
-      if(!T.sp&&vout>4.5+9.5*wh){T.state='out';T.vy=6+vout*0.3;T.vx*=1.1;T.vz*=1.1;emit('out',{T});continue}
-      if(vout>0){T.vx-=1.55*vout*nx;T.vz-=1.55*vout*nz;if(vout>2)T.s-=0.002*vout;if(vout>4)emit('wall',{T,v:vout})}
+      const wh=wallAt(th-fieldRot());
+      if(!T.sp&&vout>4.5+9.5*wh+(spr?4:0)&&fieldShrink()<0.005){T.state='out';T.vy=6+vout*0.3;T.vx*=1.1;T.vz*=1.1;emit('out',{T});continue}
+      if(vout>0){const bk=spr?2.3:1.55;T.vx-=bk*vout*nx;T.vz-=bk*vout*nz;if(spr&&vout>3)T.dash=Math.max(T.dash,0.25);if(vout>2)T.s-=0.002*vout;if(vout>4)emit('wall',{T,v:vout})}
       T.x=bc[0]+nx*LIM;T.z=bc[1]+nz*LIM;
     }
+    if(T.s<0.3&&T.def.tier==='cos'&&!T.awoke)awaken(T);
     if(T.s<=0.05){T.s=0.05;T.state='down';emit('down',{T})}
   }
   for(const [T,O] of [[A,B],[B,A]])if(T.storm>0&&T.state==='spin'&&O.state==='spin'&&Math.hypot(O.x-T.x,O.z-T.z)<3.6)O.s-=0.05*h*(T.def.type==='atk'?0.5:1);
@@ -757,7 +826,7 @@ function collide(A,B,h){
   if(vnB<0){B.vx-=vnB*nx*0.85;B.vz-=vnB*nz*0.85}
   const advA=BEATS[A.def.type]===B.def.type?1.6:A.def.type==='bal'&&B.def.type==='def'?BALDEF:1,advB=BEATS[B.def.type]===A.def.type?1.6:B.def.type==='bal'&&A.def.type==='def'?BALDEF:1;
   const defA=(0.6+A.def.def*0.12)*(A.shell>0?1.5:1)*bA.def,defB=(0.6+B.def.def*0.12)*(B.shell>0?1.5:1)*bB.def;
-  const atkA=(1+0.04*(A.def.wt-5))*(0.3+A.def.atk*0.12)*(A.def.type==='atk'?1.55:A.def.type==='bal'?1.4:1)*bA.atk*(A.def.id==='b_suzaku'&&spA?0.7:1),atkB=(1+0.04*(B.def.wt-5))*(0.3+B.def.atk*0.12)*(B.def.type==='atk'?1.55:B.def.type==='bal'?1.4:1)*bB.atk*(B.def.id==='b_suzaku'&&spB?0.7:1);
+  const atkA=(1+0.04*(A.def.wt-5))*(0.3+A.def.atk*0.12)*(A.def.type==='atk'?1.55:A.def.type==='bal'?1.4:1)*bA.atk*(A.def.id==='b_suzaku'&&spA?0.7:1)*(A.awoke?1.08:1),atkB=(1+0.04*(B.def.wt-5))*(0.3+B.def.atk*0.12)*(B.def.type==='atk'?1.55:B.def.type==='bal'?1.4:1)*bB.atk*(B.def.id==='b_suzaku'&&spB?0.7:1)*(B.awoke?1.08:1);
   const gA=spGuard(A),gB=spGuard(B),pA=impact*atkB*advB/(mA*defA)*gA,pB=impact*atkA*advA/(mB*defB)*gB;
   const tx=-nz,tz=nx;
   A.vx+=-nx*pA+tx*pA*0.3;A.vz+=-nz*pA+tz*pA*0.3;
@@ -765,13 +834,15 @@ function collide(A,B,h){
   A.dash=0;B.dash=0;
   A.s-=impact*0.005*atkB*advB/(defA*Math.sqrt(A.m))*gA*(SPD[B.def.type]||1)*(B.def.type==='atk'&&spB?0.5:1);B.s-=impact*0.005*atkA*advA/(defB*Math.sqrt(B.m))*gB*(SPD[A.def.type]||1)*(A.def.type==='atk'&&spA?0.5:1);
   if(impact>9){
-    A.burst-=spCap(A,B,(impact-9)*0.012*atkB*advB/defA*(1.4-Math.min(1,A.s)*0.6)*(A.shell>0?0.3:1)*bB.br*bA.brIn*gA*(BRK[A.def.type]||1)*DURM*((A.sp||A.chain)?0.5:1)*(BX[B.def.type]||1)*(stB?BXS:1)*durMod(A.def)*(B.def.type==='atk'&&A.def.type==='sta'?1.25:1)*(B.def.type==='sta'&&(A.def.type==='atk'||A.def.type==='def')?1/0.7:1));
-    B.burst-=spCap(B,A,(impact-9)*0.012*atkA*advA/defB*(1.4-Math.min(1,B.s)*0.6)*(B.shell>0?0.3:1)*bA.br*bB.brIn*gB*(BRK[B.def.type]||1)*DURM*((B.sp||B.chain)?0.5:1)*(BX[A.def.type]||1)*(stA?BXS:1)*durMod(B.def)*(A.def.type==='atk'&&B.def.type==='sta'?1.25:1)*(A.def.type==='sta'&&(B.def.type==='atk'||B.def.type==='def')?1/0.7:1));
+    A.burst-=pasBurst(A,spCap(A,B,(impact-9)*0.012*atkB*advB/defA*(1.4-Math.min(1,A.s)*0.6)*(A.shell>0?0.3:1)*bB.br*bA.brIn*gA*(BRK[A.def.type]||1)*DURM*((A.sp||A.chain)?0.5:1)*(BX[B.def.type]||1)*(stB?BXS:1)*durMod(A.def)*(B.def.type==='atk'&&A.def.type==='sta'?1.25:1)*(B.def.type==='sta'&&(A.def.type==='atk'||A.def.type==='def')?1/0.7:1)));
+    B.burst-=pasBurst(B,spCap(B,A,(impact-9)*0.012*atkA*advA/defB*(1.4-Math.min(1,B.s)*0.6)*(B.shell>0?0.3:1)*bA.br*bB.brIn*gB*(BRK[B.def.type]||1)*DURM*((B.sp||B.chain)?0.5:1)*(BX[A.def.type]||1)*(stA?BXS:1)*durMod(B.def)*(A.def.type==='atk'&&B.def.type==='sta'?1.25:1)*(A.def.type==='sta'&&(B.def.type==='atk'||B.def.type==='def')?1/0.7:1)));
   }
+  {const rf=impact*0.0012,lc=impact*0.0011;if(B.def.pas==='reflect')A.s-=rf;if(A.def.pas==='reflect')B.s-=rf;if(A.def.pas==='leech')A.s=Math.min(1.1,A.s+lc);if(B.def.pas==='leech')B.s=Math.min(1.1,B.s+lc)}
   if(bA.k==='thunder')B.s-=0.04*(A.def.type==='atk'?0.5:1);if(bB.k==='thunder')A.s-=0.04*(B.def.type==='atk'?0.5:1);if(bA.k==='ice')B.s-=impact*0.003;if(bB.k==='ice')A.s-=impact*0.003;
   A.charge=Math.min(1,A.charge+impact*0.009*chgMul(A));B.charge=Math.min(1,B.charge+impact*0.009*chgMul(B));
   {const dr=Math.min(0.08,0.02+impact*0.003);if(A.def.type==='bal'&&B.state==='spin')B.charge=Math.max(0,B.charge-dr);if(B.def.type==='bal'&&A.state==='spin')A.charge=Math.max(0,A.charge-dr)}
   emit('hit',{A,B,bA:bA.k,bB:bB.k,impact,x:(A.x+B.x)/2,z:(A.z+B.z)/2});
+  for(const T of [A,B])if(T.burst<=0&&T.def.tier==='cos'&&!T.bar2){T.bar2=true;T.burst=1;emit('bar2',{T});awaken(T)}
   if(A.burst<=0&&B.burst<=0){if(A.burst<=B.burst)B.burst=0.02;else A.burst=0.02}/* 同時爆裂：只爆受損較重的一方 */
   if(A.burst<=0){A.burst=0;A.state='burst';emit('burst',{T:A})}
   if(B.burst<=0){B.burst=0;B.state='burst';emit('burst',{T:B})}
@@ -838,6 +909,16 @@ ARENAS.push(
  {name:'階梯神殿',pat:'sun',a:'#c99a50',b:'#7a3a10',rim:0x8a6a3a,glow:0xffc04a,bg:0x1e1206,base:0x5a3e20,geo:'terrace',wall:{tex:'sand',deco:'obelisk',dc:0xf0c070}},
  {name:'四方高台',pat:'circuit',a:'#0c1a20',b:'#ff4bd8',rim:0x1a2030,glow:0xff4bd8,bg:0x06060e,base:0x10141e,emit:0.8,geo:'four',wall:{tex:'circuit',deco:'cube',dc:0xff4bd8,emit:1}},
  {name:'五芒浮島',pat:'nebula',a:'#0e1838',b:'#7be0ff',rim:0x1a2450,glow:0x7be0ff,bg:0x03050f,base:0x0c1430,emit:0.6,geo:'penta',wall:{tex:'glass',deco:'crystal',dc:0x9fe8ff}});
+ARENAS.push(
+ {name:'黑洞星域',pat:'nebula',a:'#0a0418',b:'#b24bff',rim:0x1a0a30,glow:0xb24bff,bg:0x020108,base:0x0c0618,emit:0.6,fx:'blackhole',wall:{tex:'glass',deco:'orb',dc:0xb24bff}},
+ {name:'隕石帶',pat:'moon',a:'#1e1a22',b:'#ff8a3d',rim:0x2a2028,glow:0xff8a3d,bg:0x060408,base:0x1a1418,emit:0.3,fx:'meteor',wall:{tex:'rock',deco:'spike',dc:0x3a2a20}},
+ {name:'極地冰原',pat:'ice',a:'#cfe8fa',b:'#ffffff',rim:0x9fc8ea,glow:0xd8f6ff,bg:0x0a1626,base:0x7fa6c8,fx:'ice',geo:'terrace',wall:{tex:'ice',deco:'crystal',dc:0xd8f6ff}},
+ {name:'熔岩核心',pat:'lava',a:'#1e0804',b:'#ff4a10',rim:0x3a1008,glow:0xff4a10,bg:0x120402,base:0x200804,emit:0.8,fx:'lava',geo:'crater',wall:{tex:'rock',deco:'spike',dc:0x2a1008,emit:1}},
+ {name:'颶風峽谷',pat:'sun',a:'#c9a070',b:'#6a3a1a',rim:0x7a5a3a,glow:0xffe0a0,bg:0x1e140a,base:0x5a3e24,fx:'wind',geo:'peanut',wall:{tex:'sand',deco:'obelisk',dc:0xe8c890}},
+ {name:'彈跳星環',pat:'rainbow',a:'#1a1a3a',b:'#ffffff',rim:0x2a2a5a,glow:0x5dff8a,bg:0x08081a,base:0x161634,emit:0.5,fx:'spring',wall:{tex:'rainbow',deco:'orb',dc:0x5dff8a}},
+ {name:'收縮競技場',pat:'grid',a:'#140a1a',b:'#ff4b6a',rim:0x2a1020,glow:0xff4b6a,bg:0x08040a,base:0x180a14,emit:0.4,fx:'shrink',wall:{tex:'panel',deco:'pillar',dc:0xff4b6a}},
+ {name:'旋轉太空站',pat:'circuit',a:'#0a121c',b:'#5fe0ff',rim:0x1a2a3a,glow:0x5fe0ff,bg:0x04080e,base:0x0c1622,emit:0.8,fx:'rotwall',wall:{tex:'circuit',deco:'cube',dc:0x5fe0ff,emit:1}},
+ {name:'加速星軌',pat:'bolt',a:'#10101e',b:'#ffe14a',rim:0x22223a,glow:0xffe14a,bg:0x06060c,base:0x12121e,emit:0.6,fx:'boost',wall:{tex:'hazard',deco:'coil',dc:0xffe14a,emit:1}});
 function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function rgba(h,a){const n=parseInt(h.slice(1),16);return `rgba(${n>>16},${n>>8&255},${n&255},${a})`}
 function drawArena(g,w,A){
@@ -1039,14 +1120,49 @@ function updateWallViews(t,running){
       if(!wallSegs._told){wallSegs._told=true;popText('牆壁下降！','小心被撞出場')}}
     if(h===1)w.h=1});
 }
+/* ---------- 戰鬥盤效果：畫面 ---------- */
+function drawFieldTex(g,A){if(!FIELD)return;const S=2*(R+0.25),u=1024/S,P=(x,z)=>[512+x*u,512+z*u],fx=FIELD.fx,TAU=Math.PI*2;g.save();g.beginPath();g.arc(512,512,512,0,TAU);g.clip();
+  if(fx==='lava')for(const z of FIELD.zones){const [cx,cy]=P(z[0],z[1]),r=z[2]*u,gr=g.createRadialGradient(cx,cy,r*0.1,cx,cy,r);gr.addColorStop(0,'#fff27a');gr.addColorStop(0.35,'#ff7a1a');gr.addColorStop(0.85,'#c01a00');gr.addColorStop(1,'rgba(80,0,0,0)');g.fillStyle=gr;g.beginPath();g.arc(cx,cy,r,0,TAU);g.fill();
+    g.strokeStyle='rgba(40,0,0,.7)';g.lineWidth=3;const rr=rng(z[0]*10|0);for(let k=0;k<7;k++){let x=cx,y=cy;g.beginPath();g.moveTo(x,y);for(let q=0;q<4;q++){x+=(rr()-.5)*r*0.6;y+=(rr()-.5)*r*0.6;g.lineTo(x,y)}g.stroke()}}
+  if(fx==='boost')for(const z of FIELD.zones){const [cx,cy]=P(z[0],z[1]),r=z[2]*u;g.shadowColor='#ffe14a';g.shadowBlur=18;g.strokeStyle='#ffe14a';g.lineWidth=6;g.beginPath();g.arc(cx,cy,r,0,TAU);g.stroke();
+    g.fillStyle='rgba(255,225,74,.25)';g.fill();g.lineWidth=7;for(let k=0;k<3;k++){const a=k*TAU/3;g.save();g.translate(cx,cy);g.rotate(a);g.beginPath();g.moveTo(r*0.2,-r*0.35);g.lineTo(r*0.55,0);g.lineTo(r*0.2,r*0.35);g.stroke();g.restore()}g.shadowBlur=0}
+  if(fx==='blackhole'){const [cx,cy]=P(0,0),r=2.6*u;for(let k=0;k<5;k++){g.strokeStyle=k%2?'rgba(255,143,224,.55)':'rgba(178,75,255,.6)';g.lineWidth=5;g.beginPath();for(let i=0;i<=60;i++){const t=i/60,a=t*4.5+k*TAU/5,rr=r*(1-t*0.85);i?g.lineTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr):g.moveTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr)}g.stroke()}
+    const gr=g.createRadialGradient(cx,cy,0,cx,cy,r*0.5);gr.addColorStop(0,'#000');gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.beginPath();g.arc(cx,cy,r*0.5,0,TAU);g.fill()}
+  if(fx==='ice'){g.globalAlpha=0.35;g.strokeStyle='#ffffff';g.lineWidth=2;const rr=rng(9);for(let k=0;k<40;k++){const x=rr()*1024,y=rr()*1024;g.beginPath();g.moveTo(x,y);g.lineTo(x+(rr()-.5)*160,y+(rr()-.5)*160);g.stroke()}
+    const gr=g.createLinearGradient(0,0,1024,1024);gr.addColorStop(0,'rgba(255,255,255,.35)');gr.addColorStop(0.5,'rgba(255,255,255,0)');gr.addColorStop(1,'rgba(255,255,255,.3)');g.globalAlpha=1;g.fillStyle=gr;g.fillRect(0,0,1024,1024)}
+  if(fx==='spring'||fx==='shrink'){const col=fx==='spring'?'#5dff8a':'#ff4b6a';for(const c of GEO.circles){const [cx,cy]=P(c[0],c[1]);g.strokeStyle=col;g.shadowColor=col;g.shadowBlur=14;g.lineWidth=5;g.setLineDash(fx==='shrink'?[18,14]:[]);
+    for(const f of fx==='shrink'?[0.92,0.8,0.7]:[0.97]){g.beginPath();g.arc(cx,cy,(c[2]*f-0.6)*u,0,TAU);g.stroke()}g.setLineDash([]);g.shadowBlur=0}}
+  if(fx==='meteor'){const rr=rng(5);for(let k=0;k<9;k++){const a=rr()*TAU,d=rr()*GEO.minRho*0.8,[cx,cy]=P(Math.sin(a)*d,Math.cos(a)*d),r=(0.5+rr()*0.8)*u;g.fillStyle='rgba(0,0,0,.4)';g.beginPath();g.arc(cx,cy,r,0,TAU);g.fill();g.strokeStyle='rgba(255,138,61,.5)';g.lineWidth=3;g.stroke()}}
+  if(fx==='rotwall'){const [cx,cy]=P(0,0);g.strokeStyle='rgba(95,224,255,.6)';g.lineWidth=6;for(let k=0;k<3;k++){const a=k*TAU/3;g.beginPath();g.arc(cx,cy,GEO.minRho*u*0.6,a,a+1.4);g.stroke();const ex=cx+Math.cos(a+1.4)*GEO.minRho*u*0.6,ey=cy+Math.sin(a+1.4)*GEO.minRho*u*0.6;g.beginPath();g.arc(ex,ey,8,0,TAU);g.fillStyle='#5fe0ff';g.fill()}}
+  g.restore()}
+const fieldGrp=new THREE.Group();scene.add(fieldGrp);let FV=null;
+function buildFieldViews(){while(fieldGrp.children.length)fieldGrp.remove(fieldGrp.children[0]);FV=null;wallGrp.rotation.y=0;if(!FIELD)return;FV={};const fx=FIELD.fx;
+  if(fx==='blackhole'){const y=GEO.H(0,0)+0.05;const core=new THREE.Mesh(new THREE.CircleGeometry(0.55,32),new THREE.MeshBasicMaterial({color:0x000000}));core.rotation.x=-Math.PI/2;core.position.y=y+0.06;fieldGrp.add(core);FV.rings=[];
+    for(let i=0;i<3;i++){const m=new THREE.Mesh(new THREE.RingGeometry(0.6+i*0.45,0.75+i*0.45,40,1,0,Math.PI*1.4),new THREE.MeshBasicMaterial({color:i%2?0xff8fe0:0xb24bff,transparent:true,opacity:0.75-i*0.15,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));m.rotation.x=-Math.PI/2;m.position.y=y+0.03*(i+1);fieldGrp.add(m);FV.rings.push(m)}}
+  if(fx==='shrink')FV.tor=GEO.circles.map(c=>{const m=new THREE.Mesh(new THREE.TorusGeometry(c[2],0.07,6,120),new THREE.MeshBasicMaterial({color:0xff4b6a,transparent:true,opacity:0.85,blending:THREE.AdditiveBlending,depthWrite:false}));m.rotation.x=Math.PI/2;fieldGrp.add(m);return {m,c}});
+  if(fx==='meteor'){FV.met=[];for(let i=0;i<4;i++){const ring=new THREE.Mesh(new THREE.RingGeometry(2.3,2.6,40),new THREE.MeshBasicMaterial({color:0xff3b2f,transparent:true,opacity:0.8,depthTest:false,depthWrite:false,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;ring.renderOrder=5;
+    const rock=new THREE.Mesh(new THREE.DodecahedronGeometry(0.55),new THREE.MeshStandardMaterial({color:0x5a4030,emissive:0xff5a1a,emissiveIntensity:0.8,flatShading:true}));ring.visible=rock.visible=false;fieldGrp.add(ring);fieldGrp.add(rock);FV.met.push({ring,rock})}}
+  if(fx==='wind'){FV.st=[];const mat=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.4,blending:THREE.AdditiveBlending,depthWrite:false});for(let i=0;i<40;i++){const m=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.05,1.5),mat);const a=Math.random()*6.283,r=Math.random()*R;m.position.set(Math.sin(a)*r,0,Math.cos(a)*r);fieldGrp.add(m);FV.st.push(m)}}
+}
+let windShown=-1;
+function updateFieldViews(dt,running){if(!FIELD||!FV){wallGrp.rotation.y=0;return}const fx=FIELD.fx,now=performance.now()/1000;
+  if(fx==='rotwall')wallGrp.rotation.y=fieldRot();
+  if(FV.rings)FV.rings.forEach((m,i)=>m.rotation.z+=dt*(1.6+i*0.8));
+  if(FV.tor){const k=1-fieldShrink();FV.tor.forEach(({m,c})=>{const r=c[2]*k-0.5;m.scale.set(r/c[2],r/c[2],1);m.position.set(c[0],groundHc(c[0],c[1]+r)+0.2,c[1]);m.visible=fieldShrink()>0.001;m.material.opacity=0.6+0.3*Math.sin(now*6)})}
+  if(FV.met)FV.met.forEach((v,i)=>{const m=meteors[i];if(!m||m.hit){v.ring.visible=v.rock.visible=false;return}const y=groundHc(m.x,m.z),f=Math.max(0,m.t/m.T0);v.ring.visible=true;v.ring.position.set(m.x,y+0.12,m.z);v.ring.material.opacity=0.45+0.4*Math.sin(now*16);
+    v.rock.visible=f<0.85;v.rock.position.set(m.x+f*5,y+0.4+f*16,m.z-f*3);v.rock.rotation.x+=dt*6;v.rock.rotation.z+=dt*4});
+  if(FV.st){const a=windDir(),dx=Math.sin(a),dz=Math.cos(a);for(const m of FV.st){m.position.x+=dx*dt*15;m.position.z+=dz*dt*15;if(Math.hypot(m.position.x,m.position.z)>R+1){const b=Math.random()*6.283,r=Math.random()*R*0.9;m.position.x=Math.sin(b)*r-dx*R*0.9;m.position.z=Math.cos(b)*r-dz*R*0.9}
+    m.position.y=groundHc(m.position.x,m.position.z)+0.5+((m.id%5)*0.15);m.rotation.y=a}
+    const k=Math.floor(fieldT/6);if(running&&k!==windShown&&fieldT>0.5){windShown=k;if(k>0)popText('風向改變！')}}
+}
 let arenaIdx=0;
 function applyArena(i){
-  arenaIdx=i;const A=ARENAS[i];setGeo(GEOS[A.geo||'bowl']);buildGround();buildTrackViews();if(typeof fit==='function')fit();
-  drawArena(arenaCanvas.getContext('2d'),1024,A);arenaTex.needsUpdate=true;
+  arenaIdx=i;const A=ARENAS[i];setGeo(GEOS[A.geo||'bowl']);setField(mkField(A.fx));buildGround();buildTrackViews();if(typeof fit==='function')fit();
+  drawArena(arenaCanvas.getContext('2d'),1024,A);drawFieldTex(arenaCanvas.getContext('2d'),A);arenaTex.needsUpdate=true;buildFieldViews();
   ARN.bowlMat.emissive.setHex(A.emit?0xffffff:0x000000);ARN.bowlMat.emissiveIntensity=A.emit||0;ARN.bowlMat.needsUpdate=true;
   ARN.rimMat.color.setHex(A.rim);ARN.glowMat.color.setHex(A.glow);buildWalls(A);ARN.baseMat.color.setHex(A.base);ARN.haloMat.color.setHex(A.glow);
   scene.background.setHex(A.bg);scene.fog.color.setHex(A.bg);ARN.floorMat.color.setHex(A.bg).multiplyScalar(1.3);
-  const nm=document.getElementById('arenaName');if(nm)nm.textContent=A.name;
+  const nm=document.getElementById('arenaName');if(nm)nm.textContent=A.name+(A.fx?'・'+FIELDS[A.fx][0]:'');
 }
 
 
@@ -1375,6 +1491,11 @@ function makeModel(def){
    const around=(n,fn)=>{for(let i=0;i<n;i++){const pv=new THREE.Group();pv.rotation.y=(i+0.5)/n*Math.PI*2;fn(pv,i);pv.updateMatrixWorld(true);for(const ch of [...pv.children]){const w=ch.clone();ch.getWorldPosition(w.position);ch.getWorldQuaternion(w.quaternion);add(w)}}};
    if(se==='gold'||se==='silver'){const halo=new THREE.Mesh(new THREE.TorusGeometry(0.62,0.05,8,40),gold);halo.rotation.x=Math.PI/2;halo.position.y=0.98;add(halo);
      around(6,pv=>{const g=new THREE.Mesh(new THREE.OctahedronGeometry(0.09),acM);g.position.set(0,0.98,0.62);g.scale.y=1.5;pv.add(g);const sp=new THREE.Mesh(new THREE.ConeGeometry(0.06,0.32,4),gold);sp.position.set(0,0.74,1.12);sp.rotation.x=Math.PI/2;pv.add(sp)})}
+   else if(se==='cosmos'){const ringM=new THREE.MeshStandardMaterial({color:def.accent,emissive:def.accent,emissiveIntensity:0.9,metalness:0.5,roughness:0.3});
+     const orb=new THREE.Mesh(new THREE.TorusGeometry(0.98,0.025,6,48),ringM);orb.rotation.x=Math.PI/2+0.32;orb.position.y=0.9;add(orb);
+     const orb2=new THREE.Mesh(new THREE.TorusGeometry(0.74,0.02,6,40),new THREE.MeshBasicMaterial({color:0xffffff}));orb2.rotation.x=Math.PI/2-0.4;orb2.rotation.y=0.6;orb2.position.y=0.92;add(orb2);
+     around(3,(pv,i)=>{const p=new THREE.Mesh(new THREE.SphereGeometry(0.08+0.03*i,10,8),i===1?ringM:acM);p.position.set(0,0.9+(i-1)*0.12,0.98);pv.add(p)});
+     const gem=new THREE.Mesh(new THREE.OctahedronGeometry(0.13),ringM);gem.position.y=1.12;gem.scale.y=1.6;add(gem)}
    else if(se==='dragon'||def.id==='b_seiryu'){for(const sg of [-1,1]){const h=new THREE.Mesh(new THREE.ConeGeometry(0.08,0.5,6),gold);h.position.set(sg*0.24,1.12,-0.1);h.rotation.set(-0.5,0,sg*-0.5);add(h)}
      around(def.blades>6?8:6,pv=>{const sp=new THREE.Mesh(new THREE.ConeGeometry(0.07,0.3,4),acM);sp.position.set(0,0.78,1.02);sp.rotation.x=Math.PI/2-0.3;pv.add(sp)})}
    else if(se==='katana'){const blade=new THREE.MeshStandardMaterial({color:0xf0f4fa,metalness:1,roughness:0.08});
@@ -1498,7 +1619,7 @@ let trackViews=[];function buildTrackViews(){for(const v of trackViews)scene.rem
 });}
 
 let supplyClock=3;
-function trackReset(){supplyClock=3;wallReset();if(wallSegs)wallSegs._told=false;track=null;trackClock=0;trackPhase=0;trackCount=0;items=[];for(const v of trackViews){v.grp.visible=false}trackShown=null}
+function trackReset(){supplyClock=3;wallReset();fieldReset();windShown=-1;if(wallSegs)wallSegs._told=false;track=null;trackClock=0;trackPhase=0;trackCount=0;items=[];for(const v of trackViews){v.grp.visible=false}trackShown=null}
 function drawItemIcon(g,w,k){
   const col=hex(ITEM_KINDS[k].col),c=w/2;const gr=g.createRadialGradient(c,c,0,c,c,c);gr.addColorStop(0,col);gr.addColorStop(0.55,col);gr.addColorStop(1,'rgba(0,0,0,0)');
   g.fillStyle=gr;g.fillRect(0,0,w,w);g.beginPath();g.arc(c,c,w*0.3,0,7);g.fillStyle='#0e1430';g.fill();g.lineWidth=w*0.04;g.strokeStyle='#fff';g.stroke();
@@ -1650,6 +1771,12 @@ emit=(type,d)=>{
   else if(type==='strikeHit'){const y=groundHc(d.x,d.z)+0.8,c=topRGB(d.T);sparks(d.x,y,d.z,90,[c,[1.8,1.8,1.8],[1.8,1.3,0.4]]);shock(d.x,y-0.3,d.z,2.4);shock(d.x,y,d.z,1.4);zap(d.x,y,d.z,6,3);
     if(vis){sf.boom();shake=1.5;camPunch=Math.min(5,camPunch+3);if(!reduce)slowT=Math.max(slowT,0.45);flashFx=0.35;popText('爆擊！')}}
   else if(type==='repel'){const T=d.T,y=groundHc(T.x,T.z)+0.4;shock(T.x,y,T.z,2.6);shock(T.x,y+0.4,T.z,1.8);sparks(T.x,y+0.4,T.z,50,[[0.6,1.2,1.8],[1.6,1.6,1.6]]);if(vis){sf.boom();shake=Math.max(shake,0.8)}}
+  else if(type==='awaken'){const T=d.T,y=groundHc(T.x,T.z);sparks(T.x,y+0.9,T.z,120,[topRGB(T),[1.8,1.8,1.8],[1.2,0.9,1.9]]);shock(T.x,y+0.3,T.z,3);shock(T.x,y+0.8,T.z,2);zap(T.x,y+1,T.z,6,3);
+    if(vis){sf.special();shake=Math.max(shake,1.2);flashFx=0.5;speedFx=0.6;speedCol='#c78bff';if(!reduce)slowT=Math.max(slowT,0.7);popText('覺醒！',(T===P?'你的「':'對手的「')+T.def.name+(T.bar2&&T.burst>0.95?'」第一條耐久破裂，力量覺醒':'」轉速告急，力量覺醒'))}}
+  else if(type==='bar2'){const T=d.T,y=groundHc(T.x,T.z);sparks(T.x,y+0.8,T.z,80,[[1.2,0.9,1.9],[0.6,1.6,1.9],[1.8,1.8,1.8]]);shock(T.x,y+0.4,T.z,2.4);if(vis){sf.boom();shake=Math.max(shake,1.0);if(T.awoke)popText('耐久條破裂！','第二條耐久啟動')}}
+  else if(type==='stage2'){if(vis){popText('二段追擊！');speedFx=0.5;speedCol=hex(d.T.def.accent)}}
+  else if(type==='shield'){const T=d.T,y=groundHc(T.x,T.z);shock(T.x,y+0.6,T.z,2.2);sparks(T.x,y+0.8,T.z,50,[[1.8,1.7,1.0],[1.8,1.8,1.8]]);if(vis)popText('星盾！','擋下了這次重擊')}
+  else if(type==='meteor'){const y=groundHc(d.x,d.z);sparks(d.x,y+0.6,d.z,110,[[1.9,0.8,0.2],[1.8,1.4,0.5],[0.6,0.5,0.5]]);shock(d.x,y+0.2,d.z,2.8);shock(d.x,y+0.5,d.z,1.6);if(vis){sf.boom();shake=Math.max(shake,1.0)}}
   else if(type==='special'){sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,60,[topRGB(d.T),[1.6,1.6,1.6],[1.6,1.4,0.5]]);shock(d.T.x,groundHc(d.T.x,d.T.z)+0.4,d.T.z,1.8);
     {const fx=d.T.def.fx;if(fx==='quake'){shock(d.T.x,groundHc(d.T.x,d.T.z)+0.2,d.T.z,3.4);if(vis)shake=Math.max(shake,1.2)}if(fx==='holy'||fx==='moon'||fx==='song')shock(d.T.x,groundHc(d.T.x,d.T.z)+0.9,d.T.z,2.6);if(fx==='flame'||fx==='dragon')sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,60,[[1.8,0.7,0.15],[1.8,1.3,0.3]]);if(fx==='ice'||fx==='snow')sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,60,[[1.2,1.6,1.8],[1.6,1.6,1.6]])}
     if(vis){sf.special();if(d.T===P)stats.sp++;cutIn(d.T);if(!reduce)slowT=Math.max(slowT,0.9)}}
@@ -1671,7 +1798,7 @@ function buffChip(el,T,base){if(T.buffT>0&&T.state==='spin'){el.textContent=ITEM
 function hudTick(){
   buffChip($('pType'),P,P.def.name+'・'+P.def.typeName);buffChip($('eType'),E,E.def.name+'・'+E.def.typeName);
   const live=T=>T.state==='spin'||T.state==='idle';
-  bar($('pSpin'),live(P)?P.s:0);bar($('eSpin'),live(E)?E.s:0);bar($('pArm'),P.burst);bar($('eArm'),E.burst);bar($('pChg'),P.charge);bar($('eChg'),E.charge);$('pChg').classList.toggle('full',P.charge>=0.99);$('eChg').classList.toggle('full',E.charge>=0.99);
+  bar($('pSpin'),live(P)?P.s:0);bar($('eSpin'),live(E)?E.s:0);bar($('pArm'),P.burst);bar($('eArm'),E.burst);$('pArm').classList.toggle('cos1',P.def.tier==='cos'&&!P.bar2);$('eArm').classList.toggle('cos1',E.def.tier==='cos'&&!E.bar2);bar($('pChg'),P.charge);bar($('eChg'),E.charge);$('pChg').classList.toggle('full',P.charge>=0.99);$('eChg').classList.toggle('full',E.charge>=0.99);
   spBtn.style.setProperty('--g',P.charge.toFixed(3));$('spName').textContent=Math.floor(P.charge*100)+'%';
   if(duel2){sp2Btn.style.setProperty('--g',E.charge.toFixed(3));$('spName2').textContent=Math.floor(E.charge*100)+'%'}
 }
@@ -1711,7 +1838,7 @@ function renderPicker(){
     b.onclick=e=>{audioInit();if(e.target.closest('[data-pin]')){togglePin(def.id);renderPicker();return}if(!owns(def)){peek=i;renderDetail();peek=-1;return}pick=i;save('top',i);[...pickEl.children].forEach(c=>c.setAttribute('aria-pressed',c===b));renderDetail();sfx.ding();demoReset();if(!$('tourSetup').hidden)tourSetupUI()};
     pickEl.appendChild(b)});
 }
-[['mine','我的'],['all','圖鑑'],['div','神聖'],['leg','傳說'],['brz','青銅'],['custom','自組']].forEach(([k,n])=>{const b=document.createElement('button');b.type='button';b.id='flt-'+k;b.textContent=n;b.setAttribute('aria-pressed',k==='mine');
+[['mine','我的'],['all','圖鑑'],['cos','宇宙'],['div','神聖'],['leg','傳說'],['brz','青銅'],['custom','自組']].forEach(([k,n])=>{const b=document.createElement('button');b.type='button';b.id='flt-'+k;b.textContent=n;b.setAttribute('aria-pressed',k==='mine');
   b.onclick=()=>{topFilter=k;[...filtersEl.children].forEach(c=>c.setAttribute('aria-pressed',c===b));renderPicker()};filtersEl.appendChild(b)});
 renderPicker();renderDetail();
 document.fonts&&document.fonts.ready.then(()=>{renderPicker();renderDetail();glyphCanvases.forEach(o=>{drawGlyph(o.c,o.def);o.t.needsUpdate=true})});
@@ -1750,6 +1877,7 @@ function toLaunch(){
   for(const T of [P,E]){T.state='idle';T.s=0;T.burst=1;T.charge=0;T.x=0;T.z=T.side==='P'?5.5:-5.5;T.vx=T.vz=0;T.y=0;T.lift=3.2;T.model.root.visible=true;T.model.tilt.rotation.set(0,0,0);T.model.spin.rotation.set(0,0,0)}
   if(typeof pickBattleTrack==='function'&&mus.g)pickBattleTrack();
   trackReset();phase='launch';launchEl.hidden=false;spShow(false);$('hud').hidden=true;$('roundEnd').hidden=true;fill.style.height='0';pullStart=null;pull=0;humSet(0,false);hudTick();
+  if(FIELD)popText(FIELDS[FIELD.fx][0]+'！',FIELDS[FIELD.fx][1]);
   ov.mode='launch';ov.t=0;ov.pPull=0;ov.ePull=0;ov.who=duel2?'P':null;launchWho='P';pendingP=null;launchTipSet();
 }
 let launchWho='P',pendingP=null;
@@ -2382,7 +2510,7 @@ function updateModel(T,dt,rdt){
   }else if(T.state==='down'){
     M.spin.rotation.y-=0.4*dt;M.tilt.rotation.x=Math.min(1.15,M.tilt.rotation.x+dt*1.6);M.blur.material.opacity=0;
   }
-  const glow=T.shell>0?0.35:T.moon>0?0.3:T.dash>0?0.4:0;M.aura.material.color.setHex(T.shell>0?0x6fb8ff:T.moon>0?0x9ffff0:0xffd060);
+  const aw=T.awoke&&T.state==='spin',glow=T.shell>0?0.35:T.moon>0?0.3:T.dash>0?0.4:aw?0.22+0.1*Math.sin(performance.now()/120):0;M.aura.material.color.setHex(T.shell>0?0x6fb8ff:T.moon>0?0x9ffff0:aw?0xb388ff:0xffd060);
   M.aura.material.opacity+=(glow-M.aura.material.opacity)*Math.min(1,rdt*10);
   M.shadow.visible=T.state!=='burst'&&T.state!=='out'&&inShape(T.x,T.z);M.shadow.position.set(T.x,gy+0.03,T.z);
   M.shadow.material.opacity=T.lift>0?0.4:1;
@@ -2462,12 +2590,14 @@ function shClose(){wz.step=0;shopEl.hidden=true;$('menu').hidden=false;if(pick>=
 /* 遊戲說明 */
 const HELP={
 rule:`<div class="hcard"><h4>怎麼贏</h4>每一局兩顆陀螺在戰鬥盤上互撞，<b>先拿 4 分</b>的人獲勝。<br>轉停（轉速歸零）<b>+1</b>　撞出場 <b>+2</b>　撞爆（耐久歸零） <b>+3</b>。</div>
-<div class="hcard"><h4>操作</h4>往下拉再放開發射，拉得越滿轉速越高；剛好放在最準的位置有「完美射擊」加成。<br>對戰時手指在畫面上拖，可以推著陀螺跑。必殺鈕亮了（100%）就按。</div>
+<div class="hcard"><h4>操作</h4>往下拉再放開發射，拉得越滿轉速越高；剛好放在最準的位置有「完美射擊」加成。<br>對戰時手指在畫面上拖，可以推著陀螺跑。必殺氣到 100% 會<b>自動發動</b>必殺；狂點或長按必殺鈕可以集氣更快。</div>
 <div class="hcard"><h4>兩條血：轉速與耐久</h4><b>轉速</b>：會自己慢慢掉，被撞也會掉，歸零就停轉。<br><b>耐久</b>：撞擊很重（超過一定力道）時才會扣，歸零就會爆裂。<br>轉速越低，耐久越容易被打掉。吃到「耐久修復」或「轉速」道具可以補回來。</div>
-<div class="hcard"><h4>必殺技</h4>必殺氣會自己慢慢增加，被撞、點擊必殺鈕、長按鈕也能加快。滿了之後按鈕亮起，按下就發動。<br>必殺<b>期間會減傷</b>（攻擊型最多），所以開場放必殺不容易兩敗俱傷。<br>對防禦型、耐久型，一次必殺最多只能打掉他們 40% 的耐久；任何型態自己放必殺時，一次也最多損失 40% 耐久，不會因為衝撞反擊而自爆。<br><b>平衡型</b>撞到對手，會扣掉對手一小段必殺氣。</div>
+<div class="hcard"><h4>必殺技</h4>必殺氣會自己慢慢增加，被撞、點擊必殺鈕、長按鈕也能加快。到 100% 就<b>自動發動</b>（AI 和雙人對戰也一樣，不會忘記放）。<br>必殺<b>期間會減傷</b>（攻擊型最多），所以開場放必殺不容易兩敗俱傷。<br>對防禦型、耐久型，一次必殺最多只能打掉他們 40% 的耐久；任何型態自己放必殺時，一次也最多損失 40% 耐久，不會因為衝撞反擊而自爆。<br><b>平衡型</b>撞到對手，會扣掉對手一小段必殺氣。</div>
 <div class="hcard"><h4>四種型態互相剋制</h4><b>攻擊</b> 剋 <b>耐久</b>　<b>耐久</b> 剋 <b>防禦</b>　<b>防禦</b> 剋 <b>攻擊</b><br>被剋制的一方吃到的傷害 ×1.6。<b>平衡型</b>不剋也不被剋。<br>攻擊型打耐久型，耐久型的耐久損耗再多 25%。</div>
+<div class="hcard" style="border-color:#9f7bff"><h4 style="color:#c78bff">宇宙級陀螺（最高等級）</h4><b>兩條耐久</b>：第一條（藍紫色）被打破後，才開始扣第二條（橘色）。每條比一般陀螺薄一點。<br><b>覺醒</b>：轉速低於 30%，或第一條耐久被打破時，會覺醒一次：補回轉速、攻擊變強、轉速掉得更慢、必殺氣大增，身上會發出紫光。<br><b>二段必殺</b>：必殺結束後會自動再追擊一次。<br><b>專屬被動</b>：每顆都有一個特性（新星、彗尾、吸能、重質、反震、再生、環繞、日蝕、虛化、引力、脈衝、星盾），寫在陀螺介紹裡。<br>宇宙陀螺比神聖強，但神聖陀螺還是有機會打贏，所以神聖陀螺也能挑戰宇宙盃。</div>
+<div class="hcard"><h4>戰鬥盤效果</h4>有些戰鬥盤有特殊效果，發射前會提示：<br>${Object.values(FIELDS).map(f=>'<b>'+f[0]+'</b>：'+f[1]).join('<br>')}</div>
 <div class="hcard"><h4>戰鬥盤與牆</h4>戰鬥盤會浮出<b>特殊軌道</b>，踩上去會被加速、拉著走（平衡型不受軌道吸引）。<br>四周的牆會慢慢降下，從降下的地方最容易被撞出場。盤面形狀、牆的高度每個場地都不同。</div>
-<div class="hcard"><h4>賽制</h4><b>積分淘汰</b>：32 位參賽者抽籤對戰，打贏 5 關就是冠軍。<br><b>三戰兩勝</b>：8 強淘汰賽，每一關三戰兩勝，獎勵是 32 強淘汰賽的 2 倍。<br><b>自由練習</b>：隨便打，不影響成績。<br>盃賽分青銅、傳說、神聖三級，對手會用同等級的陀螺；等級不夠的盃賽會鎖住。<br>雙人模式：兩人共用一支手機，畫面上下兩半各自操控。</div>`,
+<div class="hcard"><h4>賽制</h4><b>積分淘汰</b>：32 位參賽者抽籤對戰，打贏 5 關就是冠軍。<br><b>三戰兩勝</b>：8 強淘汰賽，每一關三戰兩勝，獎勵是 32 強淘汰賽的 2 倍。<br><b>自由練習</b>：隨便打，不影響成績。<br>盃賽分青銅、傳說、神聖、宇宙四級，對手會用同等級的陀螺；等級不夠的盃賽會鎖住。<br>可以用<b>低一級的陀螺</b>挑戰高級盃賽：打完獎勵再 ×1.5（以下剋上）。<br>雙人模式：兩人共用一支手機，畫面上下兩半各自操控。</div>`,
 item:`<div class="note" style="font-size:12px">戰鬥盤上會隨機出現道具，用陀螺碰到就能吃。有人快沒轉速或耐久時，補給道具會出現得更多，讓落後的人有翻盤機會。增益類道具持續 <b>8 秒</b>（平衡型 ×1.4）。</div>`+[
 ['spin','#5dff8a','轉速提升','立刻補回一段轉速（約 30%）。'],
 ['rush','#7dffe4','轉速爆發','大量補回轉速（約 55%），快停下來時的救星。'],
@@ -2483,8 +2613,8 @@ type:`<div class="hcard" style="border-color:#ff6a4a"><h4 style="color:#ff8a6a">
 <div class="hcard" style="border-color:#7dd0ff"><h4 style="color:#7dd0ff">平衡型</h4>不剋也不被剋<br><span class="pro">優點：</span>操控最靈活，不受戰鬥盤軌道吸引；吃道具範圍最大、增益時間長；撞到對手會扣對手必殺氣，讓他放不出必殺；基礎防禦稍高。<br><span class="con">缺點：</span>攻擊、耐久都普通，沒有剋制關係可以靠，單純硬碰硬不強。<br>打法：靈活走位、搶道具、擾亂對手的必殺節奏。</div>
 <div class="hcard" style="border-color:#5dff8a"><h4 style="color:#5dff8a">耐久型</h4>剋制：<b>防禦型</b>　被剋：攻擊型<br><span class="pro">優點：</span>轉速掉得最慢，能撐最久；撞擊會大幅削減對手轉速；自己的耐久損耗很少；必殺時還會補一點轉速和耐久。<br><span class="con">缺點：</span>撞爆能力弱，不容易在短時間內打倒人；遇到攻擊型耐久會被多扣 25%。<br>打法：撐到對手自己停轉，專門磨防禦型。</div>
 <div class="hcard" style="border-color:#ffd23d"><h4 style="color:#ffd23d">防禦型</h4>剋制：<b>攻擊型</b>　被剋：耐久型<br><span class="pro">優點：</span>防禦力最高，被撞很不容易動；平時轉速掉得慢；必殺時會回補轉速，必殺期間受傷減半；一次必殺最多被打掉 40% 耐久，開場不會被秒。<br><span class="con">缺點：</span>起始轉速最低，起步慢；攻擊力普通；被耐久型磨轉速、被平衡型針對時比較辛苦。<br>打法：站穩擋住攻擊型，等對手消耗光再反擊。</div>
-<div class="note" style="font-size:12px">另外還有「特色陀螺」（青龍、白虎、朱雀、玄武等神獸，以及星座、忍者、和風妖怪等各種風格的陀螺），各自有獨特的必殺技。每顆陀螺的外環、重量盤、軸心都有素質，到工坊可以自己組裝。</div>`,
-grow:`<div class="hcard"><h4>商店幣與等級</h4>打比賽會得到商店幣和經驗值，等級提高可以參加更高級的盃賽（傳說盃 Lv 3、神聖盃 Lv 6）。<br>名次越高、打得越遠，獎勵越多。</div>
+<div class="note" style="font-size:12px">最高等級的<b>宇宙級</b>（24 顆星神陀螺）一樣分這四種型態，另外多了兩條耐久、覺醒、二段追擊和專屬被動，詳見「戰鬥規則」。<br>另外還有「特色陀螺」（青龍、白虎、朱雀、玄武等神獸，以及星座、忍者、和風妖怪等各種風格的陀螺），各自有獨特的必殺技。每顆陀螺的外環、重量盤、軸心都有素質，到工坊可以自己組裝。</div>`,
+grow:`<div class="hcard"><h4>商店幣與等級</h4>打比賽會得到商店幣和經驗值，等級提高可以參加更高級的盃賽（傳說盃 Lv 3、神聖盃 Lv 6、宇宙盃 Lv 10）。<br>用比盃賽低一級的陀螺參賽，獎勵 ×1.5（以下剋上）。<br>名次越高、打得越遠，獎勵越多。</div>
 <div class="hcard"><h4>工坊</h4><b>陀螺</b>：用商店幣買新陀螺。<br><b>盲盒・道具</b>：抽零件盲盒、買能力增幅道具、買雷電顏色和升級雷電欄位。<br><b>組裝</b>：用零件自己組一顆陀螺（外環、重量盤、軸心、紋章）。<br><b>造型</b>：一步一步改花紋、外環邊緣、內圈、貼紙，並裝備雷電顏色。<br><b>強化</b>：用增幅道具替單顆陀螺加點（攻、防、耐、重）。</div>
 <div class="hcard"><h4>捏臉</h4>在選單點「捏臉」可以改你的鬥士外觀；對戰時必殺吶喊的畫面會用到。</div>`};
 let hpTab='rule';
@@ -2508,7 +2638,7 @@ function renderTopShop(box){
   for(const d of list)h+=topRow(d,`<button class="mini ${coins<d.price?'no':''}" data-a="buyt" data-id="${d.id}" type="button">${d.price} 幣</button>`);
   box.innerHTML=h;paintIcons(box)}
 function renderBox(box){
-  let h=`<div class="shr"><div><b>🎁 零件盲盒</b><small>隨機抽到一顆陀螺的一個零件（外環／重量盤／軸心／紋章）<br>機率：青銅 50%・傳說 35%・神聖 15%；抽到重複退 20 幣</small></div><button class="mini ${coins<BOX_PRICE?'no':''}" data-a="box" type="button">${BOX_PRICE} 幣</button></div>`;
+  let h=`<div class="shr"><div><b>🎁 零件盲盒</b><small>隨機抽到一顆陀螺的一個零件（外環／重量盤／軸心／紋章）<br>機率：青銅 48%・傳說 33%・神聖 14%・宇宙 5%；抽到重複退 20 幣</small></div><button class="mini ${coins<BOX_PRICE?'no':''}" data-a="box" type="button">${BOX_PRICE} 幣</button></div>`;
   h+=`<div class="note" style="font-size:12px">已收集零件：${ownedParts.size} 個（擁有的陀螺本身的 4 個零件也能拿來組裝）</div><div class="shH">能力增幅道具</div>`;
   for(const k in BOOST_ITEMS){const it=BOOST_ITEMS[k];h+=`<div class="shr"><div><b>${it.n}　持有 ${inv[k]||0}</b><small>${it.d}　每顆陀螺最多強化 ${BOOST_BUDGET} 點，單項上限 ${BOOST_MAX}</small></div><button class="mini ${coins<it.pr?'no':''}" data-a="buyb" data-id="${k}" type="button">${it.pr} 幣</button></div>`}
   h+=`<div class="shH">淘汰賽 buff 道具</div><div class="shr"><div><b>全能力強化券　持有 ${inv.buff25||0}</b><small>開始淘汰賽前可以選一顆陀螺使用：整場淘汰賽中，那顆陀螺的攻擊、防禦、耐久、重量全部 +25%。一次只能選一顆，用掉就消耗一張，也可以不用。</small></div><button class="mini ${coins<BUFF_PRICE?'no':''}" data-a="buyff" type="button">${BUFF_PRICE} 幣</button></div>`;
@@ -2621,7 +2751,7 @@ function rollTier(w){const r=Math.random();let acc=0;for(const [t,p] of w){acc+=
 shBody.addEventListener('click',e=>{
   const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,id=b.dataset.id;
   if(a==='buyt'){const d=TOP_BY[id];if(coins<d.price)shMsg='商店幣不夠，去打競技大賽吧！';else{coins-=d.price;ownedTops.add(id);savePrefs();shMsg=`買到了「${d.name}」！到主畫面就能選用`;sfx.win()}}
-  else if(a==='box'){if(coins<BOX_PRICE)shMsg='商店幣不夠，去打競技大賽吧！';else{coins-=BOX_PRICE;const t=rollTier([['brz',0.5],['leg',0.35],['div',0.15]]),pool=TOPS.filter(d=>!d.custom&&d.tier===t),d=pool[Math.floor(Math.random()*pool.length)],c=CATS[Math.floor(Math.random()*4)],pid=d.id+':'+c;
+  else if(a==='box'){if(coins<BOX_PRICE)shMsg='商店幣不夠，去打競技大賽吧！';else{coins-=BOX_PRICE;const t=rollTier([['brz',0.48],['leg',0.33],['div',0.14],['cos',0.05]]),pool=TOPS.filter(d=>!d.custom&&d.tier===t),d=pool[Math.floor(Math.random()*pool.length)],c=CATS[Math.floor(Math.random()*4)],pid=d.id+':'+c;
       if(hasPart(pid)){coins+=20;shMsg=`🎁 ${TIER_NAME[d.tier]}「${d.name}」的${PCAT[c]}（重複，退 20 幣）`}else{ownedParts.add(pid);shMsg=`🎁 抽到 ${TIER_NAME[d.tier]}「${d.name}」的${PCAT[c]}！到「組裝」使用`;sfx.item()}savePrefs()}}
   else if(a==='buyff'){if(coins<BUFF_PRICE)shMsg='商店幣不夠，去打比賽賺吧！';else{coins-=BUFF_PRICE;inv.buff25=(inv.buff25||0)+1;savePrefs();shMsg='買到了全能力強化券！淘汰賽開始前可以使用';sfx.ding()}}
   else if(a==='buyb'){const it=BOOST_ITEMS[id];if(coins<it.pr)shMsg='商店幣不夠，去打競技大賽吧！';else{coins-=it.pr;inv[id]=(inv[id]||0)+1;savePrefs();shMsg='買到了 '+it.n+'！';sfx.ding()}}
@@ -2664,28 +2794,28 @@ let tour=null,curMatch=null,tourN=1,p2pick=1,p2Av=load('p2av')||randomAvatar(),p
 let coins=load('coins')||0;if(!Number.isFinite(coins))coins=0;
 function addCoins(n){coins+=n;save('coins',coins);menuStatus()}
 menuStatus();
-const CUP_LV={brz:1,leg:3,div:6},CUP_I={brz:0,leg:1,div:2},XP_OF={'冠軍':100,'亞軍':70,'4強':50,'8強':35,'16強':25,'32強':15};let tourCup='brz';
+const CUP_LV={brz:1,leg:3,div:6,cos:10},CUP_I={brz:0,leg:1,div:2,cos:3},XP_OF={'冠軍':100,'亞軍':70,'4強':50,'8強':35,'16強':25,'32強':15};let tourCup='brz';
 const fitsCup=d=>TIER_ORD[d.tier]<=TIER_ORD[tourCup];
 function effPick(i){const d=TOPS[i];if(fitsCup(d))return i;const c=TOPS.map((t,j)=>j).filter(j=>owns(TOPS[j])&&fitsCup(TOPS[j]));const sc=j=>{const t=TOPS[j];return (t.type===d.type?100:0)+TIER_ORD[t.tier]*10+t.atk+t.def+t.sta};return c.sort((a,b)=>sc(b)-sc(a))[0]}
 function cupOk(){return lv>=CUP_LV[tourCup]}
 const shuf=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
 const mkF=(def,name,av,h)=>({def,name,av,h,rank:null});
 function simBout(da,db){
-  const sE=emit,sT=track,sI=items;emit=()=>{};track=null;items=[];wallReset();let res=null;
+  const sE=emit,sT=track,sI=items,sF=FIELD;emit=()=>{};track=null;items=[];FIELD=null;wallReset();let res=null;
   for(let k=0;k<3&&!res;k++){
     const A=newTop(da,'P'),B=newTop(db,'E');launchTop(A,0.55+Math.random()*0.4,Math.random()-.5,Math.random()<.2);launchTop(B,0.55+Math.random()*0.4,Math.random()-.5,Math.random()<.2);
     let t=0;while(t<75){aiControl(A,B,t,0.7);aiControl(B,A,t,0.7);wallTick(t);stepPhysics(A,B,1/90);t+=1/90;if(A.state!=='spin'||B.state!=='spin')break}
     const aa=A.state==='spin',bb=B.state==='spin';res=aa&&!bb?'A':bb&&!aa?'B':(!aa&&!bb?null:(A.s>=B.s?'A':'B'))}
-  emit=sE;track=sT;items=sI;return res||(Math.random()<.5?'A':'B')}
+  emit=sE;track=sT;items=sI;FIELD=sF;return res||(Math.random()<.5?'A':'B')}
 function pairUp(list){const m=[];for(let i=0;i<list.length;i+=2)m.push({a:list[i],b:list[i+1],w:null,sa:0,sb:0});return m}
 function setResult(m,wf,sa,sb){m.w=wf;m.sa=sa;m.sb=sb;const l=wf===m.a?m.b:m.a;l.rank=RANK_OF[tour.round]}
 function cpuAuto(m){const r=simBout(m.a.def,m.b.def),T=TARGET[tour.round],lo=Math.floor(Math.random()*T);r==='A'?setResult(m,m.a,T,lo):setResult(m,m.b,lo,T)}
-const maxCup=()=>['div','leg','brz'].find(c=>lv>=CUP_LV[c])||'brz';
+const maxCup=()=>['cos','div','leg','brz'].find(c=>lv>=CUP_LV[c])||'brz';
 function tourOpen(){tourCup=maxCup();$('menu').hidden=true;$('tourSetup').hidden=false;mountP1($('p1Slot'));tourSetupUI()}
 function tourSetupUI(){
-  [...$('cupRow').children].forEach(b=>{const c=b.dataset.cup,lock=lv<CUP_LV[c];b.setAttribute('aria-pressed',c===tourCup);b.textContent=(lock?'🔒':'')+{brz:'青銅盃',leg:'傳說盃',div:'神聖盃'}[c]});
+  [...$('cupRow').children].forEach(b=>{const c=b.dataset.cup,lock=lv<CUP_LV[c];b.setAttribute('aria-pressed',c===tourCup);b.textContent=(lock?'🔒':'')+{brz:'青銅盃',leg:'傳說盃',div:'神聖盃',cos:'宇宙盃'}[c]});
   const mineOk=TOPS.map((t,i)=>i).filter(i=>owns(TOPS[i])&&fitsCup(TOPS[i]));const eP=effPick(pick);if(!mineOk.includes(p2pick)||p2pick===eP)p2pick=mineOk.find(i=>i!==eP)??mineOk[0];
-  $('cupNote').innerHTML=lv<CUP_LV[tourCup]?`玩家等級 ${CUP_LV[tourCup]} 才能參加（現在 Lv ${lv}）`:!fitsCup(TOPS[pick])?`P1 的「${TOPS[pick].name}」超過本盃等級，比賽會自動換成「${TOPS[eP].name}」`:`對手都使用${TIER_NAME[tourCup]}陀螺；獎勵 ×${CUP_I[tourCup]+1}`;
+  $('cupNote').innerHTML=lv<CUP_LV[tourCup]?`玩家等級 ${CUP_LV[tourCup]} 才能參加（現在 Lv ${lv}）`:!fitsCup(TOPS[pick])?`P1 的「${TOPS[pick].name}」超過本盃等級，比賽會自動換成「${TOPS[eP].name}」`:`對手都使用${TIER_NAME[tourCup]}陀螺；獎勵 ×${CUP_I[tourCup]+1}`+(TIER_ORD[TOPS[eP].tier]<TIER_ORD[tourCup]?`<br><b style="color:#c78bff">以下剋上！</b>用${TIER_NAME[TOPS[eP].tier]}陀螺挑戰，獎勵再 ×1.5`:'');
   $('tDraw').style.opacity=cupOk()?1:0.4;
   $('tn1').setAttribute('aria-pressed',tourN===1);$('tn2').setAttribute('aria-pressed',tourN===2);$('p2box').hidden=tourN!==2;
   $('t1Lbl').textContent=pName;$('t1Top').textContent=TOPS[eP].name+'・'+TOPS[eP].typeName;drawPortrait($('t1Face'),pAv);
@@ -2700,8 +2830,8 @@ $('p2Rand').onclick=()=>{p2Av=randomAvatar();save('p2av',p2Av);tourSetupUI()};
 $('tBack').onclick=()=>{$('tourSetup').hidden=true;$('menu').hidden=false;menuEnter()};
 function cupAsk(){
   let o=$('cupAsk');if(!o){o=document.createElement('div');o.id='cupAsk';o.style.cssText='position:fixed;inset:0;z-index:60;background:rgba(5,7,16,.82);display:flex;align-items:center;justify-content:center;padding:20px';document.body.appendChild(o)}
-  const nm={brz:'青銅盃',leg:'傳說盃',div:'神聖盃'},top=TOPS[effPick(pick)];
-  o.innerHTML=`<div style="width:100%;max-width:420px;background:#12162a;border:2px solid var(--gold);border-radius:16px;padding:20px;display:grid;gap:12px"><b style="font-size:20px">要打哪一級盃賽？</b><div style="font-size:13px;color:var(--dim)">${tourN===2?'雙人':'單人'}・P1 陀螺：${top.name}（${TIER_NAME[top.tier]}）<br>選好就會直接抽籤開始。對手會用同等級的陀螺。</div>${['brz','leg','div'].map(c=>{const lock=lv<CUP_LV[c];return `<button type="button" class="btn ${c===tourCup?'':'ghost'}" data-c="${c}" ${lock?'disabled style="opacity:.4"':''}>${lock?'🔒 ':''}${nm[c]}${lock?'（Lv '+CUP_LV[c]+' 解鎖）':c===tourCup?'　← 目前':''}</button>`}).join('')}<button type="button" class="btn ghost small" data-c="x">取消，回去再看看</button></div>`;
+  const nm={brz:'青銅盃',leg:'傳說盃',div:'神聖盃',cos:'宇宙盃'},top=TOPS[effPick(pick)];
+  o.innerHTML=`<div style="width:100%;max-width:420px;background:#12162a;border:2px solid var(--gold);border-radius:16px;padding:20px;display:grid;gap:12px"><b style="font-size:20px">要打哪一級盃賽？</b><div style="font-size:13px;color:var(--dim)">${tourN===2?'雙人':'單人'}・P1 陀螺：${top.name}（${TIER_NAME[top.tier]}）<br>選好就會直接抽籤開始。對手會用同等級的陀螺。</div>${['brz','leg','div','cos'].map(c=>{const lock=lv<CUP_LV[c];return `<button type="button" class="btn ${c===tourCup?'':'ghost'}" data-c="${c}" ${lock?'disabled style="opacity:.4"':''}>${lock?'🔒 ':''}${nm[c]}${lock?'（Lv '+CUP_LV[c]+' 解鎖）':c===tourCup?'　← 目前':''}</button>`}).join('')}<button type="button" class="btn ghost small" data-c="x">取消，回去再看看</button></div>`;
   o.hidden=false;o.onclick=e=>{const b=e.target.closest('[data-c]');if(!b){if(e.target===o)o.hidden=true;return}if(b.dataset.c==='x'){o.hidden=true;return}tourCup=b.dataset.c;o.hidden=true;tourSetupUI();$('cupNote').style.color='';buffAsk(fitsCup,tourStart)}}
 $('tDraw').onclick=()=>{audioInit();cupAsk()};
 function buffAsk(fit,cb){
@@ -2773,7 +2903,7 @@ function tourBoard(first){
 }
 function tourPlay(m){
   let fp=m.a,fe=m.b;const duel=!!(fp.h&&fe.h);if(!duel&&!fp.h){fp=m.b;fe=m.a}
-  curMatch={m,fp,fe,duel,flip:fp!==m.a};duel2=duel;npcChgX=duel?1:Math.min(2,[1,1.35,1.7][CUP_I[tour.cup]]+0.075*tour.round);duelX=duel?1.5:1;passX=duel?0.2:1;
+  curMatch={m,fp,fe,duel,flip:fp!==m.a};duel2=duel;npcChgX=duel?1:Math.min(2,[1,1.35,1.7,1.85][CUP_I[tour.cup]]+0.075*tour.round);duelX=duel?1.5:1;passX=duel?0.2:1;
   pAv=fp.av;pName=fp.name;eAv=fe.av;eName=fe.name;matchTarget=TARGET[tour.round];aiSkill=0.5+0.08*CUP_I[tour.cup]+0.06*tour.round;
   score={P:0,E:0};stats={hits:0,max:0,perf:0,sp:0};applyArena(Math.floor(Math.random()*ARENAS.length));
   setupTops(fp.def,fe.def);$('hud').hidden=false;hudNames();toLaunch();
@@ -2804,15 +2934,15 @@ function tourFinish(){
   phase='over';ov.mode=null;$('tourBoard').hidden=true;$('watchBar').hidden=true;
   let lines='',tot=0;
   const mul=CUP_I[tour.cup]+1;let gx=0;
-  for(const h of tour.hs){const c=(COIN_OF[h.rank]||0)*mul,x=Math.round((XP_OF[h.rank]||0)*(1+0.25*CUP_I[tour.cup]));tot+=c;gx=Math.max(gx,x);lines+=`${fname(h)}：<b>${h.rank}</b>　+${c} 商店幣　+${x} 經驗<br>`}
+  for(const h of tour.hs){const ud=TIER_ORD[h.def.tier]<TIER_ORD[tour.cup],c=Math.round((COIN_OF[h.rank]||0)*mul*(ud?1.5:1)),x=Math.round((XP_OF[h.rank]||0)*(1+0.25*CUP_I[tour.cup])*(ud?1.5:1));tot+=c;gx=Math.max(gx,x);lines+=`${fname(h)}：<b>${h.rank}</b>　+${c} 商店幣　+${x} 經驗${ud?'　<b style="color:#c78bff">以下剋上 ×1.5</b>':''}<br>`}
   addCoins(tot);xp+=gx;let up=0;while(xp>=xpNeed(lv)){xp-=xpNeed(lv);lv++;up++}
   // 抽陀螺
   const best=tour.hs.reduce((a,h)=>Math.min(a,['冠軍','亞軍','4強','8強','16強','32強'].indexOf(h.rank)),9);
   const chance=[1,0.7,0.5,0.35,0.2,0.2][best]??0.2;let drawTxt='🎲 這次沒有抽到新陀螺，下次再接再厲！';
-  if(Math.random()<chance){let got=null;for(const t of ['brz','leg','div'].slice(TIER_ORD[tour.cup])){const dp=TOPS.filter(d=>!d.custom&&d.tier===t&&!ownedTops.has(d.id));if(dp.length){got=dp[Math.floor(Math.random()*dp.length)];break}}
+  if(Math.random()<chance){let got=null;for(const t of ['brz','leg','div','cos'].slice(TIER_ORD[tour.cup])){const dp=TOPS.filter(d=>!d.custom&&d.tier===t&&!ownedTops.has(d.id));if(dp.length){got=dp[Math.floor(Math.random()*dp.length)];break}}
     if(got){ownedTops.add(got.id);drawTxt=`🎲 抽到新陀螺：<b>${TIER_NAME[got.tier]}「${got.name}」</b>！${TIER_ORD[got.tier]>TIER_ORD[tour.cup]?'（等級較高，要參加'+TIER_NAME[got.tier]+'盃或練習賽才能用）':''}`}else{addCoins(300);drawTxt='🎲 所有陀螺都收集齊了，改送 300 幣'}}
   savePrefs();menuStatus();
-  lines+=`<br>${drawTxt}${up?`<br>⬆ 升級！玩家等級 Lv ${lv}${lv>=CUP_LV.leg&&lv-up<CUP_LV.leg?'（解鎖傳說盃）':''}${lv>=CUP_LV.div&&lv-up<CUP_LV.div?'（解鎖神聖盃）':''}`:''}`;
+  lines+=`<br>${drawTxt}${up?`<br>⬆ 升級！玩家等級 Lv ${lv}${lv>=CUP_LV.leg&&lv-up<CUP_LV.leg?'（解鎖傳說盃）':''}${lv>=CUP_LV.div&&lv-up<CUP_LV.div?'（解鎖神聖盃）':''}${lv>=CUP_LV.cos&&lv-up<CUP_LV.cos?'（解鎖宇宙盃）':''}`:''}`;
   const ch=tour.champ;
   $('teBig').textContent=tour.hs.includes(ch)?'冠軍！':'大賽結束';
   $('teNote').innerHTML=`冠軍：<b>${fname(ch)}</b>（${ch.def.name}）<br>${lines}<br>共獲得 ${tot} 商店幣（現有 ${coins}）・Lv ${lv}（${xp}/${xpNeed(lv)}）`;
@@ -2831,10 +2961,10 @@ const b3Fit=d=>TIER_ORD[d.tier]<=TIER_ORD[b3Cup],b3Def=id=>TOPS.find(t=>t.id===i
 function b3Open(){b3Cup=maxCup();$('menu').hidden=true;$('b3Setup').hidden=false;b3UI()}
 function b3UI(){
   const av=b3Avail();
-  [...$('b3Cup').children].forEach(b=>{const c=b.dataset.cup,lock=lv<CUP_LV[c];b.setAttribute('aria-pressed',c===b3Cup);b.textContent=(lock?'🔒':'')+{brz:'青銅盃',leg:'傳說盃',div:'神聖盃'}[c]});
+  [...$('b3Cup').children].forEach(b=>{const c=b.dataset.cup,lock=lv<CUP_LV[c];b.setAttribute('aria-pressed',c===b3Cup);b.textContent=(lock?'🔒':'')+{brz:'青銅盃',leg:'傳說盃',div:'神聖盃',cos:'宇宙盃'}[c]});
   b3Slots=b3Slots.map(id=>id&&av.some(t=>t.id===id)?id:null);
   for(let i=0;i<3;i++)if(!b3Slots[i]){const c=av.find(t=>!b3Slots.includes(t.id));if(c)b3Slots[i]=c.id}
-  $('b3Note').textContent=lv<CUP_LV[b3Cup]?`玩家等級 ${CUP_LV[b3Cup]} 才能參加（現在 Lv ${lv}）`:`8 強淘汰，對手都帶三顆${TIER_NAME[b3Cup]}陀螺；獎勵是同盃賽 32 強淘汰賽的 2 倍（×${(CUP_I[b3Cup]+1)*2}）`;
+  $('b3Note').textContent=lv<CUP_LV[b3Cup]?`玩家等級 ${CUP_LV[b3Cup]} 才能參加（現在 Lv ${lv}）`:`8 強淘汰，對手都帶三顆${TIER_NAME[b3Cup]}陀螺；獎勵是同盃賽 32 強淘汰賽的 2 倍（×${(CUP_I[b3Cup]+1)*2}）`+(b3Slots.filter(id=>id&&TIER_ORD[b3Def(id).tier]<TIER_ORD[b3Cup]).length>=2?'；以下剋上（兩顆以上用低一級陀螺）獎勵再 ×1.5':'');
   $('b3Name').textContent=pName;drawPortrait($('b3Face'),pAv);
   const box=$('b3Slots');box.innerHTML='';
   b3Slots.forEach((id,i)=>{const d=id&&b3Def(id),r=document.createElement('div');r.className='shr';r.style.cssText='cursor:pointer;border-width:2px;'+(i===b3Sel?'border-color:var(--gold);box-shadow:0 0 10px rgba(255,200,61,.35)':'');
@@ -2881,7 +3011,7 @@ function b3Advance(){
 }
 function b3Round(){
   const n=b3.res.length,ci=CUP_I[b3.cup],pd=n<3?b3.mine[n]:b3.pick,fd=n<3?b3.foe[n]:b3.foe[Math.floor(Math.random()*3)];
-  curMatch=null;duel2=false;matchTarget=99;aiSkill=Math.min(0.92,0.5+0.08*ci+0.05*(b3.rd+2)+0.02*n);npcChgX=Math.min(2,[1,1.35,1.7][ci]+0.075*(b3.rd+2));duelX=passX=1;
+  curMatch=null;duel2=false;matchTarget=99;aiSkill=Math.min(0.92,0.5+0.08*ci+0.05*(b3.rd+2)+0.02*n);npcChgX=Math.min(2,[1,1.35,1.7,1.85][ci]+0.075*(b3.rd+2));duelX=passX=1;
   score={P:b3.w.P,E:b3.w.E};stats={hits:0,max:0,perf:0,sp:0};eAv=b3.fav;eName=b3.fname;b3.cur=[pd,fd];
   applyArena(Math.floor(Math.random()*ARENAS.length));
   setupTops(withBoost(pd),fd);$('b3Board').hidden=true;$('matchEnd').hidden=true;$('hud').hidden=false;hudNames();toLaunch();
@@ -2907,10 +3037,10 @@ function b3Show(end){
       $('b3Title').textContent='晉級！';lines+=`<br><br>勝場 ${b3.w.P} : ${b3.w.E}　打贏 ${b3.fname}，進入下一關`;
       nx.textContent='抽下一關對手';nx.onclick=()=>{audioInit();b3Advance()};sfx.ding();
     }else{
-      const rank=win?'冠軍':['8強','4強','亞軍'][b3.rd],ci=CUP_I[b3.cup],c=(COIN_OF[rank]||0)*(ci+1)*2,x=Math.round((XP_OF[rank]||0)*(1+0.25*ci)*2);
+      const rank=win?'冠軍':['8強','4強','亞軍'][b3.rd],ci=CUP_I[b3.cup],ud=b3.mine.filter(d=>TIER_ORD[d.tier]<TIER_ORD[b3.cup]).length>=2,c=Math.round((COIN_OF[rank]||0)*(ci+1)*2*(ud?1.5:1)),x=Math.round((XP_OF[rank]||0)*(1+0.25*ci)*2*(ud?1.5:1));
       addCoins(c);xp+=x;let up=0;while(xp>=xpNeed(lv)){xp-=xpNeed(lv);lv++;up++}savePrefs();menuStatus();
       $('b3Title').textContent=win?'冠軍！':(n>=10?'延長賽全平手…淘汰':'止步於 '+rank);
-      lines+=`<br><br>最終名次：<b>${rank}</b>　+${c} 商店幣　+${x} 經驗${up?`<br>⬆ 升級！玩家等級 Lv ${lv}`:''}`;
+      lines+=`<br><br>最終名次：<b>${rank}</b>　+${c} 商店幣　+${x} 經驗${ud?'　<b style="color:#c78bff">以下剋上 ×1.5</b>':''}${up?`<br>⬆ 升級！玩家等級 Lv ${lv}`:''}`;
       nx.textContent='回主選單';nx.onclick=()=>b3Exit();if(win)sfx.win();
     }
   }else if(n<3){
@@ -2953,7 +3083,7 @@ function frame(now){
     if(phase==='menu'&&(P.state!=='spin'||E.state!=='spin')){demoT+=0;if(!P._dt)P._dt=0;P._dt+=rdt;if(P._dt>1.5){P._dt=0;demoReset()}}
     if(phase==='battle'||phase==='ending')humSet(P.state==='spin'?P.s:0,P.state==='spin');
   }
-  updateModel(P,dt,rdt);updateModel(E,dt,rdt);updateSparks(dt);updateWaves(dt);updateDebris(dt);updateArcs(dt);trackTick(dt,phase==='battle'||phase==='watch');updateItems(dt);if(phase==='battle'||phase==='ending'||phase==='watch')wallTick(battleT);updateWallViews(battleT,phase==='battle'||phase==='watch');
+  updateModel(P,dt,rdt);updateModel(E,dt,rdt);updateSparks(dt);updateWaves(dt);updateDebris(dt);updateArcs(dt);trackTick(dt,phase==='battle'||phase==='watch');updateItems(dt);if(phase==='battle'||phase==='ending'||phase==='watch')wallTick(battleT);updateWallViews(battleT,phase==='battle'||phase==='watch');updateFieldViews(dt,phase==='battle');
   if(phase!=='menu')hudTick();
   overlayTick(rdt);if(AC&&mus.g)setMusic(musicForPhase());if(crOpen)drawCreator(rdt);
   shake*=Math.pow(0.02,rdt);
