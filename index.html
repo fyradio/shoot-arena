@@ -218,7 +218,7 @@ h1{margin:0;font-weight:900;font-size:clamp(40px,12vw,62px);line-height:1;letter
 .prev{display:grid;grid-template-columns:76px 1fr;gap:10px;align-items:center;background:var(--deck);border:2px solid var(--gold);border-radius:10px;padding:10px}
 .prev canvas{width:76px;height:76px}.prev .st{grid-column:1/-1;display:grid;grid-template-columns:auto 1fr auto;gap:3px 6px;font-size:11px;color:var(--dim);align-items:center}
 .prev .st i{height:6px;border-radius:3px;background:var(--line);overflow:hidden;display:block}.prev .st i em{display:block;height:100%;background:var(--gold)}.prev .st i em.b{background:var(--you)}
-.wznav{grid-column:1/-1;display:flex;gap:8px}.wznav .btn{flex:1}.wzq{margin:10px 0 8px;display:grid;gap:2px}.wzq small{color:var(--gold);font-size:12px}.wzq b{font-size:17px}
+.wznav{grid-column:1/-1;display:flex;gap:8px}.wznav .btn{flex:1;padding:10px 4px;font-size:14px;white-space:nowrap}.wzq{margin:10px 0 8px;display:grid;gap:2px}.wzq small{color:var(--gold);font-size:12px}.wzq b{font-size:17px}
 #shBody .prev.stky{position:sticky;top:0;z-index:6;grid-template-columns:100px 1fr;background:#12162a;box-shadow:0 10px 14px -8px rgba(0,0,0,.9)}#shBody .prev.stky canvas{width:100px;height:100px}
 .tp{position:relative}.tp .pin{position:absolute;top:1px;right:2px;font-style:normal;font-size:12px;opacity:.22;padding:2px;filter:grayscale(1)}.tp .pin.on{opacity:1;filter:none}
 .tp.lock{opacity:.4}.tp.lock span::before{content:"🔒"}
@@ -414,7 +414,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.16.5</div>
+  <div class="ver">v1.17.0</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -751,8 +751,8 @@ function collide(A,B,h){
   A.dash=0;B.dash=0;
   A.s-=impact*0.005*atkB*advB/(defA*Math.sqrt(A.m))*gA*(SPD[B.def.type]||1)*(B.def.type==='atk'&&spB?0.5:1);B.s-=impact*0.005*atkA*advA/(defB*Math.sqrt(B.m))*gB*(SPD[A.def.type]||1)*(A.def.type==='atk'&&spA?0.5:1);
   if(impact>9){
-    A.burst-=spCap(A,B,(impact-9)*0.012*atkB*advB/defA*(1.4-Math.min(1,A.s)*0.6)*(A.shell>0?0.3:1)*bB.br*bA.brIn*gA*(BRK[A.def.type]||1)*DURM*((A.sp||A.chain)?0.5:1)*(BX[B.def.type]||1)*(stB?BXS:1)*durMod(A.def)*(B.def.type==='sta'&&(A.def.type==='atk'||A.def.type==='def')?1/0.7:1));
-    B.burst-=spCap(B,A,(impact-9)*0.012*atkA*advA/defB*(1.4-Math.min(1,B.s)*0.6)*(B.shell>0?0.3:1)*bA.br*bB.brIn*gB*(BRK[B.def.type]||1)*DURM*((B.sp||B.chain)?0.5:1)*(BX[A.def.type]||1)*(stA?BXS:1)*durMod(B.def)*(A.def.type==='sta'&&(B.def.type==='atk'||B.def.type==='def')?1/0.7:1));
+    A.burst-=spCap(A,B,(impact-9)*0.012*atkB*advB/defA*(1.4-Math.min(1,A.s)*0.6)*(A.shell>0?0.3:1)*bB.br*bA.brIn*gA*(BRK[A.def.type]||1)*DURM*((A.sp||A.chain)?0.5:1)*(BX[B.def.type]||1)*(stB?BXS:1)*durMod(A.def)*(B.def.type==='atk'&&A.def.type==='sta'?1.25:1)*(B.def.type==='sta'&&(A.def.type==='atk'||A.def.type==='def')?1/0.7:1));
+    B.burst-=spCap(B,A,(impact-9)*0.012*atkA*advA/defB*(1.4-Math.min(1,B.s)*0.6)*(B.shell>0?0.3:1)*bA.br*bB.brIn*gB*(BRK[B.def.type]||1)*DURM*((B.sp||B.chain)?0.5:1)*(BX[A.def.type]||1)*(stA?BXS:1)*durMod(B.def)*(A.def.type==='atk'&&B.def.type==='sta'?1.25:1)*(A.def.type==='sta'&&(B.def.type==='atk'||B.def.type==='def')?1/0.7:1));
   }
   if(bA.k==='thunder')B.s-=0.04*(A.def.type==='atk'?0.5:1);if(bB.k==='thunder')A.s-=0.04*(B.def.type==='atk'?0.5:1);if(bA.k==='ice')B.s-=impact*0.003;if(bB.k==='ice')A.s-=impact*0.003;
   A.charge=Math.min(1,A.charge+impact*0.009*chgMul(A));B.charge=Math.min(1,B.charge+impact*0.009*chgMul(B));
@@ -2233,26 +2233,26 @@ function drawSplit(dt){
   }else if(ov.mode==='open'&&t>=0.5){ov.mode=null}
 }
 function cutIn(T){
-  const isP=T===P;cutIns.push({isP,t:0,name:T.def.special,who:isP?pName:eName,av:isP?pAv:eAv});
+  const isP=T===P;cutIns.push({isP,t:0,mini:Math.random()<0.5,name:T.def.special,who:isP?pName:eName,av:isP?pAv:eAv});
   sayZh(T.def.special);
 }
 function drawCutIns(dt){
   const g=cg,W=CW,H=CH;
   for(let i=cutIns.length-1;i>=0;i--){
-    const c=cutIns[i];c.t+=dt;if(c.t>1.45){cutIns.splice(i,1);continue}
-    const bh=Math.min(H*0.26,230),cy=c.isP?H*0.6:H*0.34,sk=bh*0.35,y0=cy-bh/2,y1=cy+bh/2;
+    const c=cutIns[i];c.t+=dt;if(c.t>(c.mini?1.2:1.45)){cutIns.splice(i,1);continue}
+    const M=c.mini,bh=M?Math.min(H*0.12,100):Math.min(H*0.26,230),cy=M?(c.isP?H*0.82:H*0.17):c.isP?H*0.6:H*0.34,sk=bh*0.35,y0=cy-bh/2,y1=cy+bh/2,xa=M&&!c.isP?W*0.36:-30,xb=M&&c.isP?W*0.64:W+30;
     const tin=Math.min(1,c.t/0.16),tout=Math.max(0,(c.t-1.2)/0.25);
     const ox=c.isP?(-(1-easeOut(tin))*W+easeIn(tout)*W):((1-easeOut(tin))*W-easeIn(tout)*W);
     g.save();g.translate(ox,0);
-    pth(g,[-30,y0+sk*0.3-8,W+30,y0-sk*0.3-8,W+30,y1-sk*0.3+8,-30,y1+sk*0.3+8]);g.fillStyle='#ffc83d';g.fill();
-    pth(g,[-30,y0+sk*0.3,W+30,y0-sk*0.3,W+30,y1-sk*0.3,-30,y1+sk*0.3]);g.save();g.clip();
+    pth(g,[xa,y0+sk*0.3-8,xb,y0-sk*0.3-8,xb,y1-sk*0.3+8,xa,y1+sk*0.3+8]);g.fillStyle='#ffc83d';g.fill();
+    pth(g,[xa,y0+sk*0.3,xb,y0-sk*0.3,xb,y1-sk*0.3,xa,y1+sk*0.3]);g.save();g.clip();
     const gr=g.createLinearGradient(0,y0,0,y1);gr.addColorStop(0,c.isP?'#123a9a':'#8a1020');gr.addColorStop(1,c.isP?'#2f8bff':'#ff4b3a');g.fillStyle=gr;g.fillRect(-30,y0-sk,W+60,bh+2*sk);
     g.strokeStyle='rgba(255,255,255,.35)';g.lineCap='round';const r=rng(9);
     for(let k=0;k<26;k++){const yy=y0-sk*0.3+r()*(bh+sk*0.6),len=40+r()*160,x=((r()*W+(c.isP?1:-1)*c.t*W*2.2)%(W+400)+W+400)%(W+400)-200;g.lineWidth=1+r()*4;g.beginPath();g.moveTo(x,yy);g.lineTo(x+len,yy);g.stroke()}
-    const bx=c.isP?W*0.16:W*0.84,u=bh*0.58,shk=c.t<0.7?(Math.random()-.5)*6:0;
+    const bx=M?(c.isP?W*0.09:W*0.91):c.isP?W*0.16:W*0.84,u=bh*0.58,shk=c.t<0.7?(Math.random()-.5)*6:0;
     g.save();g.translate(bx+shk,cy-bh*0.02+2.12*u+shk);g.scale(c.isP?u:-u,u);drawChar(g,c.av,{pose:'shout',t:c.t});g.restore();
     g.restore();
-    const fs=Math.min(bh*0.3,W*0.09),pop=1+0.35*(1-easeOut(tin)),tx=c.isP?W*0.42:W*0.58,al=c.isP?'left':'right';
+    const fs=M?Math.min(bh*0.34,W*0.058):Math.min(bh*0.3,W*0.09),pop=1+0.35*(1-easeOut(tin)),tx=M?(c.isP?W*0.2:W*0.8):c.isP?W*0.42:W*0.58,al=c.isP?'left':'right';
     g.save();g.translate(tx,cy+fs*0.35);g.scale(pop,pop);g.transform(1,0,-0.18,1,0,0);
     label(g,c.name+'！',0,0,fs,al,'#fff3a0');label(g,c.who+' 吶喊',0,-fs*1.05,fs*0.42,al,'#ffffff');g.restore();
     g.restore();
@@ -2462,6 +2462,7 @@ function renderBox(box){
   let h=`<div class="shr"><div><b>🎁 零件盲盒</b><small>隨機抽到一顆陀螺的一個零件（外環／重量盤／軸心／紋章）<br>機率：青銅 50%・傳說 35%・神聖 15%；抽到重複退 20 幣</small></div><button class="mini ${coins<BOX_PRICE?'no':''}" data-a="box" type="button">${BOX_PRICE} 幣</button></div>`;
   h+=`<div class="note" style="font-size:12px">已收集零件：${ownedParts.size} 個（擁有的陀螺本身的 4 個零件也能拿來組裝）</div><div class="shH">能力增幅道具</div>`;
   for(const k in BOOST_ITEMS){const it=BOOST_ITEMS[k];h+=`<div class="shr"><div><b>${it.n}　持有 ${inv[k]||0}</b><small>${it.d}　每顆陀螺最多強化 ${BOOST_BUDGET} 點，單項上限 ${BOOST_MAX}</small></div><button class="mini ${coins<it.pr?'no':''}" data-a="buyb" data-id="${k}" type="button">${it.pr} 幣</button></div>`}
+  h+='<div class="shH">⚡ 必殺技雷電（買顏色、升欄位、裝備都在這裡）</div>'+boltHTML();
   box.innerHTML=h}
 function partsOf(cat){const ids=new Set();for(const d of TOPS)if(!d.custom&&hasPart(d.id+':'+cat))ids.add(d.id+':'+cat);return [...ids].sort((a,b)=>TIER_ORD[partTop(a).tier]-TIER_ORD[partTop(b).tier])}
 function renderAsm(box){
@@ -2489,6 +2490,25 @@ function boltHTML(){let h=`<div class="note" style="font-size:12px">放必殺技
   for(const [id,n,c,pr] of BOLT_COLORS){const own=boltS.own.includes(id),on=boltS.equip.includes(id);
     h+=`<div class="shr"><div style="display:flex;gap:8px;align-items:center"><i style="width:22px;height:22px;border-radius:50%;background:${c};box-shadow:0 0 12px ${c};display:inline-block"></i><div><b>${n}</b><small>${own?(on?'已配置':'已擁有'):'還沒買'}</small></div></div>${own?`<button class="mini" data-a="beq" data-id="${id}" type="button">${on?'卸下':'配置'}</button>`:`<button class="mini ${coins<pr?'no':''}" data-a="bbuy" data-id="${id}" type="button">${pr} 幣</button>`}</div>`}
   return h}
+function boltPick(){const own=boltS.own.map(id=>BOLT_COLORS.find(c=>c[0]===id));
+  let h=`<div class="note" style="font-size:12px">上面的預覽會旋轉，並帶著你目前裝備的雷電。最多可以裝備 ${boltS.slots} 種顏色（共 ${[7,11,15][boltS.slots-1]} 道）。沒有裝備時用陀螺原本的雷電色。<br>想買新顏色或升級欄位，到「盲盒・道具」分頁。</div>`;
+  h+=`<div class="shr"><div><b>已裝備　${boltS.equip.length}／${boltS.slots}</b><small>${boltS.equip.length?boltS.equip.map(id=>BOLT_COLORS.find(c=>c[0]===id)[1]).join('、'):'（沿用陀螺原本的雷電）'}</small></div></div>`;
+  if(!own.length)h+='<div class="note">還沒買任何雷電顏色。</div>';
+  for(const [id,n,c] of own){const on=boltS.equip.includes(id);h+=`<div class="shr"><div style="display:flex;gap:8px;align-items:center"><i style="width:22px;height:22px;border-radius:50%;background:${c};box-shadow:0 0 12px ${c};display:inline-block"></i><b>${n}</b></div><button class="mini" data-a="beq" data-id="${id}" type="button">${on?'卸下':'裝備'}</button></div>`}
+  return h}
+let boltAnim=0;
+function startBoltPrev(cv,def){const my=++boltAnim,off=document.createElement('canvas');off.width=off.height=cv.width;drawIcon(off,def);
+  const g=cv.getContext('2d'),W=cv.width;let ang=0,last=performance.now(),seed=0,tAcc=0,bolts=[];
+  const cols=()=>boltS.equip.length?boltS.equip.map(id=>BOLT_COLORS.find(c=>c[0]===id)[2]):[hex(def.accent)];
+  const mk=()=>{const n=[7,11,15][boltS.slots-1],cs=cols();bolts=[];for(let i=0;i<n;i++){const a=i/n*Math.PI*2+Math.random()*0.3,pts=[],len=0.2+Math.random()*0.22;let r=0.44;for(let k=0;k<5;k++){pts.push([Math.cos(a+(Math.random()-.5)*0.25*k)*r*W,Math.sin(a+(Math.random()-.5)*0.25*k)*r*W]);r+=len/4}bolts.push({pts,c:cs[i%cs.length]})}};
+  mk();
+  const step=now=>{if(my!==boltAnim||!document.body.contains(cv)||shTab!=='style'||wz.step!==10)return;
+    const dt=Math.min(0.05,(now-last)/1000);last=now;ang+=dt*9;tAcc+=dt;if(tAcc>0.07){tAcc=0;mk()}
+    g.clearRect(0,0,W,W);g.save();g.translate(W/2,W/2);g.scale(0.68,0.68);g.rotate(ang);g.drawImage(off,-W/2,-W/2);g.restore();
+    g.save();g.translate(W/2,W/2);g.scale(0.68,0.68);g.lineCap='round';g.lineJoin='round';
+    for(const b of bolts){g.strokeStyle=b.c;g.shadowColor=b.c;g.shadowBlur=10;g.lineWidth=W*0.022;g.beginPath();b.pts.forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.stroke();g.shadowBlur=0;g.strokeStyle='#fff';g.lineWidth=W*0.008;g.stroke()}
+    g.restore();requestAnimationFrame(step)};
+  requestAnimationFrame(step)}
 function renderStyle(box){
   const mine=TOPS.filter(t=>owns(t));
   if(wz.step>0&&!mine.some(t=>t.id===wz.id))wz.step=0;
@@ -2530,9 +2550,9 @@ function renderStyle(box){
     if(!cs)h+='<div class="note">還沒貼主貼紙，請按「上一步」先選一個貼紙。</div>';
     else{h+='<div class="pset">'+pb('stk2','none','不疊',!cs.k2)+STK.filter(x=>x[0]!=='blank').map(([x,n])=>pb('stk2',x,n,cs.k2===x)).join('')+'</div>';
       if(cs.k2)h+='<div class="shH">副貼紙顏色</div>'+swH('stkc2',cs.c2,'#ffffff')}}
-  else h+=boltHTML();
+  else h+=boltPick();
   if(k>=1&&k<=9)h+=`<div class="pset" style="margin-top:10px"><button type="button" class="pbtn" data-a="wzreset" data-id="${k}">↺ 這一步全部清除</button></div>`;
-  box.innerHTML=h;drawIcon(box.querySelector('#stCv'),def)
+  box.innerHTML=h;if(k===10)startBoltPrev(box.querySelector('#stCv'),def);else{boltAnim++;drawIcon(box.querySelector('#stCv'),def)}
 }
 function renderBoost(box){
   const mine=TOPS.map((t,i)=>[t,i]).filter(([t])=>owns(t));if(!mine.some(([,i])=>i===bsSel))bsSel=mine[0][1];
