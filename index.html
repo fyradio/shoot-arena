@@ -431,7 +431,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.22.2</div>
+  <div class="ver">v1.22.3</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2563,7 +2563,7 @@ function updatePLine(T){const arr=PL[T.side],hist=T.hist,on=hist&&T.histT>0;
     const pts=hist.slice(-46),n=pts.length+(T.sp&&T.sp.kind==='path'?1:0);let v=0;
     for(let i=0;i<n;i++){const q=i<pts.length?pts[i]:[T.x,T.z];o.pos[v++]=q[0]+o.ox;o.pos[v++]=groundHc(q[0],q[1])+0.28;o.pos[v++]=q[1]+o.oz}
     o.g.attributes.position.needsUpdate=true;o.g.setDrawRange(0,n);
-    o.m.color.setHex(T.def.accent);if(o.core)o.m.color.lerp(WHT,0.2);o.m.opacity=Math.min(1,T.histT*1.4)*(o.core?0.95:0.6)}}
+    o.m.color.setHex(T.def.accent);o.m.opacity=Math.min(1,T.histT*1.4)*(o.core?0.95:0.6)}}
 function updateModel(T,dt,rdt){
   const M=T.model;if(!M)return;
   const r=Math.hypot(T.x,T.z),gy=groundHc(T.x,T.z);
@@ -2595,7 +2595,7 @@ function updateModel(T,dt,rdt){
   if(bk==='light'){M.fx.light.rotation.y+=rdt*0.9;M.fx.light.material.opacity=0.45+0.3*Math.sin(now*6)}
   if(M.edge)M.edge.material.opacity=live?0.18+0.12*Math.sin(now*7):0;
   if(live&&T.sp){const c=topRGB(T),n=T.sp.kind==='strike'?6:T.sp.kind==='path'?9:4;for(let i=0;i<n;i++)trailP(T.x+(Math.random()-.5)*0.5,y+0.5+Math.random()*0.4,T.z+(Math.random()-.5)*0.5,Math.random()<0.3?bodyRGB(T):c);
-    M.aura.material.color.setHex(T.def.accent);M.aura.material.opacity=0.22}
+    M.aura.material.color.setHex(T.def.accent);M.aura.material.opacity=0.06}
   if(live&&T.storm>0){const c=topRGB(T);for(let i=0;i<5;i++){const a=now*9+i*1.256,hh=((now*1.6+i*0.2)%1),rr=0.6+hh*2.4;trailP(T.x+Math.sin(a+hh*6)*rr,y+0.2+hh*3,T.z+Math.cos(a+hh*6)*rr,i%2?c:bodyRGB(T))}}
   if(M.fx.shell){M.fx.shell.visible=live&&T.shell>0;if(M.fx.shell.visible){M.fx.shell.rotation.y+=rdt*1.5;M.fx.shell.material.opacity=0.5+0.25*Math.sin(now*8)}}
   T.spGlow=Math.max(0,(T.spGlow||0)-dt);
@@ -2610,9 +2610,9 @@ function updateModel(T,dt,rdt){
         for(let i=0;i<NS;i++){const f=i/(NS-1)*8,k=Math.min(7,Math.floor(f)),u=f-k,o=k*3;
           const x=cp[o]+(cp[o+3]-cp[o])*u,y=cp[o+1]+(cp[o+4]-cp[o+1])*u,z=cp[o+2]+(cp[o+5]-cp[o+2])*u;
           pos[v]=x;pos[v+1]=y;pos[v+2]=z;cpos[v]=x;cpos[v+1]=y;cpos[v+2]=z;
-          col[v]=c.r*fl;col[v+1]=c.g*fl;col[v+2]=c.b*fl;ccol[v]=(0.12+c.r*0.88)*fl;ccol[v+1]=(0.12+c.g*0.88)*fl;ccol[v+2]=(0.12+c.b*0.88)*fl;v+=3}}
+          col[v]=c.r*fl*0.7;col[v+1]=c.g*fl*0.7;col[v+2]=c.b*fl*0.7;ccol[v]=(0.03+c.r*0.8)*fl;ccol[v+1]=(0.03+c.g*0.8)*fl;ccol[v+2]=(0.03+c.b*0.8)*fl;v+=3}}
       for(const ch of M.orbit.children){ch.geometry.attributes.position.needsUpdate=true;ch.geometry.attributes.color.needsUpdate=true}
-      M.glowL.color.copy(pal[Math.floor(now*6)%pal.length]);M.glowL.intensity=0.5+Math.random()*0.5}
+      M.glowL.color.copy(pal[Math.floor(now*6)%pal.length]);M.glowL.intensity=0.15+Math.random()*0.15}
     else M.glowL.intensity=0}
 }
 
