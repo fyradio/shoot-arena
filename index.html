@@ -441,7 +441,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.26.0</div>
+  <div class="ver">v1.27.0</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -1713,6 +1713,16 @@ function updateSparks(dt){
     const f=Math.max(0,Math.min(1,spLife[i]*2.5));spCol[i*3]=spBase[i*3]*f;spCol[i*3+1]=spBase[i*3+1]*f;spCol[i*3+2]=spBase[i*3+2]*f}
   spGeo.attributes.position.needsUpdate=true;spGeo.attributes.color.needsUpdate=true;
 }
+/* 星魄爆發：粉紅氣焰（獨立粒子池，不佔用火花池） */
+const KP=900,kPos=new Float32Array(KP*3),kCol=new Float32Array(KP*3),kVel=new Float32Array(KP*3),kLife=new Float32Array(KP),kMax=new Float32Array(KP),kBase=new Float32Array(KP*3);let kI=0;
+const kGeo=new THREE.BufferGeometry();kGeo.setAttribute('position',new THREE.BufferAttribute(kPos,3));kGeo.setAttribute('color',new THREE.BufferAttribute(kCol,3));
+{const kp=new THREE.Points(kGeo,new THREE.PointsMaterial({size:0.55,map:glowTex,vertexColors:true,transparent:true,opacity:0.85,blending:THREE.AdditiveBlending,depthWrite:false}));kp.frustumCulled=false;scene.add(kp)}
+const KI_COL=[[0.95,0.28,0.75],[1.0,0.45,0.9],[0.8,0.2,0.85],[1.0,0.75,0.98]];
+function kiP(x,y,z,vx,vy,vz,life,c){const i=kI;kI=(kI+1)%KP;kPos[i*3]=x;kPos[i*3+1]=y;kPos[i*3+2]=z;kVel[i*3]=vx;kVel[i*3+1]=vy;kVel[i*3+2]=vz;kLife[i]=kMax[i]=life;kBase[i*3]=c[0];kBase[i*3+1]=c[1];kBase[i*3+2]=c[2]}
+function updateKi(dt){for(let i=0;i<KP;i++){if(kLife[i]<=0){kCol[i*3]=kCol[i*3+1]=kCol[i*3+2]=0;continue}
+  kLife[i]-=dt;const d=Math.max(0,1-1.6*dt);kVel[i*3]*=d;kVel[i*3+2]*=d;kPos[i*3]+=kVel[i*3]*dt;kPos[i*3+1]+=kVel[i*3+1]*dt;kPos[i*3+2]+=kVel[i*3+2]*dt;
+  const f=Math.max(0,Math.min(1,kLife[i]/kMax[i]*1.6));kCol[i*3]=kBase[i*3]*f;kCol[i*3+1]=kBase[i*3+1]*f;kCol[i*3+2]=kBase[i*3+2]*f}
+  kGeo.attributes.position.needsUpdate=true;kGeo.attributes.color.needsUpdate=true}
 const waves=[];for(let i=0;i<6;i++){const m=new THREE.Mesh(new THREE.RingGeometry(0.8,1,48),new THREE.MeshBasicMaterial({color:0xffe08a,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));m.rotation.x=-Math.PI/2;scene.add(m);waves.push({m,t:9})}
 let fxC=null;function fxPick(){return fxC?fxC[Math.floor(Math.random()*fxC.length)]:null}
 let waveI=0;function shock(x,y,z,s){const w=waves[waveI++%waves.length];w.m.position.set(x,y,z);w.t=0;w.s=s;const c=fxPick();w.m.material.color.setHex(c==null?0xffe08a:c)}
@@ -2598,7 +2608,7 @@ function drawSplit(dt){
   }else if(ov.mode==='open'&&t>=0.5){ov.mode=null}
 }
 function cutIn(T){
-  const isP=T===P;cutIns.push({isP,t:0,mini:Math.random()<0.5,name:T.def.special,who:isP?pName:eName,av:isP?pAv:eAv});
+  const isP=T===P;cutIns.push({isP,t:0,mini:Math.random()<0.5,name:T.def.special,ki:isCA(T),who:isP?pName:eName,av:isP?pAv:eAv});
   sayZh(T.def.special);
 }
 function drawCutIns(dt){
@@ -2619,7 +2629,7 @@ function drawCutIns(dt){
     g.restore();
     const fs=M?Math.min(bh*0.34,W*0.058):Math.min(bh*0.3,W*0.09),pop=1+0.35*(1-easeOut(tin)),tx=M?(c.isP?W*0.2:W*0.8):c.isP?W*0.42:W*0.58,al=c.isP?'left':'right';
     g.save();g.translate(tx,cy+fs*0.35);g.scale(pop,pop);g.transform(1,0,-0.18,1,0,0);
-    label(g,c.name+'！',0,0,fs,al,'#fff3a0');label(g,c.who+' 吶喊',0,-fs*1.05,fs*0.42,al,'#ffffff');g.restore();
+    label(g,c.name+'！',0,0,fs,al,'#fff3a0');if(c.ki)label(g,'星魄爆發',0,fs*0.62,fs*0.5,al,'#ff8fe0');label(g,c.who+' 吶喊',0,-fs*1.05,fs*0.42,al,'#ffffff');g.restore();
     g.restore();
   }
 }
@@ -2749,6 +2759,13 @@ function updateModel(T,dt,rdt){
   if(M.edge)M.edge.material.opacity=live?0.18+0.12*Math.sin(now*7):0;
   if(live&&T.sp){const c=topRGB(T),n=T.sp.kind==='strike'?6:T.sp.kind==='path'?9:4;for(let i=0;i<n;i++)trailP(T.x+(Math.random()-.5)*0.5,y+0.5+Math.random()*0.4,T.z+(Math.random()-.5)*0.5,Math.random()<0.3?bodyRGB(T):c);
     M.aura.material.color.setHex(T.def.accent);M.aura.material.opacity=0.06}
+  if(live&&isCA(T)&&(T.sp||T.chain||T.spGlow>0)){
+    /* 轉動中的環形粉紅氣焰＋沿軌跡留下的殘火 */
+    const N=reduce?5:9,w=now*9,sp=Math.hypot(T.vx,T.vz);
+    for(let i=0;i<N;i++){const a=w+i*6.2832/N+Math.random()*0.25,r=Math.max(0.35,Math.min(0.7,0.525+0.175*Math.sin(now*3.4+i*6.2832/N)+(Math.random()-.5)*0.04)),tv=1.9;
+      kiP(T.x+Math.sin(a)*r,y+0.12+Math.random()*0.15,T.z+Math.cos(a)*r,Math.cos(a)*tv+T.vx*0.5,2.2+Math.random()*1.8,-Math.sin(a)*tv+T.vz*0.5,0.34+Math.random()*0.22,KI_COL[(Math.random()*4)|0])}
+    for(let i=0;i<(reduce?1:3);i++){const a=Math.random()*6.283,r=Math.random()*0.4;kiP(T.x+Math.sin(a)*r,y+0.1,T.z+Math.cos(a)*r,(Math.random()-.5)*0.6,0.5+Math.random()*1.1,(Math.random()-.5)*0.6,0.85+Math.random()*0.5,KI_COL[(Math.random()*3)|0])}
+    if(sp>2&&Math.random()<0.8)kiP(T.x-T.vx*0.06,y+0.2,T.z-T.vz*0.06,0,0.8,0,1.0,KI_COL[1])}
   if(live&&T.storm>0){const c=topRGB(T);for(let i=0;i<5;i++){const a=now*9+i*1.256,hh=((now*1.6+i*0.2)%1),rr=0.6+hh*2.4;trailP(T.x+Math.sin(a+hh*6)*rr,y+0.2+hh*3,T.z+Math.cos(a+hh*6)*rr,i%2?c:bodyRGB(T))}}
   if(M.fx.shell){M.fx.shell.visible=live&&T.shell>0;if(M.fx.shell.visible){M.fx.shell.rotation.y+=rdt*1.5;M.fx.shell.material.opacity=0.5+0.25*Math.sin(now*8)}}
   T.spGlow=Math.max(0,(T.spGlow||0)-dt);
@@ -3542,7 +3559,7 @@ function frame(now){
     if(phase==='battle'||phase==='ending')humSet(P.state==='spin'?P.s:0,P.state==='spin');
     if(REC&&(phase==='battle'||phase==='ending')){recT+=rdt;recFrame()}
   }else if(phase==='replay')rpTick(rdt);
-  updateModel(P,dt,rdt);updateModel(E,dt,rdt);updateSparks(dt);updateWaves(dt);updateDebris(dt);updateArcs(dt);trackTick(dt,phase==='battle'||phase==='watch');updateItems(dt);if(phase==='battle'||phase==='ending'||phase==='watch')wallTick(battleT);updateWallViews(battleT,phase==='battle'||phase==='watch');updateFieldViews(dt,phase==='battle');
+  updateModel(P,dt,rdt);updateModel(E,dt,rdt);updateSparks(dt);updateKi(dt);updateWaves(dt);updateDebris(dt);updateArcs(dt);trackTick(dt,phase==='battle'||phase==='watch');updateItems(dt);if(phase==='battle'||phase==='ending'||phase==='watch')wallTick(battleT);updateWallViews(battleT,phase==='battle'||phase==='watch');updateFieldViews(dt,phase==='battle');
   if(phase!=='menu')hudTick();
   overlayTick(rdt);if(AC&&mus.g)setMusic(musicForPhase());if(crOpen)drawCreator(rdt);
   shake*=Math.pow(0.02,rdt);
