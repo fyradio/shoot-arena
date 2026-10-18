@@ -431,7 +431,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.23.1</div>
+  <div class="ver">v1.23.2</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -1208,7 +1208,7 @@ function ringGeo(def){
 }
 const glyphCanvases=[];
 
-const STK=[['blank','素面'],['star','星星'],['heart','愛心'],['flame','火焰'],['bolt','閃電'],['crown','皇冠'],['moon','月亮'],['sun','太陽'],['flower','花朵'],['paw','肉球'],['smile','笑臉'],['eye','魔眼'],['spiral','漩渦'],['shield','盾牌'],['rainbow','彩虹圈'],['yin','太極'],['clover','四葉草'],['target','靶心'],['gem','寶石'],['ghost','小幽靈'],['asanoha','麻の葉'],['ichimatsu','市松'],['uroko','鱗紋'],['seigaiha','青海波'],['shippo','七寶'],['butterfly','蝴蝶'],['fuji','藤花'],['nichirin','日輪'],['inazuma','稻妻'],['shuriken','手裏劍'],['magatama','勾玉'],['kitsune','狐面'],['oni','鬼面'],['katana','交叉刀']];
+const STK=[['blank','素面'],['suzaku','朱雀鳳凰'],['star','星星'],['heart','愛心'],['flame','火焰'],['bolt','閃電'],['crown','皇冠'],['moon','月亮'],['sun','太陽'],['flower','花朵'],['paw','肉球'],['smile','笑臉'],['eye','魔眼'],['spiral','漩渦'],['shield','盾牌'],['rainbow','彩虹圈'],['yin','太極'],['clover','四葉草'],['target','靶心'],['gem','寶石'],['ghost','小幽靈'],['asanoha','麻の葉'],['ichimatsu','市松'],['uroko','鱗紋'],['seigaiha','青海波'],['shippo','七寶'],['butterfly','蝴蝶'],['fuji','藤花'],['nichirin','日輪'],['inazuma','稻妻'],['shuriken','手裏劍'],['magatama','勾玉'],['kitsune','狐面'],['oni','鬼面'],['katana','交叉刀']];
 let stk=load('v2stk')||{};
 let drw=load('v2drw')||{};const drwIm={};
 function drwImg(id){let im=drwIm[id];if(!im){im=drwIm[id]=new Image();im.onload=()=>{refreshGlyphs();const cv=document.getElementById('stCv');if(cv&&typeof stkTop!=='undefined'&&TOPS[stkTop])drawIcon(cv,TOPS[stkTop])};if(drw[id])im.src=drw[id].png}return im}
@@ -1216,6 +1216,20 @@ function drawSticker(g,k,col,cx,cy,r){
   g.save();g.translate(cx,cy);g.scale(r,r);g.lineJoin='round';g.lineCap='round';g.fillStyle=col;g.strokeStyle='#1b1630';g.lineWidth=0.07;
   const TAU=Math.PI*2,poly=(pts)=>{g.beginPath();pts.forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.closePath();g.fill();g.stroke()};
   if(k&&k[0]==='d'&&k[1]===':'){const im=drwImg(k.slice(2));if(im.complete&&im.naturalWidth){g.save();g.beginPath();g.arc(0,0,0.95,0,TAU);g.clip();g.drawImage(im,-0.95,-0.95,1.9,1.9);g.restore()}else{g.globalAlpha=0.3;g.beginPath();g.arc(0,0,0.9,0,TAU);g.fill();g.globalAlpha=1}}
+  else if(k==='suzaku'){g.lineWidth=0.045;
+    const fe=(x0,y0,x1,y1,w,c)=>{g.fillStyle=c;g.beginPath();g.moveTo(x0,y0);g.quadraticCurveTo(x0+(x1-x0)*0.5+w,y0+(y1-y0)*0.5,x1,y1);g.quadraticCurveTo(x0+(x1-x0)*0.5-w,y0+(y1-y0)*0.5,x0,y0);g.closePath();g.fill();g.stroke()};
+    fe(0,0.25,0,0.98,0.1,'#ff7a1a');fe(0.04,0.25,0.34,0.95,0.13,col);fe(-0.04,0.25,-0.34,0.95,0.13,col);fe(0.06,0.2,0.62,0.78,0.12,'#ffd23d');fe(-0.06,0.2,-0.62,0.78,0.12,'#ffd23d');
+    for(const sg of [-1,1]){
+      g.fillStyle=col;g.beginPath();g.moveTo(sg*0.1,0.05);g.bezierCurveTo(sg*0.4,-0.18,sg*0.86,-0.22,sg*0.98,-0.82);g.lineTo(sg*0.8,-0.52);g.lineTo(sg*0.9,-0.28);g.lineTo(sg*0.66,-0.16);g.lineTo(sg*0.74,0.08);g.lineTo(sg*0.46,0.1);g.lineTo(sg*0.54,0.32);g.lineTo(sg*0.12,0.26);g.closePath();g.fill();g.stroke();
+      g.fillStyle='#ffd23d';g.beginPath();g.moveTo(sg*0.12,0.06);g.bezierCurveTo(sg*0.38,-0.1,sg*0.66,-0.14,sg*0.78,-0.55);g.lineTo(sg*0.62,-0.2);g.lineTo(sg*0.56,0.02);g.lineTo(sg*0.34,0.06);g.lineTo(sg*0.36,0.2);g.lineTo(sg*0.14,0.18);g.closePath();g.fill();
+      g.strokeStyle='rgba(27,22,48,.6)';g.lineWidth=0.025;g.beginPath();g.moveTo(sg*0.34,-0.02);g.lineTo(sg*0.74,-0.34);g.moveTo(sg*0.5,0.18);g.lineTo(sg*0.84,-0.04);g.stroke();g.strokeStyle='#1b1630';g.lineWidth=0.045}
+    g.fillStyle='#ff5a1a';g.beginPath();g.ellipse(0,0.08,0.17,0.4,0,0,TAU);g.fill();g.stroke();
+    g.fillStyle='#ffd23d';g.beginPath();g.ellipse(0,0.14,0.08,0.24,0,0,TAU);g.fill();
+    g.fillStyle='#ff3b2f';for(const [x,y,h,w] of [[0,-0.5,0.46,0.07],[-0.11,-0.46,0.3,0.06],[0.11,-0.46,0.3,0.06]]){g.beginPath();g.moveTo(x-w,y);g.quadraticCurveTo(x+(x?x*0.8:0.05),y-h*0.6,x*1.8,y-h);g.quadraticCurveTo(x+w*0.4,y-h*0.3,x+w,y);g.closePath();g.fill();g.stroke()}
+    g.fillStyle='#ff7a1a';g.beginPath();g.arc(0,-0.38,0.16,0,TAU);g.fill();g.stroke();
+    g.fillStyle='#ffd23d';g.beginPath();g.moveTo(-0.06,-0.33);g.lineTo(0.06,-0.33);g.lineTo(0,-0.19);g.closePath();g.fill();g.stroke();
+    g.fillStyle='#fff';g.strokeStyle='#1b1630';g.lineWidth=0.03;for(const sg of [-1,1]){g.beginPath();g.moveTo(sg*0.03,-0.4);g.lineTo(sg*0.12,-0.45);g.lineTo(sg*0.11,-0.37);g.closePath();g.fill();g.stroke()}
+  }
   else if(k==='blank'){g.beginPath();g.arc(0,0,0.92,0,TAU);g.fill();g.stroke()}
   else if(k==='star'){const p=[];for(let i=0;i<10;i++){const a=-Math.PI/2+i/10*TAU,rr=i%2?0.42:0.95;p.push([Math.cos(a)*rr,Math.sin(a)*rr])}poly(p)}
   else if(k==='heart'){g.beginPath();g.moveTo(0,0.85);g.bezierCurveTo(-1.1,0.1,-0.7,-0.85,0,-0.35);g.bezierCurveTo(0.7,-0.85,1.1,0.1,0,0.85);g.closePath();g.fill();g.stroke()}
