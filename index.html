@@ -441,7 +441,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.29.2</div>
+  <div class="ver">v1.29.3</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -3150,8 +3150,10 @@ window.openDrawEd=function(baseId,onDone){
    <div class="dr" id="dAst"></div><div class="dr" id="dAct"></div></div>`;
   document.body.appendChild(root);
   const $=id=>root.querySelector('#'+id),cv=$('dCv'),g=cv.getContext('2d',{willReadFrequently:true}),bg=$('dBg'),bgg=bg.getContext('2d');
-  function fit(){const w=root.querySelector('.dw'),s=Math.max(120,Math.min(w.clientWidth-8,w.clientHeight-8));$('dBox').style.width=$('dBox').style.height=s+'px'}
-  fit();addEventListener('resize',fit);
+  function fit(){const w=root.querySelector('.dw'),s=Math.floor(Math.max(120,Math.min(w.clientWidth-8,w.clientHeight-8)));$('dBox').style.width=$('dBox').style.height=s+'px';
+    /* 兩張畫布都用明確的像素大小，避免 iOS 把畫布高度算成比例（畫出來的圖會被壓扁、往上移） */
+    for(const c of [cv,bg]){c.style.position='absolute';c.style.left=c.style.top='0';c.style.width=c.style.height=s+'px';c.style.display='block'}}
+  fit();addEventListener('resize',fit);requestAnimationFrame(fit);setTimeout(fit,250);if(window.ResizeObserver)new ResizeObserver(fit).observe(root.querySelector('.dw'));
   const snap=()=>g.getImageData(0,0,N,N);
   const push=()=>{S.und.push(snap());if(S.und.length>25)S.und.shift();S.red.length=0;btns()};
   function drawBg(){
@@ -3189,7 +3191,7 @@ window.openDrawEd=function(baseId,onDone){
   }
   /* 指標 */
   let drawing=false,raw=[],sm=null,pp=[],base=null;
-  const pos=e=>{const r=cv.getBoundingClientRect();return [(e.clientX-r.left)/r.width*N,(e.clientY-r.top)/r.height*N]};
+  const pos=e=>{const r=cv.getBoundingClientRect();return [(e.clientX-r.left)/(r.width||1)*N,(e.clientY-r.top)/(r.height||1)*N]};
   cv.addEventListener('pointerdown',e=>{
     e.preventDefault();const p=pos(e);
     if(S.tool==='fill'){push();const seeds=TS().map(t=>t.f(p[0],p[1]));for(const s of seeds)fill(s);return}
