@@ -431,7 +431,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.22.4</div>
+  <div class="ver">v1.22.5</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2605,8 +2605,8 @@ function updateModel(T,dt,rdt){
             cpos=M.orbit.children[1].geometry.attributes.position.array,ccol=M.orbit.children[1].geometry.attributes.color.array;
       const cp=[];let v=0;
       for(let b=0;b<NB;b++){
-        const dir=b%2?-1:1,span=1.55,base=dir*M.orbitPh*(1+0.15*(b%3))+b*Math.PI*2/NB,h0=0.6+0.35*Math.sin(M.orbitPh*1.1+b*1.7),c=pal[b%pal.length],fl=Math.random()<0.15?0.35:1;
-        cp.length=0;for(let k=0;k<9;k++){const f=k/8,a=base-span/2+span*f,e=(k===0||k===8)?0.3:1,r=1.5+(Math.random()-.5)*0.45*e;cp.push(Math.sin(a)*r,h0+(f-0.5)*0.5*dir+(Math.random()-.5)*0.4*e,Math.cos(a)*r)}
+        const dir=b%2?-1:1,span=1.55,base=dir*M.orbitPh*(1+0.15*(b%3))+b*Math.PI*2/NB,h0=0.5+0.28*Math.sin(M.orbitPh*1.1+b*1.7),c=pal[b%pal.length],fl=Math.random()<0.15?0.35:1;
+        cp.length=0;for(let k=0;k<9;k++){const f=k/8,a=base-span/2+span*f,e=(k===0||k===8)?0.3:1,r=0.98+(Math.random()-.5)*0.28*e;cp.push(Math.sin(a)*r,h0+(f-0.5)*0.5*dir+(Math.random()-.5)*0.4*e,Math.cos(a)*r)}
         for(let i=0;i<NS;i++){const f=i/(NS-1)*8,k=Math.min(7,Math.floor(f)),u=f-k,o=k*3;
           const x=cp[o]+(cp[o+3]-cp[o])*u,y=cp[o+1]+(cp[o+4]-cp[o+1])*u,z=cp[o+2]+(cp[o+5]-cp[o+2])*u;
           pos[v]=x;pos[v+1]=y;pos[v+2]=z;cpos[v]=x;cpos[v+1]=y;cpos[v+2]=z;
