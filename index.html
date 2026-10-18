@@ -361,8 +361,8 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
       <div class="big" id="reBig">—</div>
       <div class="note" id="reNote">—</div>
       <div class="score"><span class="y" id="reY">0</span> : <span class="r" id="reR">0</span></div>
-      <div class="note">點一下，下一回合</div>
-      <button class="btn ghost small" id="reRp" type="button">▶ 回放這一回合</button>
+      <button class="btn" id="reNext" type="button" style="width:100%;margin-top:6px">下一回合 ▶</button>
+      <button class="btn ghost" id="reRp" type="button" style="font-size:12px;padding:5px 12px;letter-spacing:.05em;margin:34px auto 0;display:block;opacity:.75">回放</button>
     </div>
   </section>
 
@@ -377,8 +377,8 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
         <div><b id="stSp">0</b><span>必殺技</span></div>
       </div>
       <div class="row" id="meRow"><button class="btn ghost" id="again" type="button">再來一場</button><button class="btn ghost" id="change" type="button">換陀螺</button></div>
-      <button class="btn ghost" id="meRp" type="button">▶ 回放最後一回合</button>
       <button class="btn" id="meNext" type="button" hidden>繼續</button>
+      <button class="btn ghost" id="meRp" type="button" style="font-size:12px;padding:5px 12px;letter-spacing:.05em;margin:30px auto 0;display:block;opacity:.75">回放</button>
     </div>
   </section>
 
@@ -431,7 +431,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.22.1</div>
+  <div class="ver">v1.22.2</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2009,7 +2009,7 @@ function showRoundEnd(){
   $('reBig').textContent=big;$('reNote').textContent=note;$('reY').textContent=score.P;$('reR').textContent=score.E;
   $('roundEnd').hidden=false;spShow(false);phase='round';if(!ended.draw)(ended.winner==='P'?sfx.ding:sfx.wall.bind(null,6))();
 }
-$('roundEnd').onclick=()=>{toLaunch()};
+$('reNext').onclick=e=>{e.stopPropagation();toLaunch()};
 /* ---------- 回放 ---------- */
 function rpClone(T){const o={};for(const k in T){if(k==='model'||k==='def')continue;const v=T[k];if(v===null||typeof v!=='object'&&typeof v!=='function')o[k]=v;else if(typeof v==='object'&&!v.isObject3D)o[k]=Array.isArray(v)?v.slice():Object.assign({},v)}return o}
 function rpPut(T,o){for(const k in o){const v=o[k];T[k]=v&&typeof v==='object'?(Array.isArray(v)?v.slice():Object.assign({},v)):v}}
