@@ -441,7 +441,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.27.2</div>
+  <div class="ver">v1.28.0</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -636,7 +636,7 @@ const BEATS={atk:'sta',sta:'def',def:'atk'};
 let emit=()=>{};let REC=null,rpOn=false,rpIdx=0,rpT=0,rpSave=null,recT=0;
 function bowlH(r){return 0.03*r*r}
 /* 星魄爆發：宇宙級攻擊型必殺中——減傷、打出耐久傷害加成、命中回耐久 */
-const AX={bx:1.6,guard:0.4,heal:0.012};const isCA=T=>T.def.tier==='cos'&&T.def.type==='atk'&&(T.awoke||T.bar2);let BXS=4.5,BALDEF=1;const BX={atk:7.5,bal:1,sta:4,def:1};
+const AX={bx:1.6,guard:0.4,heal:0.012};const isKi=T=>T.def.tier==='cos'&&(T.awoke||T.bar2),isCA=T=>isKi(T)&&T.def.type==='atk';let BXS=4.5,BALDEF=1;const BX={atk:7.5,bal:1,sta:4,def:1};
 const SPD={atk:1,bal:1.2,sta:1.35,def:1},INIT={atk:1.1,bal:1,sta:1.02,def:0.8};
 const TUNE={"p_red":0.91,"p_blue":1.125,"p_yellow":0.771,"p_green":0.79,"p_white":0.738,"p_black":0.893,"s_lyra":0.9,"s_aquila":1.067,"s_cassio":0.844,"s_orion":0.931,"s_ursa":1.418,"s_cygnus":0.88,"n_kage":1.094,"n_kaze":0.917,"n_hi":0.958,"n_mizu":0.895,"n_tsuchi":1.019,"n_rai":0.811,"phoenix":0.926,"tri_arrow":0.945,"b_seiryu":0.793,"b_byakko":0.921,"b_suzaku":0.914,"b_genbu":0.958,"m_ares":1.034,"m_titan":0.839,"m_raven":0.792,"m_raijin":1.219,"m_aegis":0.913,"m_zero":0.881,"g_aries":0.987,"g_taurus":0.793,"g_gemini":0.837,"g_leo":0.896,"g_scorpio":1.138,"g_sagitt":0.903,"d_red":1.041,"d_azure":0.765,"d_gold":0.802,"d_black":0.908,"d_white":0.88,"d_king":0.703,"k_masamune":0.808,"k_muramasa":1.229,"k_kiku":1.151,"k_onimaru":0.893,"k_monohoshi":0.923,"k_douji":0.909,"u_nova":1.222,"u_comet":2.5,"u_saber":1.383,"u_neutron":1.9,"u_halo":1.947,"u_bastion":1.12,"u_nebula":0.941,"u_aurora":0.582,"u_sirius":0.585,"u_hole":0.695,"u_pulsar":0.893,"u_eternal":0.498,"u_quasar":1.615,"u_gamma":0.776,"u_mars":2.3,"u_saturn":1.979,"u_jupiter":1.746,"u_dwarf":0.845,"u_moon":0.918,"u_andromeda":0.64,"u_string":0.9,"u_sun":0.944,"u_dark":0.563,"u_dust":0.615};
 const SPCAP=0.4;/* 單次必殺（含連擊）最多打掉防禦/耐久型這麼多耐久，開場必殺不會直接爆 */
@@ -1718,7 +1718,8 @@ function updateSparks(dt){
 const KP=900,kPos=new Float32Array(KP*3),kCol=new Float32Array(KP*3),kVel=new Float32Array(KP*3),kLife=new Float32Array(KP),kMax=new Float32Array(KP),kBase=new Float32Array(KP*3);let kI=0;
 const kGeo=new THREE.BufferGeometry();kGeo.setAttribute('position',new THREE.BufferAttribute(kPos,3));kGeo.setAttribute('color',new THREE.BufferAttribute(kCol,3));
 {const kp=new THREE.Points(kGeo,new THREE.PointsMaterial({size:0.55,map:glowTex,vertexColors:true,transparent:true,opacity:0.85,blending:THREE.AdditiveBlending,depthWrite:false}));kp.frustumCulled=false;scene.add(kp)}
-const KI_COL=[[0.95,0.28,0.75],[1.0,0.45,0.9],[0.8,0.2,0.85],[1.0,0.75,0.98]];
+const KI_SET={atk:[[1.0,0.2,0.15],[1.0,0.5,0.25],[0.9,0.1,0.2],[1.0,0.8,0.7]],sta:[[1.0,0.85,0.2],[1.0,0.95,0.5],[0.95,0.7,0.1],[1,1,0.85]],bal:[[0.25,1,0.4],[0.55,1,0.6],[0.15,0.85,0.35],[0.85,1,0.85]],def:[[0.25,0.5,1],[0.45,0.7,1],[0.2,0.4,0.95],[0.85,0.92,1]]};
+const KI_HEX={atk:'#ff6a5a',sta:'#ffe14a',bal:'#6dff8a',def:'#7ab8ff'};
 function kiP(x,y,z,vx,vy,vz,life,c){const i=kI;kI=(kI+1)%KP;kPos[i*3]=x;kPos[i*3+1]=y;kPos[i*3+2]=z;kVel[i*3]=vx;kVel[i*3+1]=vy;kVel[i*3+2]=vz;kLife[i]=kMax[i]=life;kBase[i*3]=c[0];kBase[i*3+1]=c[1];kBase[i*3+2]=c[2]}
 function updateKi(dt){for(let i=0;i<KP;i++){if(kLife[i]<=0){kCol[i*3]=kCol[i*3+1]=kCol[i*3+2]=0;continue}
   kLife[i]-=dt;const d=Math.max(0,1-1.6*dt);kVel[i*3]*=d;kVel[i*3+2]*=d;kPos[i*3]+=kVel[i*3]*dt;kPos[i*3+1]+=kVel[i*3+1]*dt;kPos[i*3+2]+=kVel[i*3+2]*dt;
@@ -2609,7 +2610,7 @@ function drawSplit(dt){
   }else if(ov.mode==='open'&&t>=0.5){ov.mode=null}
 }
 function cutIn(T){
-  const isP=T===P;cutIns.push({isP,t:0,mini:Math.random()<0.5,name:T.def.special,ki:isCA(T),who:isP?pName:eName,av:isP?pAv:eAv});
+  const isP=T===P;cutIns.push({isP,t:0,mini:Math.random()<0.5,name:T.def.special,ki:isKi(T)?T.def.type:null,who:isP?pName:eName,av:isP?pAv:eAv});
   sayZh(T.def.special);
 }
 function drawCutIns(dt){
@@ -2630,7 +2631,7 @@ function drawCutIns(dt){
     g.restore();
     const fs=M?Math.min(bh*0.34,W*0.058):Math.min(bh*0.3,W*0.09),pop=1+0.35*(1-easeOut(tin)),tx=M?(c.isP?W*0.2:W*0.8):c.isP?W*0.42:W*0.58,al=c.isP?'left':'right';
     g.save();g.translate(tx,cy+fs*0.35);g.scale(pop,pop);g.transform(1,0,-0.18,1,0,0);
-    label(g,c.name+'！',0,0,fs,al,'#fff3a0');if(c.ki)label(g,'星魄爆發',0,fs*0.62,fs*0.5,al,'#ff8fe0');label(g,c.who+' 吶喊',0,-fs*1.05,fs*0.42,al,'#ffffff');g.restore();
+    label(g,c.name+'！',0,0,fs,al,'#fff3a0');if(c.ki)label(g,'星魄爆發',0,fs*0.62,fs*0.5,al,KI_HEX[c.ki]||'#ff8fe0');label(g,c.who+' 吶喊',0,-fs*1.05,fs*0.42,al,'#ffffff');g.restore();
     g.restore();
   }
 }
@@ -2760,7 +2761,7 @@ function updateModel(T,dt,rdt){
   if(M.edge)M.edge.material.opacity=live?0.18+0.12*Math.sin(now*7):0;
   if(live&&T.sp){const c=topRGB(T),n=T.sp.kind==='strike'?6:T.sp.kind==='path'?9:4;for(let i=0;i<n;i++)trailP(T.x+(Math.random()-.5)*0.5,y+0.5+Math.random()*0.4,T.z+(Math.random()-.5)*0.5,Math.random()<0.3?bodyRGB(T):c);
     M.aura.material.color.setHex(T.def.accent);M.aura.material.opacity=0.06}
-  if(live&&isCA(T)&&(T.sp||T.chain||T.spGlow>0)){
+  if(live&&isKi(T)&&(T.sp||T.chain||T.spGlow>0)){const KI_COL=KI_SET[T.def.type]||KI_SET.atk;
     /* 轉動中的環形粉紅氣焰＋沿軌跡留下的殘火 */
     const N=reduce?2:5,w=now*9,sp=Math.hypot(T.vx,T.vz);
     for(let i=0;i<N;i++){const a=w+i*6.2832/N+Math.random()*0.25,r=Math.max(0.35,Math.min(0.7,0.525+0.175*Math.sin(now*3.4+i*6.2832/N)+(Math.random()-.5)*0.04)),tv=1.9;
