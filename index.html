@@ -354,12 +354,15 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
     </div>
   </section>
 
+  <div id="rpBar" hidden style="position:absolute;left:0;right:0;bottom:calc(14px + env(safe-area-inset-bottom));display:flex;justify-content:center;gap:10px;align-items:center;z-index:30;pointer-events:none"><span style="background:rgba(0,0,0,.55);color:#fff;padding:6px 12px;border-radius:14px;font-weight:700">🎬 回放中</span><button class="btn small" id="rpStop" type="button" style="pointer-events:auto">■ 結束回放</button></div>
+
   <section id="roundEnd" class="result" hidden>
     <div class="rcard">
       <div class="big" id="reBig">—</div>
       <div class="note" id="reNote">—</div>
       <div class="score"><span class="y" id="reY">0</span> : <span class="r" id="reR">0</span></div>
       <div class="note">點一下，下一回合</div>
+      <button class="btn ghost small" id="reRp" type="button">▶ 回放這一回合</button>
     </div>
   </section>
 
@@ -374,6 +377,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
         <div><b id="stSp">0</b><span>必殺技</span></div>
       </div>
       <div class="row" id="meRow"><button class="btn ghost" id="again" type="button">再來一場</button><button class="btn ghost" id="change" type="button">換陀螺</button></div>
+      <button class="btn ghost" id="meRp" type="button">▶ 回放最後一回合</button>
       <button class="btn" id="meNext" type="button" hidden>繼續</button>
     </div>
   </section>
@@ -427,7 +431,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.21.0</div>
+  <div class="ver">v1.22.0</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -614,12 +618,11 @@ const BOLT_COLORS=[['white','白電','#ffffff',0],['gold','金電','#ffc83d',500
 let boltS=load('v2bolt')||{own:['white'],slots:1,equip:[]};if(!boltS.own||!boltS.own.includes('white'))boltS.own=['white'].concat(boltS.own||[]);
 const boltHex=id=>{const c=BOLT_COLORS.find(x=>x[0]===id);return parseInt((c||BOLT_COLORS[0])[2].slice(1),16)};
 function withBoost(def){
-  def=Object.assign({},def,{boltN:[7,11,15][boltS.slots-1]||7});if(boltS.equip.length)def.bolts=boltS.equip.map(boltHex);
   const b=boostOf(def.id);let o=def;if(b.atk||b.def||b.sta||b.wt){o=Object.assign({},def);for(const k of ['atk','def','sta','wt'])o[k]=Math.max(def[k],Math.min(BOOST_MAX,def[k]+(b[k]||0)))}
   if(tourBuff&&tourBuff===def.id&&(tour||b3)){o=Object.assign({},o);for(const k of ['atk','def','sta','wt'])o[k]=+(o[k]*BUFF_PCT).toFixed(2)}return o}
 
 const BEATS={atk:'sta',sta:'def',def:'atk'};
-let emit=()=>{};
+let emit=()=>{};let REC=null,rpOn=false,rpIdx=0,rpT=0,rpSave=null,recT=0;
 function bowlH(r){return 0.03*r*r}
 let BXS=4.5,BALDEF=1;const BX={atk:7.5,bal:1,sta:4,def:1};
 const SPD={atk:1,bal:1.2,sta:1.35,def:1},INIT={atk:1.1,bal:1,sta:1.02,def:0.8};
@@ -1563,11 +1566,13 @@ function sparks(x,y,z,n,colors){
   for(let k=0;k<n;k++){const i=spI;spI=(spI+1)%SP;
     spPos[i*3]=x;spPos[i*3+1]=y;spPos[i*3+2]=z;
     const a=Math.random()*6.283,s=4+Math.random()*12;spVel[i*3]=Math.cos(a)*s;spVel[i*3+1]=2+Math.random()*8;spVel[i*3+2]=Math.sin(a)*s;
-    spLife[i]=0.35+Math.random()*0.45;const c=colors[k%colors.length];spBase[i*3]=c[0];spBase[i*3+1]=c[1];spBase[i*3+2]=c[2]}
+    spLife[i]=0.35+Math.random()*0.45;const c=vivid(colors[k%colors.length]);spBase[i*3]=c[0];spBase[i*3+1]=c[1];spBase[i*3+2]=c[2]}
 }
+function vivid(c){const mx=Math.max(c[0],c[1],c[2]),mn=Math.min(c[0],c[1],c[2]);if(mx<=0)return c;if(mx-mn<0.15*mx)return [0.62,0.62,0.66];const k=0.95/(mx-mn*0.8);return [(c[0]-mn*0.8)*k,(c[1]-mn*0.8)*k,(c[2]-mn*0.8)*k]}
+function bodyRGB(T){const c=T.def.color;return [((c>>16)&255)/150,((c>>8)&255)/150,(c&255)/150]}
 function topRGB(T){const c=T.def.accent;return [((c>>16)&255)/150,((c>>8)&255)/150,(c&255)/150]}
-function trailP(x,y,z,c){const i=spI;spI=(spI+1)%SP;spPos[i*3]=x;spPos[i*3+1]=y;spPos[i*3+2]=z;spVel[i*3]=(Math.random()-.5)*0.6;spVel[i*3+1]=1.2+Math.random();spVel[i*3+2]=(Math.random()-.5)*0.6;spLife[i]=0.45;spBase[i*3]=c[0];spBase[i*3+1]=c[1];spBase[i*3+2]=c[2]}
-function ember(x,y,z,c){const i=spI;spI=(spI+1)%SP;spPos[i*3]=x;spPos[i*3+1]=y;spPos[i*3+2]=z;spVel[i*3]=(Math.random()-.5)*1.5;spVel[i*3+1]=4+Math.random()*4;spVel[i*3+2]=(Math.random()-.5)*1.5;spLife[i]=0.35+Math.random()*0.3;spBase[i*3]=c[0];spBase[i*3+1]=c[1];spBase[i*3+2]=c[2]}
+function trailP(x,y,z,c){const i=spI;spI=(spI+1)%SP;spPos[i*3]=x;spPos[i*3+1]=y;spPos[i*3+2]=z;spVel[i*3]=(Math.random()-.5)*0.6;spVel[i*3+1]=1.2+Math.random();spVel[i*3+2]=(Math.random()-.5)*0.6;spLife[i]=0.45;c=vivid(c);spBase[i*3]=c[0];spBase[i*3+1]=c[1];spBase[i*3+2]=c[2]}
+function ember(x,y,z,c){const i=spI;spI=(spI+1)%SP;spPos[i*3]=x;spPos[i*3+1]=y;spPos[i*3+2]=z;spVel[i*3]=(Math.random()-.5)*1.5;spVel[i*3+1]=4+Math.random()*4;spVel[i*3+2]=(Math.random()-.5)*1.5;spLife[i]=0.35+Math.random()*0.3;c=vivid(c);spBase[i*3]=c[0];spBase[i*3+1]=c[1];spBase[i*3+2]=c[2]}
 function updateSparks(dt){
   for(let i=0;i<SP;i++){if(spLife[i]<=0){spCol[i*3]=spCol[i*3+1]=spCol[i*3+2]=0;continue}
     spLife[i]-=dt;spVel[i*3+1]-=20*dt;spPos[i*3]+=spVel[i*3]*dt;spPos[i*3+1]+=spVel[i*3+1]*dt;spPos[i*3+2]+=spVel[i*3+2]*dt;
@@ -1749,7 +1754,9 @@ function say(text){try{const u=new SpeechSynthesisUtterance(text);u.lang='en-US'
 /* ---------- game state ---------- */
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 let b3=null,phase='menu',pick=0,P=null,E=null,score={P:0,E:0},stats=null,battleT=0,endT=0,slowT=0,ended=null,totalHits=0,demoT=0;
-function setupTops(pDef,eDef){
+function rollBolts(d){const k=d.tier==='cos'?3:d.tier==='div'?2:1,ids=BOLT_COLORS.map(c=>c[0]);for(let i=ids.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ids[i],ids[j]]=[ids[j],ids[i]]}
+  return Object.assign({},d,{bolts:ids.slice(0,k).map(boltHex),boltN:[7,11,15][k-1]})}
+function setupTops(pDef,eDef){pDef=rollBolts(pDef);eDef=rollBolts(eDef);
   if(P&&P.model)disposeModel(P.model);if(E&&E.model)disposeModel(E.model);clearDebris();
   P=newTop(pDef,'P');E=newTop(eDef,'E');P.model=makeModel(pDef);E.model=makeModel(eDef);P.lift=E.lift=0;
 }
@@ -1757,12 +1764,13 @@ function rebuild(T){disposeModel(T.model);T.model=makeModel(T.def)}
 
 const NOSFX=new Proxy({},{get:()=>()=>{}});
 emit=(type,d)=>{
+  if(REC&&!rpOn&&phase!=='menu'&&REC.fr.length)REC.ev.push({f:REC.fr.length-1,type,d});
   const sf=phase==='menu'?NOSFX:sfx;
   const vis=phase!=='menu';
   if(type==='hit'){
     const y=groundHc(d.x,d.z)+0.9,ca=d.A.def.color,cb=d.B.def.color,toRGB=c=>[((c>>16)&255)/255*1.6,((c>>8)&255)/255*1.6,(c&255)/255*1.6];
-    sparks(d.x,y,d.z,Math.min(90,Math.round(d.impact*3.6)),[[1.6,1.4,0.8],[1.6,1.6,1.6],[0.6,1.3,1.8],toRGB(ca),toRGB(cb)]);
-    zap(d.x,y,d.z,d.impact>14?4:d.impact>8?2:1,1.2+d.impact*0.08);flash.position.set(d.x,y+0.6,d.z);flash.intensity=Math.min(9,1.5+d.impact*0.45);
+    sparks(d.x,y,d.z,Math.min(70,Math.round(d.impact*3)),[toRGB(ca),toRGB(cb),topRGB(d.A),topRGB(d.B)]);
+    zap(d.x,y,d.z,d.impact>14?4:d.impact>8?2:1,1.2+d.impact*0.08);flash.position.set(d.x,y+0.6,d.z);flash.color.setHex(Math.random()<.5?d.A.def.accent:d.B.def.accent);flash.intensity=Math.min(4,0.8+d.impact*0.2);
     if(d.impact>6)shock(d.x,y-0.3,d.z,Math.min(1.6,d.impact/12));
     for(const b of [d.bA,d.bB]){if(b==='fire')sparks(d.x,y,d.z,40,[[1.8,0.7,0.15],[1.8,1.3,0.3]]);if(b==='thunder')zap(d.x,y,d.z,4,2.4);if(b==='ice')sparks(d.x,y,d.z,30,[[1.2,1.6,1.8],[1.6,1.6,1.6]]);if(b==='steel')sparks(d.x,y,d.z,30,[[1.6,1.6,1.4]]);if(b==='light')shock(d.x,y-0.2,d.z,1.8)}
     if(!vis)return;
@@ -1783,7 +1791,7 @@ emit=(type,d)=>{
   else if(type==='blink'){const T=d.T;sparks(T.x,groundHc(T.x,T.z)+0.7,T.z,18,[[1.6,1.6,1.8],topRGB(T)]);if(d.zap)zap(T.x,groundHc(T.x,T.z)+0.9,T.z,3,2.8);if(d.smoke)sparks(T.x,groundHc(T.x,T.z)+0.7,T.z,30,[[0.5,0.5,0.6],[0.3,0.3,0.4],topRGB(T)]);if(d.star){sparks(T.x,groundHc(T.x,T.z)+1,T.z,26,[[1.8,1.8,1.6],[1.8,1.5,0.6]]);shock(T.x,groundHc(T.x,T.z)+0.3,T.z,0.9)}if(d.fire)sparks(T.x,groundHc(T.x,T.z)+0.8,T.z,30,[[1.8,0.7,0.15],[1.8,1.3,0.3]]);if(vis)sf.zap(0.6)}
   else if(type==='slash'){const T=d.T,c=topRGB(T);for(let i=0;i<=24;i++){const f=i/24,x=d.x0+(d.x1-d.x0)*f,z=d.z0+(d.z1-d.z0)*f;sparks(x,groundHc(x,z)+0.8,z,5,[[1.8,1.8,1.8],c])}
     shock((d.x0+d.x1)/2,groundHc(0,0)+0.5,(d.z0+d.z1)/2,2.8);if(vis){sf.boom();sf.zap(1);shake=Math.max(shake,1.0);flashFx=0.4;speedFx=0.5;speedCol='#ffffff';popText('一閃！','把戰場切成兩半')}}
-  else if(type==='strikeHit'){const y=groundHc(d.x,d.z)+0.8,c=topRGB(d.T);sparks(d.x,y,d.z,90,[c,[1.8,1.8,1.8],[1.8,1.3,0.4]]);shock(d.x,y-0.3,d.z,2.4);shock(d.x,y,d.z,1.4);zap(d.x,y,d.z,6,3);
+  else if(type==='strikeHit'){const y=groundHc(d.x,d.z)+0.8,c=topRGB(d.T);sparks(d.x,y,d.z,70,[c,bodyRGB(d.T)]);shock(d.x,y-0.3,d.z,2.4);shock(d.x,y,d.z,1.4);zap(d.x,y,d.z,6,3);
     if(vis){sf.boom();shake=1.5;camPunch=Math.min(5,camPunch+3);if(!reduce)slowT=Math.max(slowT,0.45);flashFx=0.35;popText('爆擊！')}}
   else if(type==='repel'){const T=d.T,y=groundHc(T.x,T.z)+0.4;shock(T.x,y,T.z,2.6);shock(T.x,y+0.4,T.z,1.8);sparks(T.x,y+0.4,T.z,50,[[0.6,1.2,1.8],[1.6,1.6,1.6]]);if(vis){sf.boom();shake=Math.max(shake,0.8)}}
   else if(type==='awaken'){const T=d.T,y=groundHc(T.x,T.z);sparks(T.x,y+0.9,T.z,120,[topRGB(T),[1.8,1.8,1.8],[1.2,0.9,1.9]]);shock(T.x,y+0.3,T.z,3);shock(T.x,y+0.8,T.z,2);zap(T.x,y+1,T.z,6,3);
@@ -1792,7 +1800,7 @@ emit=(type,d)=>{
   else if(type==='stage2'){if(vis){popText('二段追擊！');speedFx=0.5;speedCol=hex(d.T.def.accent)}}
   else if(type==='shield'){const T=d.T,y=groundHc(T.x,T.z);shock(T.x,y+0.6,T.z,2.2);sparks(T.x,y+0.8,T.z,50,[[1.8,1.7,1.0],[1.8,1.8,1.8]]);if(vis)popText('星盾！','擋下了這次重擊')}
   else if(type==='meteor'){const y=groundHc(d.x,d.z);sparks(d.x,y+0.6,d.z,110,[[1.9,0.8,0.2],[1.8,1.4,0.5],[0.6,0.5,0.5]]);shock(d.x,y+0.2,d.z,2.8);shock(d.x,y+0.5,d.z,1.6);if(vis){sf.boom();shake=Math.max(shake,1.0)}}
-  else if(type==='special'){sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,60,[topRGB(d.T),[1.6,1.6,1.6],[1.6,1.4,0.5]]);shock(d.T.x,groundHc(d.T.x,d.T.z)+0.4,d.T.z,1.8);
+  else if(type==='special'){sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,50,[topRGB(d.T),bodyRGB(d.T)]);shock(d.T.x,groundHc(d.T.x,d.T.z)+0.4,d.T.z,1.8);
     {const fx=d.T.def.fx;if(fx==='quake'){shock(d.T.x,groundHc(d.T.x,d.T.z)+0.2,d.T.z,3.4);if(vis)shake=Math.max(shake,1.2)}if(fx==='holy'||fx==='moon'||fx==='song')shock(d.T.x,groundHc(d.T.x,d.T.z)+0.9,d.T.z,2.6);if(fx==='flame'||fx==='dragon')sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,60,[[1.8,0.7,0.15],[1.8,1.3,0.3]]);if(fx==='ice'||fx==='snow')sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,60,[[1.2,1.6,1.8],[1.6,1.6,1.6]])}
     if(vis){sf.special();if(d.T===P)stats.sp++;cutIn(d.T);if(!reduce)slowT=Math.max(slowT,0.9)}}
 };
@@ -1933,7 +1941,7 @@ function doLaunch(p,a,perfect,q){q=q||(perfect?'p':'n');
 function startBattle(){
   const L=pendingLaunch||{p:0.6,a:0,perfect:false};pendingLaunch=null;
   launchTop(P,L.p,L.a*0.8,L.perfect);if(L.E)launchTop(E,L.E.p,L.E.a*0.8,L.E.perfect);else{const ep=0.62+Math.random()*0.33;launchTop(E,ep,(Math.random()-.5)*0.8,Math.random()<0.25)}
-  P.lift=E.lift=3.2;spShow(true);$('hud').hidden=false;phase='battle';battleT=0;ended=null;endWait=null;humStart();
+  P.lift=E.lift=3.2;spShow(true);$('hud').hidden=false;phase='battle';battleT=0;ended=null;endWait=null;humStart();REC={fr:[],ev:[]};recT=0;
   const QB={p:0.35,n:0.15,b:0},QN={p:'完美發射！',n:'普通發射',b:'發射失誤…'};
   P.charge=QB[L.q||'n'];E.charge=L.E?QB[L.E.q||'n']:QB[Math.random()<0.25?'p':Math.random()<0.75?'n':'b'];
   popText(QN[L.q||'n'],(L.perfect?'轉速加成・':'')+'必殺氣 +'+Math.round(P.charge*100)+'%');
@@ -1998,6 +2006,35 @@ function showRoundEnd(){
   $('roundEnd').hidden=false;spShow(false);phase='round';if(!ended.draw)(ended.winner==='P'?sfx.ding:sfx.wall.bind(null,6))();
 }
 $('roundEnd').onclick=()=>{toLaunch()};
+/* ---------- 回放 ---------- */
+function rpClone(T){const o={};for(const k in T){if(k==='model'||k==='def')continue;const v=T[k];if(v===null||typeof v!=='object'&&typeof v!=='function')o[k]=v;else if(typeof v==='object'&&!v.isObject3D)o[k]=Array.isArray(v)?v.slice():Object.assign({},v)}return o}
+function rpPut(T,o){for(const k in o){const v=o[k];T[k]=v&&typeof v==='object'?(Array.isArray(v)?v.slice():Object.assign({},v)):v}}
+function recFrame(){if(REC.fr.length<4500)REC.fr.push({t:recT,p:rpClone(P),e:rpClone(E),bt:battleT})}
+function rpStart(){
+  if(!REC||REC.fr.length<5)return;
+  rpSave={ph:phase,ov:$('roundEnd').hidden?'matchEnd':'roundEnd',p:rpClone(P),e:rpClone(E),bt:battleT,stats:Object.assign({},stats),th:totalHits,sp:spHold&&Object.assign({},spHold)};
+  $('roundEnd').hidden=true;$('matchEnd').hidden=true;
+  rebuild(P);rebuild(E);clearDebris();P.model.root.visible=E.model.root.visible=true;
+  rpOn=true;rpIdx=0;rpT=0;phase='replay';$('rpBar').hidden=false;
+}
+function rpEnd(){
+  if(!rpSave)return;
+  rpOn=false;rpPut(P,rpSave.p);rpPut(E,rpSave.e);battleT=rpSave.bt;Object.assign(stats,rpSave.stats);totalHits=rpSave.th;
+  phase=rpSave.ph;$(rpSave.ov).hidden=false;$('rpBar').hidden=true;slowT=0;rpSave=null;
+}
+function rpTick(rdt){
+  const fr=REC.fr;rpT+=rdt;
+  while(rpIdx<fr.length&&fr[rpIdx].t<=rpT){
+    const f=fr[rpIdx];rpPut(P,f.p);rpPut(E,f.e);battleT=f.bt;
+    for(const ev of REC.ev)if(ev.f===rpIdx)emit(ev.type,ev.d);
+    rpIdx++;
+  }
+  if(rpIdx>=fr.length&&rpT>fr[fr.length-1].t+1.2)rpEnd();
+}
+$('reRp').onclick=e=>{e.stopPropagation();rpStart()};
+$('meRp').onclick=e=>{e.stopPropagation();rpStart()};
+$('rpStop').onclick=e=>{e.stopPropagation();rpEnd()};
+
 function showMatchEnd(){
   phase='over';spShow(false);const win=score.P>score.E;
   $('meBig').textContent=curMatch?(curMatch.duel?(win?pName:eName)+' 獲勝！':win?'晉級！':'止步於 '+RANK_OF[tour.round]):win?'你贏了！':'再接再厲！';
@@ -2503,7 +2540,7 @@ function setMusic(k){mus.want=k;if(!AC||!mus.g||mus.cur===k)return;if(!mus.buf[k
   const tr=trackOf(k),src=AC.createBufferSource(),g=AC.createGain();src.buffer=mus.buf[k];src.loop=true;src.loopStart=tr.ls;src.loopEnd=tr.le;
   const off=tr.ls+Math.floor(Math.random()*Math.max(1,(tr.le-tr.ls-1)));
   g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(1,t+(k[0]==='b'?0.5:0.8));src.connect(g);g.connect(mus.g);src.start(t,off);mus.node={src,g};mus.cur=k}
-function musicForPhase(){return phase==='battle'||phase==='ending'||phase==='watch'?'b'+battleIdx:phase==='round'||phase==='over'?'result':'intro'}
+function musicForPhase(){return phase==='battle'||phase==='ending'||phase==='watch'||phase==='replay'?'b'+battleIdx:phase==='round'||phase==='over'?'result':'intro'}
 function musicBtnLabel(){const b=$('musicBtn');if(b){b.textContent=musicOn?'音樂：開':'音樂：關';b.setAttribute('aria-pressed',musicOn)}}
 $('musicBtn').onclick=()=>{audioInit();musicOn=!musicOn;save('music',musicOn);musicBtnLabel();if(mus.g)mus.g.gain.setTargetAtTime(musicOn?0.55:0,AC.currentTime,0.1)};musicBtnLabel();
 /* ---------- loop ---------- */
@@ -2534,11 +2571,11 @@ function updateModel(T,dt,rdt){
   if(T.state==='spin'||T.state==='out'){
     M.spin.rotation.y-=s*20*dt*(T.def.left?-1:1);M.phase+=dt*(3+(1-Math.min(1,s))*5);
     const a=0.035+Math.pow(Math.max(0,1-s/0.75),2)*0.42;M.tilt.rotation.x=a*Math.cos(M.phase);M.tilt.rotation.z=a*Math.sin(M.phase);
-    M.blur.material.opacity=Math.min(1,s)*0.22;
+    M.blur.material.opacity=Math.min(1,s)*0.07;
   }else if(T.state==='down'){
     M.spin.rotation.y-=0.4*dt;M.tilt.rotation.x=Math.min(1.15,M.tilt.rotation.x+dt*1.6);M.blur.material.opacity=0;
   }
-  const aw=T.awoke&&T.state==='spin',glow=T.shell>0?0.35:T.moon>0?0.3:T.dash>0?0.4:aw?0.22+0.1*Math.sin(performance.now()/120):0;M.aura.material.color.setHex(T.shell>0?0x6fb8ff:T.moon>0?0x9ffff0:aw?0xb388ff:0xffd060);
+  const aw=T.awoke&&T.state==='spin',glow=T.shell>0?0.18:T.moon>0?0.15:T.dash>0?0.14:aw?0.14+0.06*Math.sin(performance.now()/120):0;M.aura.material.color.setHex(T.shell>0?0x6fb8ff:T.moon>0?0x9ffff0:aw?0xb388ff:0xffd060);
   M.aura.material.opacity+=(glow-M.aura.material.opacity)*Math.min(1,rdt*10);
   M.shadow.visible=T.state!=='burst'&&T.state!=='out'&&inShape(T.x,T.z);M.shadow.position.set(T.x,gy+0.03,T.z);
   M.shadow.material.opacity=T.lift>0?0.4:1;
@@ -2552,10 +2589,10 @@ function updateModel(T,dt,rdt){
   if(bk==='steel')M.fx.steel.rotation.y+=rdt*1.2;
   if(bk==='ice'){M.fx.ice.rotation.y-=rdt*0.8;if(Math.random()<rdt*6)ember(T.x+(Math.random()-.5)*2.4,y+0.9,T.z+(Math.random()-.5)*2.4,[1.2,1.6,1.8])}
   if(bk==='light'){M.fx.light.rotation.y+=rdt*0.9;M.fx.light.material.opacity=0.45+0.3*Math.sin(now*6)}
-  if(M.edge)M.edge.material.opacity=live?0.4+0.3*Math.sin(now*7):0;
-  if(live&&T.sp){const c=topRGB(T),n=T.sp.kind==='strike'?6:T.sp.kind==='path'?9:4;for(let i=0;i<n;i++)trailP(T.x+(Math.random()-.5)*0.5,y+0.5+Math.random()*0.4,T.z+(Math.random()-.5)*0.5,Math.random()<0.3?[1.8,1.8,1.8]:c);
-    M.aura.material.color.setHex(T.def.accent);M.aura.material.opacity=0.55}
-  if(live&&T.storm>0){const c=topRGB(T);for(let i=0;i<5;i++){const a=now*9+i*1.256,hh=((now*1.6+i*0.2)%1),rr=0.6+hh*2.4;trailP(T.x+Math.sin(a+hh*6)*rr,y+0.2+hh*3,T.z+Math.cos(a+hh*6)*rr,i%2?c:[1.4,1.8,1.8])}}
+  if(M.edge)M.edge.material.opacity=live?0.18+0.12*Math.sin(now*7):0;
+  if(live&&T.sp){const c=topRGB(T),n=T.sp.kind==='strike'?6:T.sp.kind==='path'?9:4;for(let i=0;i<n;i++)trailP(T.x+(Math.random()-.5)*0.5,y+0.5+Math.random()*0.4,T.z+(Math.random()-.5)*0.5,Math.random()<0.3?bodyRGB(T):c);
+    M.aura.material.color.setHex(T.def.accent);M.aura.material.opacity=0.22}
+  if(live&&T.storm>0){const c=topRGB(T);for(let i=0;i<5;i++){const a=now*9+i*1.256,hh=((now*1.6+i*0.2)%1),rr=0.6+hh*2.4;trailP(T.x+Math.sin(a+hh*6)*rr,y+0.2+hh*3,T.z+Math.cos(a+hh*6)*rr,i%2?c:bodyRGB(T))}}
   if(M.fx.shell){M.fx.shell.visible=live&&T.shell>0;if(M.fx.shell.visible){M.fx.shell.rotation.y+=rdt*1.5;M.fx.shell.material.opacity=0.5+0.25*Math.sin(now*8)}}
   T.spGlow=Math.max(0,(T.spGlow||0)-dt);
   if(M.orbit){const spOn=live&&(T.sp||T.chain||T.storm>0||T.shell>0||T.spGlow>0);M.orbit.visible=spOn;
@@ -2571,7 +2608,7 @@ function updateModel(T,dt,rdt){
           pos[v]=x;pos[v+1]=y;pos[v+2]=z;cpos[v]=x;cpos[v+1]=y;cpos[v+2]=z;
           col[v]=c.r*fl;col[v+1]=c.g*fl;col[v+2]=c.b*fl;ccol[v]=(0.12+c.r*0.88)*fl;ccol[v+1]=(0.12+c.g*0.88)*fl;ccol[v+2]=(0.12+c.b*0.88)*fl;v+=3}}
       for(const ch of M.orbit.children){ch.geometry.attributes.position.needsUpdate=true;ch.geometry.attributes.color.needsUpdate=true}
-      M.glowL.color.copy(pal[Math.floor(now*6)%pal.length]);M.glowL.intensity=1.2+Math.random()*1.2}
+      M.glowL.color.copy(pal[Math.floor(now*6)%pal.length]);M.glowL.intensity=0.5+Math.random()*0.5}
     else M.glowL.intensity=0}
 }
 
@@ -2579,7 +2616,7 @@ const sstep=(a,b,x)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-
 const _f=new THREE.Vector3();
 function updateCamera(dt){
   let dist=camDist,el=ELEV,yawV=0;_f.set(0,0.8,0.4);
-  if(phase==='battle'||phase==='ending'||phase==='watch'){
+  if(phase==='battle'||phase==='ending'||phase==='watch'||phase==='replay'){
     const z=sstep(0.6,3.4,battleT);
     const live=[P,E].filter(T=>T.state==='spin');
     let cx=0,cz=0,sep=0;
@@ -2643,7 +2680,8 @@ type:`<div class="hcard" style="border-color:#ff6a4a"><h4 style="color:#ff8a6a">
 <div class="hcard" style="border-color:#ffd23d"><h4 style="color:#ffd23d">防禦型</h4>剋制：<b>攻擊型</b>　被剋：耐久型<br><span class="pro">優點：</span>防禦力最高，被撞很不容易動；平時轉速掉得慢；必殺時會回補轉速，必殺期間受傷減半；一次必殺最多被打掉 40% 耐久，開場不會被秒。<br><span class="con">缺點：</span>起始轉速最低，起步慢；攻擊力普通；被耐久型磨轉速、被平衡型針對時比較辛苦。<br>打法：站穩擋住攻擊型，等對手消耗光再反擊。</div>
 <div class="note" style="font-size:12px">最高等級的<b>宇宙級</b>（24 顆星神陀螺）一樣分這四種型態，另外多了兩條耐久、覺醒、二段追擊和專屬被動，詳見「戰鬥規則」。<br>另外還有「特色陀螺」（青龍、白虎、朱雀、玄武等神獸，以及星座、忍者、和風妖怪等各種風格的陀螺），各自有獨特的必殺技。每顆陀螺的外環、重量盤、軸心都有素質，到工坊可以自己組裝。</div>`,
 grow:`<div class="hcard"><h4>商店幣與等級</h4>打比賽會得到商店幣和經驗值，等級提高可以參加更高級的盃賽（傳說盃 Lv 3、神聖盃 Lv 6、宇宙盃 Lv 10）。<br>用比盃賽低一級的陀螺參賽，獎勵 ×1.5（以下剋上）。<br>名次越高、打得越遠，獎勵越多。</div>
-<div class="hcard"><h4>工坊</h4><b>陀螺</b>：用商店幣買新陀螺。<br><b>盲盒・道具</b>：抽零件盲盒、買能力增幅道具、買雷電顏色和升級雷電欄位。<br><b>組裝</b>：用零件自己組一顆陀螺（外環、重量盤、軸心、紋章）。<br><b>造型</b>：一步一步改花紋、外環邊緣、內圈、貼紙，並裝備雷電顏色。<br><b>強化</b>：用增幅道具替單顆陀螺加點（攻、防、耐、重）。</div>
+<div class="hcard"><h4>工坊</h4><b>陀螺</b>：用商店幣買新陀螺。<br><b>盲盒・道具</b>：抽零件盲盒、買能力增幅道具、全能力強化券。<br><b>組裝</b>：用零件自己組一顆陀螺（外環、重量盤、軸心、紋章）。<br><b>造型</b>：一步一步改花紋、外環邊緣、內圈、貼紙。<br><b>強化</b>：用增幅道具替單顆陀螺加點（攻、防、耐、重）。</div>
+<div class="hcard"><h4>必殺雷電</h4>放必殺時陀螺身邊的雷電顏色每場隨機搭配，不用購買：一般陀螺 1 種顏色（7 道）、神聖級 2 種（11 道）、宇宙級 3 種（15 道）。</div>
 <div class="hcard"><h4>捏臉</h4>在選單點「捏臉」可以改你的鬥士外觀；對戰時必殺吶喊的畫面會用到。</div>`};
 let hpTab='rule';
 function hpRender(){[...$('hpTabs').children].forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===hpTab));$('hpBody').innerHTML=HELP[hpTab]}
@@ -2670,7 +2708,6 @@ function renderBox(box){
   h+=`<div class="note" style="font-size:12px">已收集零件：${ownedParts.size} 個（擁有的陀螺本身的 4 個零件也能拿來組裝）</div><div class="shH">能力增幅道具</div>`;
   for(const k in BOOST_ITEMS){const it=BOOST_ITEMS[k];h+=`<div class="shr"><div><b>${it.n}　持有 ${inv[k]||0}</b><small>${it.d}　每顆陀螺最多強化 ${BOOST_BUDGET} 點，單項上限 ${BOOST_MAX}</small></div><button class="mini ${coins<it.pr?'no':''}" data-a="buyb" data-id="${k}" type="button">${it.pr} 幣</button></div>`}
   h+=`<div class="shH">淘汰賽 buff 道具</div><div class="shr"><div><b>全能力強化券　持有 ${inv.buff25||0}</b><small>開始淘汰賽前可以選一顆陀螺使用：整場淘汰賽中，那顆陀螺的攻擊、防禦、耐久、重量全部 +25%。一次只能選一顆，用掉就消耗一張，也可以不用。</small></div><button class="mini ${coins<BUFF_PRICE?'no':''}" data-a="buyff" type="button">${BUFF_PRICE} 幣</button></div>`;
-  h+='<div class="shH">⚡ 必殺技雷電（買顏色、升欄位、裝備都在這裡）</div>'+boltHTML();
   box.innerHTML=h}
 function partsOf(cat){const ids=new Set();for(const d of TOPS)if(!d.custom&&hasPart(d.id+':'+cat))ids.add(d.id+':'+cat);return [...ids].sort((a,b)=>TIER_ORD[partTop(a).tier]-TIER_ORD[partTop(b).tier])}
 function renderAsm(box){
@@ -2691,7 +2728,7 @@ function renderAsm(box){
 
 let stSid=0,stkTop=0,wz={step:0,id:null};
 const divMax=()=>Math.max(...TOPS.filter(d=>!d.custom&&d.tier==='div').map(d=>d.price)),slotPrice=n=>{const b=Math.ceil((divMax()+300)/100)*100;return n===2?b:b+2000};
-const WZ=[['選陀螺','想改造哪一顆陀螺？（內建的、自組的都可以）'],['主花紋','想要什麼主花紋？'],['副花紋','要不要再疊一層副花紋？'],['外環邊緣','外環邊緣要加什麼裝飾？'],['內圈造型','內圈（中間那一圈）要什麼造型？'],['內圈粗細','內圈要多粗？'],['內圈花紋','內圈上要不要加花紋？'],['內圈顏色','內圈要什麼顏色？'],['貼紙','陀螺中心要貼什麼貼紙？'],['副貼紙','要不要再疊一個小貼紙？'],['雷電','必殺技的雷電要什麼顏色？（所有陀螺共用）']];
+const WZ=[['選陀螺','想改造哪一顆陀螺？（內建的、自組的都可以）'],['主花紋','想要什麼主花紋？'],['副花紋','要不要再疊一層副花紋？'],['外環邊緣','外環邊緣要加什麼裝飾？'],['內圈造型','內圈（中間那一圈）要什麼造型？'],['內圈粗細','內圈要多粗？'],['內圈花紋','內圈上要不要加花紋？'],['內圈顏色','內圈要什麼顏色？'],['貼紙','陀螺中心要貼什麼貼紙？'],['副貼紙','要不要再疊一個小貼紙？']];
 const swH=(act,cur,def)=>'<div class="pset">'+PCOLS.map(([n,c])=>`<button type="button" class="pbtn" data-a="${act}" data-id="${c}" aria-pressed="${(cur||def)===c}" style="border-left:8px solid ${c}">${n}</button>`).join('')+'</div>';
 function boltHTML(){let h=`<div class="note" style="font-size:12px">放必殺技時，陀螺身邊會出現雷電。買顏色，再升級欄位：每升一級可以多配一種顏色，雷電也更密——1 種顏色 7 道、2 種 11 道、3 種 15 道。沒有配置時，用陀螺原本的雷電色。</div>`;
   h+=`<div class="shr"><div><b>雷電欄位　${boltS.slots}／3　（${[7,11,15][boltS.slots-1]} 道雷電）</b><small>目前配置：${boltS.equip.length?boltS.equip.map(id=>BOLT_COLORS.find(c=>c[0]===id)[1]).join('、'):'（沿用陀螺原本的雷電）'}</small></div>${boltS.slots<3?`<button class="mini ${coins<slotPrice(boltS.slots+1)?'no':''}" data-a="bslot" type="button">升到 ${[7,11,15][boltS.slots]} 道・${boltS.slots+1} 色　${slotPrice(boltS.slots+1)} 幣</button>`:'<span style="color:var(--gold)">已滿</span>'}</div>`;
@@ -3110,7 +3147,8 @@ function frame(now){
     if(phase==='ending'){endT+=rdt;if(endT>1.6)showRoundEnd()}
     if(phase==='menu'&&(P.state!=='spin'||E.state!=='spin')){demoT+=0;if(!P._dt)P._dt=0;P._dt+=rdt;if(P._dt>1.5){P._dt=0;demoReset()}}
     if(phase==='battle'||phase==='ending')humSet(P.state==='spin'?P.s:0,P.state==='spin');
-  }
+    if(REC&&(phase==='battle'||phase==='ending')){recT+=rdt;recFrame()}
+  }else if(phase==='replay')rpTick(rdt);
   updateModel(P,dt,rdt);updateModel(E,dt,rdt);updateSparks(dt);updateWaves(dt);updateDebris(dt);updateArcs(dt);trackTick(dt,phase==='battle'||phase==='watch');updateItems(dt);if(phase==='battle'||phase==='ending'||phase==='watch')wallTick(battleT);updateWallViews(battleT,phase==='battle'||phase==='watch');updateFieldViews(dt,phase==='battle');
   if(phase!=='menu')hudTick();
   overlayTick(rdt);if(AC&&mus.g)setMusic(musicForPhase());if(crOpen)drawCreator(rdt);
