@@ -441,7 +441,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.29.0</div>
+  <div class="ver">v1.29.1</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -596,7 +596,7 @@ const CONST={aries:[[-1,0.2],[-0.3,0.45],[0.3,0.35],[0.9,-0.1]],taurus:[[-0.9,0.
 /* ---------- collection, parts, custom tops, boosts, level ---------- */
 const PCAT={ring:'外環',disc:'重量盤',tip:'軸心',emb:'紋章'},CATS=['ring','disc','tip','emb'],TIPN={flat:'平底',semi:'半圓',ball:'球形',sharp:'尖針'};
 const TOP_BY={};for(const d of TOPS)TOP_BY[d.id]=d;
-const BOOST_CAP={brz:6,leg:7,div:8,cos:9},BOOST_PTS={brz:7,leg:8,div:8,cos:9},bMax=d=>BOOST_CAP[d.tier]||8,bPts=d=>BOOST_PTS[d.tier]||6;/* 強化上限依等級：單項 6/7/8/9、每顆可強化點數 7/8/8/9 */
+const BOOST_CAP={brz:7,leg:8,div:8,cos:9},BOOST_PTS={brz:6,leg:7,div:8,cos:9},bMax=d=>BOOST_CAP[d.tier]||8,bPts=d=>BOOST_PTS[d.tier]||6;/* 強化上限依等級：單項 7/8/8/9、每顆可強化點數 6/7/8/9 */
 const BUFF_PRICE=250,BUFF_PCT=1.25;let tourBuff=null;
 const BOOST_ITEMS={atk:{n:'突擊增幅劑',d:'攻擊剋耐久：攻擊 +1',pr:40},sta:{n:'持久增幅劑',d:'耐久剋防禦：耐久 +1',pr:40},def:{n:'堅盾增幅劑',d:'防禦剋攻擊：防禦 +1',pr:40},wt:{n:'配重增幅劑',d:'重量 +1',pr:60}};
 const STAT_N={atk:'攻',def:'防',sta:'久',wt:'重'};
@@ -2882,7 +2882,7 @@ function renderTopShop(box){
 function renderBox(box){
   let h=`<div class="shr"><div><b>🎁 零件盲盒</b><small>隨機抽到一顆陀螺的一個零件（外環／重量盤／軸心／紋章）<br>機率：青銅 48%・傳說 33%・神聖 14%・宇宙 5%；抽到重複退 20 幣</small></div><button class="mini ${coins<BOX_PRICE?'no':''}" data-a="box" type="button">${BOX_PRICE} 幣</button></div>`;
   h+=`<div class="note" style="font-size:12px">已收集零件：${ownedParts.size} 個（擁有的陀螺本身的 4 個零件也能拿來組裝）</div><div class="shH">能力增幅道具</div>`;
-  for(const k in BOOST_ITEMS){const it=BOOST_ITEMS[k];h+=`<div class="shr"><div><b>${it.n}　持有 ${inv[k]||0}</b><small>${it.d}　每顆陀螺可強化的點數／單項上限依等級：青銅 7／6、傳說 8／7、神聖 8／8、宇宙 9／9</small></div><button class="mini ${coins<it.pr?'no':''}" data-a="buyb" data-id="${k}" type="button">${it.pr} 幣</button></div>`}
+  for(const k in BOOST_ITEMS){const it=BOOST_ITEMS[k];h+=`<div class="shr"><div><b>${it.n}　持有 ${inv[k]||0}</b><small>${it.d}　每顆陀螺可強化的點數／單項上限依等級：青銅 6／7、傳說 7／8、神聖 8／8、宇宙 9／9</small></div><button class="mini ${coins<it.pr?'no':''}" data-a="buyb" data-id="${k}" type="button">${it.pr} 幣</button></div>`}
   h+=`<div class="shH">淘汰賽 buff 道具</div><div class="shr"><div><b>全能力強化券　持有 ${inv.buff25||0}</b><small>開始淘汰賽前可以選一顆陀螺使用：整場淘汰賽中，那顆陀螺的攻擊、防禦、耐久、重量全部 +25%。一次只能選一顆，用掉就消耗一張，也可以不用。</small></div><button class="mini ${coins<BUFF_PRICE?'no':''}" data-a="buyff" type="button">${BUFF_PRICE} 幣</button></div>`;
   box.innerHTML=h}
 function partsOf(cat){const ids=new Set();for(const d of TOPS)if(!d.custom&&hasPart(d.id+':'+cat))ids.add(d.id+':'+cat);return [...ids].sort((a,b)=>TIER_ORD[partTop(a).tier]-TIER_ORD[partTop(b).tier])}
