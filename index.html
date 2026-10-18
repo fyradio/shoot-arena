@@ -441,7 +441,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.27.0</div>
+  <div class="ver">v1.27.1</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -622,7 +622,8 @@ function buildDef(sp){
     metal:D.metal,bolts:[M.accent].concat(SERIES_BOLTS[R.series]||[]),reborn:R.reborn,custom:true,left:!!sp.left,sp,pat:sp.pat||null,patC:sp.patC||'#ff6a1a',pat2:sp.pat2||null,patC2:sp.patC2||'#ffffff',price:0}}
 function loadCustoms(){for(let i=TOPS.length-1;i>=0;i--)if(TOPS[i].custom)TOPS.splice(i,1);customs=customs.filter(sp=>CATS.every(c=>sp[c]&&TOP_BY[sp[c].split(':')[0]]));for(const sp of customs)TOPS.push(buildDef(sp))}
 loadCustoms();
-const owns=d=>d.custom||ownedTops.has(d.id);
+let freeAll=false;/* 自由練習：全部陀螺開放試用 */
+const owns=d=>d.custom||freeAll||ownedTops.has(d.id);
 function boostOf(id){return boosts[id]||{atk:0,def:0,sta:0,wt:0}}
 const BOLT_COLORS=[['white','白電','#ffffff',0],['gold','金電','#ffc83d',500],['red','赤電','#ff3b2f',500],['orange','橙電','#ff8a1f',500],['green','翠電','#3dff7a',500],['cyan','青電','#39e6ff',500],['blue','藍電','#3b7bff',500],['purple','紫電','#b24bff',500],['pink','粉電','#ff5ab4',500]];
 let boltS=load('v2bolt')||{own:['white'],slots:1,equip:[]};if(!boltS.own||!boltS.own.includes('white'))boltS.own=['white'].concat(boltS.own||[]);
@@ -2015,7 +2016,7 @@ function renderDetail(){const raw=TOPS[peek>=0?peek:pick],own=owns(raw),def=with
   drawIcon(detailEl.querySelector('canvas'),def)}
 function renderPicker(){
   pickEl.innerHTML='';
-  $('topCount').textContent=`擁有 ${TOPS.filter(owns).length}／${TOPS.length}`;
+  $('topCount').textContent=freeAll?`全部開放 ${TOPS.length} 顆`:`擁有 ${TOPS.filter(owns).length}／${TOPS.length}`;
   pinFirst(TOPS).map(d=>[d,TOPS.indexOf(d)]).forEach(([def,i])=>{if(topFilter==='custom'){if(!def.custom)return}else if(topFilter==='mine'){if(!owns(def))return}else if(topFilter!=='all'&&def.tier!==topFilter)return;
     const b=document.createElement('button');b.type='button';b.className='tp t-'+def.tier+(owns(def)?'':' lock');b.id='pick-'+def.id;b.setAttribute('aria-pressed',i===pick);b.setAttribute('aria-label',def.name+' '+def.typeName);
     b.innerHTML=`<canvas width="96" height="96"></canvas><span>${def.name}</span>${owns(def)?`<i class="pin ${pins.has(def.id)?'on':''}" data-pin="1" title="釘選">📌</i>`:''}`;drawIcon(b.querySelector('canvas'),def);
@@ -2035,11 +2036,11 @@ $('go').onclick=()=>{audioInit();openPractice()};
 function mountP1(host){host.appendChild($('p1Panel'));renderPicker();renderDetail();menuFighter();demoReset()}
 let arenaRandMode=load('arenaR')===1;
 function arenaRandUI(){$('arenaRand').setAttribute('aria-pressed',arenaRandMode);if(arenaRandMode)[...arenasEl.children].forEach(c=>c.setAttribute('aria-pressed',false))}
-function openPractice(){pracUI();$('menu').hidden=true;$('practice').hidden=false;mountP1($('pracSlot'));const a=load('arena');if(!arenaRandMode)pickArena(Number.isInteger(a)&&a<ARENAS.length?a:0);arenaRandUI()}
+function openPractice(){freeAll=true;pracUI();$('menu').hidden=true;$('practice').hidden=false;mountP1($('pracSlot'));const a=load('arena');if(!arenaRandMode)pickArena(Number.isInteger(a)&&a<ARENAS.length?a:0);arenaRandUI()}
 $('goPrac').onclick=()=>{audioInit();startMatch()};
 $('pracBack').onclick=()=>{$('practice').hidden=true;$('menu').hidden=false;menuEnter()};
 function quietAll(){try{humSet(0,false);if(AC&&master){const t=AC.currentTime;master.gain.cancelScheduledValues(t);master.gain.setValueAtTime(0,t);master.gain.setValueAtTime(0.8,t+0.35)}}catch(e){}}
-function menuEnter(){quietAll();const cur=load('arena');let i;do{i=Math.floor(Math.random()*ARENAS.length)}while(ARENAS.length>1&&i===menuArenaI);menuArenaI=i;applyArena(i);demoReset();mcT=0}
+function menuEnter(){if(freeAll){freeAll=false;if(!owns(TOPS[pick])){pick=Math.max(0,TOPS.findIndex(owns));save('top',pick)}renderPicker();renderDetail()}quietAll();const cur=load('arena');let i;do{i=Math.floor(Math.random()*ARENAS.length)}while(ARENAS.length>1&&i===menuArenaI);menuArenaI=i;applyArena(i);demoReset();mcT=0}
 let menuArenaI=-1,mcT=0,mcD=0,mcEl=0,mcF=null;
 let pracMode=1,oppTierSel='any';
 function pracUI(){
