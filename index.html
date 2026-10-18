@@ -441,7 +441,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.28.0</div>
+  <div class="ver">v1.29.0</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -596,7 +596,7 @@ const CONST={aries:[[-1,0.2],[-0.3,0.45],[0.3,0.35],[0.9,-0.1]],taurus:[[-0.9,0.
 /* ---------- collection, parts, custom tops, boosts, level ---------- */
 const PCAT={ring:'外環',disc:'重量盤',tip:'軸心',emb:'紋章'},CATS=['ring','disc','tip','emb'],TIPN={flat:'平底',semi:'半圓',ball:'球形',sharp:'尖針'};
 const TOP_BY={};for(const d of TOPS)TOP_BY[d.id]=d;
-const BOOST_MAX=8,BOOST_BUDGET=6;
+const BOOST_CAP={brz:6,leg:7,div:8,cos:9},BOOST_PTS={brz:7,leg:8,div:8,cos:9},bMax=d=>BOOST_CAP[d.tier]||8,bPts=d=>BOOST_PTS[d.tier]||6;/* 強化上限依等級：單項 6/7/8/9、每顆可強化點數 7/8/8/9 */
 const BUFF_PRICE=250,BUFF_PCT=1.25;let tourBuff=null;
 const BOOST_ITEMS={atk:{n:'突擊增幅劑',d:'攻擊剋耐久：攻擊 +1',pr:40},sta:{n:'持久增幅劑',d:'耐久剋防禦：耐久 +1',pr:40},def:{n:'堅盾增幅劑',d:'防禦剋攻擊：防禦 +1',pr:40},wt:{n:'配重增幅劑',d:'重量 +1',pr:60}};
 const STAT_N={atk:'攻',def:'防',sta:'久',wt:'重'};
@@ -629,7 +629,7 @@ const BOLT_COLORS=[['white','白電','#ffffff',0],['gold','金電','#ffc83d',500
 let boltS=load('v2bolt')||{own:['white'],slots:1,equip:[]};if(!boltS.own||!boltS.own.includes('white'))boltS.own=['white'].concat(boltS.own||[]);
 const boltHex=id=>{const c=BOLT_COLORS.find(x=>x[0]===id);return parseInt((c||BOLT_COLORS[0])[2].slice(1),16)};
 function withBoost(def){
-  const b=boostOf(def.id);let o=def;if(b.atk||b.def||b.sta||b.wt){o=Object.assign({},def);for(const k of ['atk','def','sta','wt'])o[k]=Math.max(def[k],Math.min(BOOST_MAX,def[k]+(b[k]||0)))}
+  const b=boostOf(def.id);let o=def;if(b.atk||b.def||b.sta||b.wt){o=Object.assign({},def);for(const k of ['atk','def','sta','wt'])o[k]=Math.max(def[k],Math.min(bMax(def),def[k]+(b[k]||0)))}
   if(tourBuff&&tourBuff===def.id&&(tour||b3)){o=Object.assign({},o);for(const k of ['atk','def','sta','wt'])o[k]=+(o[k]*BUFF_PCT).toFixed(2)}return o}
 
 const BEATS={atk:'sta',sta:'def',def:'atk'};
@@ -2882,7 +2882,7 @@ function renderTopShop(box){
 function renderBox(box){
   let h=`<div class="shr"><div><b>🎁 零件盲盒</b><small>隨機抽到一顆陀螺的一個零件（外環／重量盤／軸心／紋章）<br>機率：青銅 48%・傳說 33%・神聖 14%・宇宙 5%；抽到重複退 20 幣</small></div><button class="mini ${coins<BOX_PRICE?'no':''}" data-a="box" type="button">${BOX_PRICE} 幣</button></div>`;
   h+=`<div class="note" style="font-size:12px">已收集零件：${ownedParts.size} 個（擁有的陀螺本身的 4 個零件也能拿來組裝）</div><div class="shH">能力增幅道具</div>`;
-  for(const k in BOOST_ITEMS){const it=BOOST_ITEMS[k];h+=`<div class="shr"><div><b>${it.n}　持有 ${inv[k]||0}</b><small>${it.d}　每顆陀螺最多強化 ${BOOST_BUDGET} 點，單項上限 ${BOOST_MAX}</small></div><button class="mini ${coins<it.pr?'no':''}" data-a="buyb" data-id="${k}" type="button">${it.pr} 幣</button></div>`}
+  for(const k in BOOST_ITEMS){const it=BOOST_ITEMS[k];h+=`<div class="shr"><div><b>${it.n}　持有 ${inv[k]||0}</b><small>${it.d}　每顆陀螺可強化的點數／單項上限依等級：青銅 7／6、傳說 8／7、神聖 8／8、宇宙 9／9</small></div><button class="mini ${coins<it.pr?'no':''}" data-a="buyb" data-id="${k}" type="button">${it.pr} 幣</button></div>`}
   h+=`<div class="shH">淘汰賽 buff 道具</div><div class="shr"><div><b>全能力強化券　持有 ${inv.buff25||0}</b><small>開始淘汰賽前可以選一顆陀螺使用：整場淘汰賽中，那顆陀螺的攻擊、防禦、耐久、重量全部 +25%。一次只能選一顆，用掉就消耗一張，也可以不用。</small></div><button class="mini ${coins<BUFF_PRICE?'no':''}" data-a="buyff" type="button">${BUFF_PRICE} 幣</button></div>`;
   box.innerHTML=h}
 function partsOf(cat){const ids=new Set();for(const d of TOPS)if(!d.custom&&hasPart(d.id+':'+cat))ids.add(d.id+':'+cat);return [...ids].sort((a,b)=>TIER_ORD[partTop(a).tier]-TIER_ORD[partTop(b).tier])}
@@ -2968,12 +2968,12 @@ function renderBoost(box){
   const raw=TOPS[bsSel],b=boostOf(raw.id),eff=withBoost(raw),used=b.atk+b.def+b.sta+b.wt;
   box.innerHTML='<div class="shH">選一顆陀螺（📌 可以釘選常用的）</div><div id="bsGrid"></div>';topGrid(box.querySelector('#bsGrid'),{list:mine.map(([t])=>t),sel:raw,onPick:d=>{bsSel=TOPS.indexOf(d);shRender()}});
   const pv=document.createElement('div');pv.className='prev';
-  pv.innerHTML=`<canvas width="152" height="152"></canvas><div><b style="font-size:17px">${raw.name}</b><div class="chip" style="display:inline-block;margin:4px 0">${raw.typeName}</div><div style="font-size:12px;color:var(--dim)">已強化 ${used}/${BOOST_BUDGET} 點<br>藍色是強化增加的部分</div></div>${statBars(eff,raw)}`;
+  pv.innerHTML=`<canvas width="152" height="152"></canvas><div><b style="font-size:17px">${raw.name}</b><div class="chip" style="display:inline-block;margin:4px 0">${raw.typeName}</div><div style="font-size:12px;color:var(--dim)">已強化 ${used}/${bPts(raw)} 點<br>藍色是強化增加的部分</div></div>${statBars(eff,raw)}`;
   box.appendChild(pv);drawIcon(pv.querySelector('canvas'),raw);
   let l='<div class="shH">使用增幅道具</div>';
-  for(const k in BOOST_ITEMS){const it=BOOST_ITEMS[k],can=(inv[k]||0)>0&&used<BOOST_BUDGET&&raw[k]+(b[k]||0)<BOOST_MAX;
-    l+=`<div class="shr"><div><b>${it.n}　持有 ${inv[k]||0}</b><small>${it.d}　（目前 ${eff[k]}／上限 ${BOOST_MAX}）</small></div><button class="mini ${can?'':'no'}" data-a="use" data-id="${k}" type="button">使用</button></div>`}
-  const w=document.createElement('div');w.style.display='grid';w.style.gap='6px';w.innerHTML=l+'<div class="note" style="font-size:11px">強化後單項最高 '+BOOST_MAX+'（滿分的 8 成），原本就 9、10 分的特色陀螺依然更強。</div>';box.appendChild(w)}
+  for(const k in BOOST_ITEMS){const it=BOOST_ITEMS[k],can=(inv[k]||0)>0&&used<bPts(raw)&&raw[k]+(b[k]||0)<bMax(raw);
+    l+=`<div class="shr"><div><b>${it.n}　持有 ${inv[k]||0}</b><small>${it.d}　（目前 ${eff[k]}／上限 ${bMax(raw)}）</small></div><button class="mini ${can?'':'no'}" data-a="use" data-id="${k}" type="button">使用</button></div>`}
+  const w=document.createElement('div');w.style.display='grid';w.style.gap='6px';w.innerHTML=l+'<div class="note" style="font-size:11px">「'+TIER_NAME[raw.tier]+'」強化後單項最高 '+bMax(raw)+'，可強化 '+bPts(raw)+' 點；原本就超過上限的特色陀螺依然更強。</div>';box.appendChild(w)}
 shBody.addEventListener('change',e=>{if(e.target.id==='bsSel'){bsSel=+e.target.value;shRender()}});
 shBody.addEventListener('input',e=>{if(e.target.id==='asmName')asm.name=e.target.value.slice(0,6)});
 function rollTier(w){const r=Math.random();let acc=0;for(const [t,p] of w){acc+=p;if(r<acc)return t}return w[w.length-1][0]}
@@ -3011,7 +3011,7 @@ shBody.addEventListener('click',e=>{
   else if(a==='save'){{if(customs.length>=MAXC){shMsg='最多只能存 '+MAXC+' 顆，請先到下面「我的自組陀螺」刪除舊的';sfx.hit(4)}else{const dup=customs.find(c=>CATS.every(k=>c[k]===asm[k])&&!!c.left===!!asm.left);if(dup){const d=TOPS.find(t=>t.custom&&t.sid===dup.sid);shMsg='這個組合已經存過了（'+(d?d.name:'自組陀螺')+'），同一種組合只能存一顆';sfx.hit(4);}else{const sid=customs.reduce((m,c)=>Math.max(m,c.sid),0)+1;customs.push(Object.assign({sid},asm));loadCustoms();savePrefs();shMsg='完成！「'+TOPS[TOPS.length-1].name+'」已加入陀螺清單（自組）';asm.name='';sfx.win()}}}}
   else if(a==='del'){const sid=+id,i=customs.findIndex(c=>c.sid===sid);if(i>=0){const cur=TOPS[pick];customs.splice(i,1);delete boosts['c'+sid];loadCustoms();const ni=TOPS.indexOf(cur);pick=ni>=0?ni:TOPS.findIndex(owns);save('top',pick);savePrefs();shMsg='已刪除'}}
   else if(a==='use'){const raw=TOPS[bsSel],bb=boosts[raw.id]=boostOf(raw.id),used=bb.atk+bb.def+bb.sta+bb.wt;
-    if(!(inv[id]>0))shMsg='沒有這個道具了，到「盲盒・道具」買';else if(used>=BOOST_BUDGET)shMsg='這顆陀螺已強化到 '+BOOST_BUDGET+' 點上限';else if(raw[id]+(bb[id]||0)>=BOOST_MAX)shMsg='這項能力已經到上限 '+BOOST_MAX+' 了';
+    if(!(inv[id]>0))shMsg='沒有這個道具了，到「盲盒・道具」買';else if(used>=bPts(raw))shMsg='這顆陀螺已強化到 '+bPts(raw)+' 點上限';else if(raw[id]+(bb[id]||0)>=bMax(raw))shMsg='這項能力已經到上限 '+bMax(raw)+' 了';
     else{inv[id]--;bb[id]=(bb[id]||0)+1;savePrefs();shMsg=raw.name+' '+STAT_N[id]+' +1！';sfx.item()}}
   shRender()});
 /* ---------- 自己畫貼紙（輔助繪畫＋魔法潤飾） ---------- */
