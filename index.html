@@ -441,7 +441,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.29.1</div>
+  <div class="ver">v1.29.2</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2905,14 +2905,16 @@ function renderAsm(box){
 let stSid=0,stkTop=0,wz={step:0,id:null};
 const WZ=[['選陀螺','想改造哪一顆陀螺？（內建的、自組的都可以）'],['主花紋','想要什麼主花紋？'],['副花紋','要不要再疊一層副花紋？'],['外環邊緣','外環邊緣要加什麼裝飾？'],['內圈造型','內圈（中間那一圈）要什麼造型？'],['內圈粗細','內圈要多粗？'],['內圈花紋','內圈上要不要加花紋？'],['內圈顏色','內圈要什麼顏色？'],['貼紙','陀螺中心要貼什麼貼紙？'],['副貼紙','要不要再疊一個小貼紙？']];
 const swH=(act,cur,def)=>'<div class="pset">'+PCOLS.map(([n,c])=>`<button type="button" class="pbtn" data-a="${act}" data-id="${c}" aria-pressed="${(cur||def)===c}" style="border-left:8px solid ${c}">${n}</button>`).join('')+'</div>';
+let wzScroll=0;/* 換步驟時回到頂端，避免置頂預覽卡蓋住新步驟的標題和第一排選項 */
 function renderStyle(box){
+  if(wzScroll){wzScroll=0;requestAnimationFrame(()=>{shopEl.scrollTop=0})}
   const mine=TOPS.filter(t=>owns(t));
   if(wz.step>0&&!mine.some(t=>t.id===wz.id))wz.step=0;
   const nm=k=>(PATS.find(p=>p[0]===k)||PATS[0])[1];
   let h='';
   if(wz.step===0){
     h+=`<div class="wzq"><small>步驟 1／${WZ.length}</small><b>${WZ[0][1]}</b></div><div id="stGrid"></div><div class="note" style="font-size:12px">選好陀螺就會自動進入下一步。之後每一步都能看到預覽，不滿意可以按「上一步」回去改。</div>`;
-    box.innerHTML=h;topGrid(box.querySelector('#stGrid'),{list:mine,sel:TOPS.find(t=>t.id===wz.id)||null,onPick:d=>{wz.id=d.id;wz.step=1;shRender()}});return}
+    box.innerHTML=h;topGrid(box.querySelector('#stGrid'),{list:mine,sel:TOPS.find(t=>t.id===wz.id)||null,onPick:d=>{wz.id=d.id;wz.step=1;wzScroll=1;shRender()}});return}
   const def=TOPS.find(t=>t.id===wz.id);stkTop=TOPS.indexOf(def);
   const cs=stk[def.id],rm=rimOf(def),k=wz.step;
   const sum=[`花紋：${def.pat?nm(def.pat):'無'}${def.pat2?' ＋ '+nm(def.pat2):''}`,`邊緣：${rm?(RIMS.find(x=>x[0]===rm.k)||RIMS[0])[1]:'無'}`,`內圈：${(()=>{const o=inS[def.id];return o?(INSHAPES.find(x=>x[0]===(o.s||'circle'))[1]+(o.p?'・'+INPATS.find(x=>x[0]===o.p)[1]:'')):'預設'})()}`,`貼紙：${cs?stkNm(cs.k)+(cs.k2?' ＋ '+stkNm(cs.k2):''):'無'}`].join('<br>');
@@ -3001,7 +3003,7 @@ shBody.addEventListener('click',e=>{
       delete rimS[def.id];delete inS[def.id];delete stk[def.id];
       if(def.custom){const ci=customs.find(c=>c.sid===def.sp.sid);if(ci){ci.pat=ci.pat2=null;delete ci.patC;delete ci.patC2;const cur=TOPS[pick];loadCustoms();const ni=TOPS.indexOf(cur);pick=ni>=0?ni:TOPS.findIndex(owns)}}else{delete patS[def.id];applyPatS()}
       for(const k of Object.keys(patCache))delete patCache[k];wz.step=1;refreshGlyphs();savePrefs();shMsg='已還原「'+def.name+'」的預設造型'}}
-  else if(a==='wzgo'){if(id==='done'){wz.step=0;shMsg='✓ 「'+(TOPS.find(t=>t.id===wz.id)||{name:''}).name+'」改造完成，可以再選另一顆'}else wz.step=Math.max(0,wz.step+ +id)}
+  else if(a==='wzgo'){if(id==='done'){wz.step=0;shMsg='✓ 「'+(TOPS.find(t=>t.id===wz.id)||{name:''}).name+'」改造完成，可以再選另一顆'}else{wz.step=Math.max(0,wz.step+ +id);wzScroll=1}}
   else if(a==='ins'||a==='inw'||a==='inp'||a==='inpc'||a==='inr'){const def=TOPS[stkTop],o=inS[def.id]=inS[def.id]||Object.assign({},def.inner||{});
     if(a==='ins')o.s=id==='circle'?null:id;else if(a==='inw')o.w=+id===2?null:+id;else if(a==='inp'){o.p=id==='none'?null:id;if(id!=='none'&&!o.pc)o.pc='#ffffff'}else if(a==='inpc'){o.pc=id}else o.c=id==='none'?null:id;
     for(const k of ['s','w','p','pc','c'])if(o[k]==null)delete o[k];if(!o.p)delete o.pc;if(!Object.keys(o).length)delete inS[def.id];delete patCache[def.id];savePrefs()}
