@@ -298,6 +298,16 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
       <div class="tops" id="pick"></div>
       <div class="card" id="detail" aria-pressed="true" aria-live="polite"></div>
       </div></div>
+      <div class="secHead"><b>對戰模式</b></div>
+      <div class="row"><button class="btn ghost" id="pm1" type="button" aria-pressed="true">單人</button><button class="btn ghost" id="pm2" type="button" aria-pressed="false">雙人</button></div>
+      <div id="pSolo"><div class="secHead"><b>對手等級</b><span>不限定</span></div><div class="row" id="oppTier"></div></div>
+      <div id="pDuo" hidden>
+        <div class="fighter"><canvas id="pp2Face" width="144" height="144"></canvas><div><b id="pp2NameLbl">玩家二</b><span id="pp2TopLbl">—</span></div><button class="btn small" id="pp2Rand" type="button">換造型</button></div>
+        <div style="display:grid;gap:6px;margin-top:10px"><label for="pp2NameIn" style="font-size:13px;font-weight:700">P2 名字</label><input id="pp2NameIn" maxlength="8" autocomplete="off" style="all:unset;box-sizing:border-box;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.1);color:#fff;font-size:15px"></div>
+        <div class="secHead"><b>P2 的陀螺</b><span>任何等級都能選</span></div><div id="pp2Grid"></div>
+        <div class="note" style="font-size:12px;color:var(--dim)">輪流發射，畫面上下兩半各自操控（鍵盤 P1=WASD＋空白鍵、P2=方向鍵＋Enter）。</div>
+      </div>
+      <div class="note" style="font-size:12px;color:var(--dim)">每打完一場：+20 商店幣、+20 經驗（不會獲得陀螺）。</div>
       <div class="secHead"><b>戰鬥盤</b><span id="arenaName">星藍競技場</span><button class="mini" id="arenaRand" type="button" aria-pressed="false">🎲 隨機</button></div>
       <div class="arenas" id="arenas"></div>
       <button class="btn" id="goPrac" type="button">開始對戰</button>
@@ -431,7 +441,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.24.0</div>
+  <div class="ver">v1.25.0</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -1928,7 +1938,7 @@ emit=(type,d)=>{
   else if(type==='meteor'){const y=groundHc(d.x,d.z);sparks(d.x,y+0.6,d.z,110,[[1.9,0.8,0.2],[1.8,1.4,0.5],[0.6,0.5,0.5]]);shock(d.x,y+0.2,d.z,2.8);shock(d.x,y+0.5,d.z,1.6);if(vis){sf.boom();shake=Math.max(shake,1.0)}}
   else if(type==='special'){sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,50,[topRGB(d.T),bodyRGB(d.T)]);shock(d.T.x,groundHc(d.T.x,d.T.z)+0.4,d.T.z,1.8);
     {const fx=d.T.def.fx;if(fx==='quake'){shock(d.T.x,groundHc(d.T.x,d.T.z)+0.2,d.T.z,3.4);if(vis)shake=Math.max(shake,1.2)}if(fx==='holy'||fx==='moon'||fx==='song')shock(d.T.x,groundHc(d.T.x,d.T.z)+0.9,d.T.z,2.6);if(fx==='flame'||fx==='dragon')sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,60,[[1.8,0.7,0.15],[1.8,1.3,0.3]]);if(fx==='ice'||fx==='snow')sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,60,[[1.2,1.6,1.8],[1.6,1.6,1.6]])}
-    if(vis){sf.special();if(d.T===P)stats.sp++;cutIn(d.T);if(!reduce)slowT=Math.max(slowT,0.9)}}
+    if(vis){sf.special();if(!rpOn){if(d.T===P)stats.sp++;cutIn(d.T);if(!reduce)slowT=Math.max(slowT,0.9)}}}
 };
 
 /* ---------- HUD ---------- */
@@ -2013,17 +2023,33 @@ $('go').onclick=()=>{audioInit();openPractice()};
 function mountP1(host){host.appendChild($('p1Panel'));renderPicker();renderDetail();menuFighter();demoReset()}
 let arenaRandMode=load('arenaR')===1;
 function arenaRandUI(){$('arenaRand').setAttribute('aria-pressed',arenaRandMode);if(arenaRandMode)[...arenasEl.children].forEach(c=>c.setAttribute('aria-pressed',false))}
-function openPractice(){$('menu').hidden=true;$('practice').hidden=false;mountP1($('pracSlot'));const a=load('arena');if(!arenaRandMode)pickArena(Number.isInteger(a)&&a<ARENAS.length?a:0);arenaRandUI()}
+function openPractice(){pracUI();$('menu').hidden=true;$('practice').hidden=false;mountP1($('pracSlot'));const a=load('arena');if(!arenaRandMode)pickArena(Number.isInteger(a)&&a<ARENAS.length?a:0);arenaRandUI()}
 $('goPrac').onclick=()=>{audioInit();startMatch()};
 $('pracBack').onclick=()=>{$('practice').hidden=true;$('menu').hidden=false;menuEnter()};
 function quietAll(){try{humSet(0,false);if(AC&&master){const t=AC.currentTime;master.gain.cancelScheduledValues(t);master.gain.setValueAtTime(0,t);master.gain.setValueAtTime(0.8,t+0.35)}}catch(e){}}
 function menuEnter(){quietAll();const cur=load('arena');let i;do{i=Math.floor(Math.random()*ARENAS.length)}while(ARENAS.length>1&&i===menuArenaI);menuArenaI=i;applyArena(i);demoReset();mcT=0}
 let menuArenaI=-1,mcT=0,mcD=0,mcEl=0,mcF=null;
+let pracMode=1,oppTierSel='any';
+function pracUI(){
+  $('pm1').setAttribute('aria-pressed',pracMode===1);$('pm2').setAttribute('aria-pressed',pracMode===2);$('pSolo').hidden=pracMode!==1;$('pDuo').hidden=pracMode!==2;
+  const o=$('oppTier');if(!o.children.length)[['any','任意'],['same','同級'],['brz','青銅'],['leg','傳說'],['div','神聖'],['cos','宇宙']].forEach(([k,n])=>{const b=document.createElement('button');b.className='btn ghost small';b.type='button';b.dataset.t=k;b.textContent=n;o.appendChild(b)});
+  [...o.children].forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===oppTierSel));
+  if(pracMode===2){const ni=$('pp2NameIn');if(document.activeElement!==ni)ni.value=p2Name;
+    topGrid($('pp2Grid'),{list:TOPS.filter(t=>!t.custom||owns(t)),sel:TOPS[p2pick],onPick:d=>{p2pick=TOPS.indexOf(d);pracUI()}});
+    $('pp2NameLbl').textContent=p2Name;$('pp2TopLbl').textContent=TOPS[p2pick].name+'・'+TOPS[p2pick].typeName;drawPortrait($('pp2Face'),p2Av)}
+}
+$('pm1').onclick=()=>{pracMode=1;pracUI()};$('pm2').onclick=()=>{pracMode=2;pracUI()};
+$('oppTier').onclick=e=>{const b=e.target.closest('[data-t]');if(b){oppTierSel=b.dataset.t;pracUI()}};
+$('pp2NameIn').addEventListener('input',e=>{p2Name=e.target.value.trim().slice(0,8)||'玩家二';save('p2name',p2Name);$('pp2NameLbl').textContent=p2Name});
+$('pp2Rand').onclick=()=>{p2Av=randomAvatar();save('p2av',p2Av);pracUI()};
+let pracRun=false;
 function startMatch(){
-  markPlayed();
-  const others=TOPS.filter((d,i)=>i!==pick&&!d.custom&&d.tier===TOPS[pick].tier);const eDef=others[Math.floor(Math.random()*others.length)];
-  b3=null;curMatch=null;duel2=false;matchTarget=4;aiSkill=0.7;npcChgX=duelX=passX=1;
-  score={P:0,E:0};stats={hits:0,max:0,perf:0,sp:0};eAv=randomAvatar();eName=RIVAL_NAMES[Math.floor(Math.random()*RIVAL_NAMES.length)];
+  markPlayed();pracRun=true;
+  const duo=pracMode===2;
+  const tr=oppTierSel==='any'?null:oppTierSel==='same'?TOPS[pick].tier:oppTierSel;
+  const others=TOPS.filter((d,i)=>i!==pick&&!d.custom&&(!tr||d.tier===tr));const eDef=duo?withBoost(TOPS[p2pick]):others[Math.floor(Math.random()*others.length)];
+  b3=null;curMatch=null;duel2=duo;matchTarget=4;aiSkill=0.7;npcChgX=duo?1:1;duelX=duo?1.5:1;passX=duo?0.2:1;
+  score={P:0,E:0};stats={hits:0,max:0,perf:0,sp:0};if(duo){eAv=p2Av;eName=p2Name}else{eAv=randomAvatar();eName=RIVAL_NAMES[Math.floor(Math.random()*RIVAL_NAMES.length)]}
   if(arenaRandMode)applyArena(Math.floor(Math.random()*ARENAS.length));setupTops(withBoost(TOPS[pick]),eDef);$('menu').hidden=true;$('practice').hidden=true;$('matchEnd').hidden=true;$('hud').hidden=false;hudNames();toLaunch();
 }
 $('again').onclick=()=>{audioInit();startMatch()};
@@ -2166,6 +2192,9 @@ function showMatchEnd(){
   $('meBig').textContent=curMatch?(curMatch.duel?(win?pName:eName)+' 獲勝！':win?'晉級！':'止步於 '+RANK_OF[tour.round]):win?'你贏了！':'再接再厲！';
   $('meRow').hidden=!!curMatch;$('meNext').hidden=!curMatch;$('meNext').onclick=()=>{$('matchEnd').hidden=true;tourMatchDone(win)};$('meY').textContent=score.P;$('meR').textContent=score.E;
   $('stHits').textContent=stats.hits;$('stMax').textContent=Math.round(stats.max*10);$('stPerf').textContent=stats.perf;$('stSp').textContent=stats.sp;
+  let rw=null;if(!curMatch&&pracRun){pracRun=false;addCoins(20);xp+=20;let up=0;while(xp>=xpNeed(lv)){xp-=xpNeed(lv);lv++;up++}savePrefs();menuStatus();rw='+20 商店幣　+20 經驗'+(up?'　⬆ 升級！Lv '+lv:'')}
+  let r=$('meRw');if(!r){r=document.createElement('div');r.id='meRw';r.style.cssText='margin:8px 0;font-weight:700;color:#ffd23d;text-align:center';$('meRow').parentNode.insertBefore(r,$('meRow').nextSibling)}if(rw!==null||curMatch){r.textContent=rw||'';r.hidden=!rw}
+  if(!curMatch&&duel2)$('meBig').textContent=(win?pName:eName)+' 獲勝！';
   $('matchEnd').hidden=false;if(win){sfx.win();popText('冠軍！')}
 }
 
