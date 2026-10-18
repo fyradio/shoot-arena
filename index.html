@@ -441,7 +441,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.25.0</div>
+  <div class="ver">v1.26.0</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -634,9 +634,10 @@ function withBoost(def){
 const BEATS={atk:'sta',sta:'def',def:'atk'};
 let emit=()=>{};let REC=null,rpOn=false,rpIdx=0,rpT=0,rpSave=null,recT=0;
 function bowlH(r){return 0.03*r*r}
-let BXS=4.5,BALDEF=1;const BX={atk:7.5,bal:1,sta:4,def:1};
+/* 星魄爆發：宇宙級攻擊型必殺中——減傷、打出耐久傷害加成、命中回耐久 */
+const AX={bx:1.6,guard:0.4,heal:0.012};const isCA=T=>T.def.tier==='cos'&&T.def.type==='atk';let BXS=4.5,BALDEF=1;const BX={atk:7.5,bal:1,sta:4,def:1};
 const SPD={atk:1,bal:1.2,sta:1.35,def:1},INIT={atk:1.1,bal:1,sta:1.02,def:0.8};
-const TUNE={"p_red":0.91,"p_blue":1.125,"p_yellow":0.771,"p_green":0.79,"p_white":0.738,"p_black":0.893,"s_lyra":0.9,"s_aquila":1.067,"s_cassio":0.844,"s_orion":0.931,"s_ursa":1.418,"s_cygnus":0.88,"n_kage":1.094,"n_kaze":0.917,"n_hi":0.958,"n_mizu":0.895,"n_tsuchi":1.019,"n_rai":0.811,"phoenix":0.926,"tri_arrow":0.945,"b_seiryu":0.793,"b_byakko":0.921,"b_suzaku":0.914,"b_genbu":0.958,"m_ares":1.034,"m_titan":0.839,"m_raven":0.792,"m_raijin":1.219,"m_aegis":0.913,"m_zero":0.881,"g_aries":0.987,"g_taurus":0.793,"g_gemini":0.837,"g_leo":0.896,"g_scorpio":1.138,"g_sagitt":0.903,"d_red":1.041,"d_azure":0.765,"d_gold":0.802,"d_black":0.908,"d_white":0.88,"d_king":0.703,"k_masamune":0.808,"k_muramasa":1.229,"k_kiku":1.151,"k_onimaru":0.893,"k_monohoshi":0.923,"k_douji":0.909,"u_nova":1.222,"u_comet":1.953,"u_saber":1.383,"u_neutron":1.9,"u_halo":1.947,"u_bastion":1.12,"u_nebula":0.941,"u_aurora":0.582,"u_sirius":0.585,"u_hole":0.695,"u_pulsar":0.893,"u_eternal":0.498,"u_quasar":1.615,"u_gamma":0.776,"u_mars":1.716,"u_saturn":1.979,"u_jupiter":1.746,"u_dwarf":0.845,"u_moon":0.918,"u_andromeda":0.64,"u_string":0.9,"u_sun":0.944,"u_dark":0.563,"u_dust":0.615};
+const TUNE={"p_red":0.91,"p_blue":1.125,"p_yellow":0.771,"p_green":0.79,"p_white":0.738,"p_black":0.893,"s_lyra":0.9,"s_aquila":1.067,"s_cassio":0.844,"s_orion":0.931,"s_ursa":1.418,"s_cygnus":0.88,"n_kage":1.094,"n_kaze":0.917,"n_hi":0.958,"n_mizu":0.895,"n_tsuchi":1.019,"n_rai":0.811,"phoenix":0.926,"tri_arrow":0.945,"b_seiryu":0.793,"b_byakko":0.921,"b_suzaku":0.914,"b_genbu":0.958,"m_ares":1.034,"m_titan":0.839,"m_raven":0.792,"m_raijin":1.219,"m_aegis":0.913,"m_zero":0.881,"g_aries":0.987,"g_taurus":0.793,"g_gemini":0.837,"g_leo":0.896,"g_scorpio":1.138,"g_sagitt":0.903,"d_red":1.041,"d_azure":0.765,"d_gold":0.802,"d_black":0.908,"d_white":0.88,"d_king":0.703,"k_masamune":0.808,"k_muramasa":1.229,"k_kiku":1.151,"k_onimaru":0.893,"k_monohoshi":0.923,"k_douji":0.909,"u_nova":1.222,"u_comet":2.5,"u_saber":1.383,"u_neutron":1.9,"u_halo":1.947,"u_bastion":1.12,"u_nebula":0.941,"u_aurora":0.582,"u_sirius":0.585,"u_hole":0.695,"u_pulsar":0.893,"u_eternal":0.498,"u_quasar":1.615,"u_gamma":0.776,"u_mars":2.3,"u_saturn":1.979,"u_jupiter":1.746,"u_dwarf":0.845,"u_moon":0.918,"u_andromeda":0.64,"u_string":0.9,"u_sun":0.944,"u_dark":0.563,"u_dust":0.615};
 const SPCAP=0.4;/* 單次必殺（含連擊）最多打掉防禦/耐久型這麼多耐久，開場必殺不會直接爆 */
 function spCap(V,X,l){if(V.sp||V.chain||V.capT>0){const id='s'+(V.spId||0);if(V.selfId!==id){V.selfId=id;V.selfTaken=0}const r=Math.max(0,Math.min(l,SPCAP-V.selfTaken));V.selfTaken+=r;l=r}
   if(!((X.sp||X.chain||X.capT>0)&&(V.def.type==='def'||V.def.type==='sta')))return l;const id=X.side+':'+(X.spId||0);if(V.capId!==id){V.capId=id;V.capTaken=0}const r=Math.max(0,Math.min(l,SPCAP-V.capTaken));V.capTaken+=r;return r}
@@ -845,20 +846,21 @@ function collide(A,B,h){
   const advA=BEATS[A.def.type]===B.def.type?1.6:A.def.type==='bal'&&B.def.type==='def'?BALDEF:1,advB=BEATS[B.def.type]===A.def.type?1.6:B.def.type==='bal'&&A.def.type==='def'?BALDEF:1;
   const defA=(0.6+A.def.def*0.12)*(A.shell>0?1.5:1)*bA.def,defB=(0.6+B.def.def*0.12)*(B.shell>0?1.5:1)*bB.def;
   const atkA=(1+0.04*(A.def.wt-5))*(0.3+A.def.atk*0.12)*(A.def.type==='atk'?1.55:A.def.type==='bal'?1.4:1)*bA.atk*(A.def.id==='b_suzaku'&&spA?0.7:1)*(A.awoke?1.08:1),atkB=(1+0.04*(B.def.wt-5))*(0.3+B.def.atk*0.12)*(B.def.type==='atk'?1.55:B.def.type==='bal'?1.4:1)*bB.atk*(B.def.id==='b_suzaku'&&spB?0.7:1)*(B.awoke?1.08:1);
-  const gA=spGuard(A),gB=spGuard(B),pA=impact*atkB*advB/(mA*defA)*gA,pB=impact*atkA*advA/(mB*defB)*gB;
+  const gA=spGuard(A)*(isCA(A)&&spA?AX.guard:1),gB=spGuard(B)*(isCA(B)&&spB?AX.guard:1),pA=impact*atkB*advB/(mA*defA)*gA,pB=impact*atkA*advA/(mB*defB)*gB;
   const tx=-nz,tz=nx;
   A.vx+=-nx*pA+tx*pA*0.3;A.vz+=-nz*pA+tz*pA*0.3;
   B.vx+=nx*pB-tx*pB*0.3;B.vz+=nz*pB-tz*pB*0.3;
   A.dash=0;B.dash=0;
   A.s-=impact*0.005*atkB*advB/(defA*Math.sqrt(A.m))*gA*(SPD[B.def.type]||1)*(B.def.type==='atk'&&spB?0.5:1);B.s-=impact*0.005*atkA*advA/(defB*Math.sqrt(B.m))*gB*(SPD[A.def.type]||1)*(A.def.type==='atk'&&spA?0.5:1);
   if(impact>9){
-    A.burst-=pasBurst(A,spCap(A,B,(impact-9)*0.012*atkB*advB/defA*(1.4-Math.min(1,A.s)*0.6)*(A.shell>0?0.3:1)*bB.br*bA.brIn*gA*(BRK[A.def.type]||1)*DURM*((A.sp||A.chain)?0.5:1)*(BX[B.def.type]||1)*(stB?BXS:1)*durMod(A.def)*(B.def.type==='atk'&&A.def.type==='sta'?1.25:1)*(B.def.type==='sta'&&(A.def.type==='atk'||A.def.type==='def')?1/0.7:1)));
-    B.burst-=pasBurst(B,spCap(B,A,(impact-9)*0.012*atkA*advA/defB*(1.4-Math.min(1,B.s)*0.6)*(B.shell>0?0.3:1)*bA.br*bB.brIn*gB*(BRK[B.def.type]||1)*DURM*((B.sp||B.chain)?0.5:1)*(BX[A.def.type]||1)*(stA?BXS:1)*durMod(B.def)*(A.def.type==='atk'&&B.def.type==='sta'?1.25:1)*(A.def.type==='sta'&&(B.def.type==='atk'||B.def.type==='def')?1/0.7:1)));
+    A.burst-=pasBurst(A,spCap(A,B,(impact-9)*0.012*atkB*advB/defA*(1.4-Math.min(1,A.s)*0.6)*(A.shell>0?0.3:1)*bB.br*bA.brIn*gA*(BRK[A.def.type]||1)*DURM*((A.sp||A.chain)?0.5:1)*(BX[B.def.type]||1)*(isCA(B)&&spB?AX.bx:1)*(stB?BXS:1)*durMod(A.def)*(B.def.type==='atk'&&A.def.type==='sta'?1.25:1)*(B.def.type==='sta'&&(A.def.type==='atk'||A.def.type==='def')?1/0.7:1)));
+    B.burst-=pasBurst(B,spCap(B,A,(impact-9)*0.012*atkA*advA/defB*(1.4-Math.min(1,B.s)*0.6)*(B.shell>0?0.3:1)*bA.br*bB.brIn*gB*(BRK[B.def.type]||1)*DURM*((B.sp||B.chain)?0.5:1)*(BX[A.def.type]||1)*(isCA(A)&&spA?AX.bx:1)*(stA?BXS:1)*durMod(B.def)*(A.def.type==='atk'&&B.def.type==='sta'?1.25:1)*(A.def.type==='sta'&&(B.def.type==='atk'||B.def.type==='def')?1/0.7:1)));
   }
   {const rf=impact*0.0012,lc=impact*0.0011;if(B.def.pas==='reflect')A.s-=rf;if(A.def.pas==='reflect')B.s-=rf;if(A.def.pas==='leech')A.s=Math.min(1.1,A.s+lc);if(B.def.pas==='leech')B.s=Math.min(1.1,B.s+lc)}
   if(bA.k==='thunder')B.s-=0.04*(A.def.type==='atk'?0.5:1);if(bB.k==='thunder')A.s-=0.04*(B.def.type==='atk'?0.5:1);if(bA.k==='ice')B.s-=impact*0.003;if(bB.k==='ice')A.s-=impact*0.003;
   A.charge=Math.min(1,A.charge+impact*0.009*chgMul(A));B.charge=Math.min(1,B.charge+impact*0.009*chgMul(B));
   {const dr=Math.min(0.08,0.02+impact*0.003);if(A.def.type==='bal'&&B.state==='spin')B.charge=Math.max(0,B.charge-dr);if(B.def.type==='bal'&&A.state==='spin')A.charge=Math.max(0,A.charge-dr)}
+  if(isCA(A)&&spA)A.burst=Math.min(1,A.burst+AX.heal);if(isCA(B)&&spB)B.burst=Math.min(1,B.burst+AX.heal);
   emit('hit',{A,B,bA:bA.k,bB:bB.k,impact,x:(A.x+B.x)/2,z:(A.z+B.z)/2});
   for(const T of [A,B])if(T.burst<=0&&T.def.tier==='cos'&&!T.bar2){T.bar2=true;T.burst=1;emit('bar2',{T});awaken(T)}
   if(A.burst<=0&&B.burst<=0){if(A.burst<=B.burst)B.burst=0.02;else A.burst=0.02}/* 同時爆裂：只爆受損較重的一方 */
