@@ -441,7 +441,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.30.0</div>
+  <div class="ver">v1.30.1</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2741,7 +2741,7 @@ function overlayTick(dt){
   if(ov.mode||cutIns.length||speedFx>0||flashFx>0){cg.setTransform(CD,0,0,CD,0,0);cg.clearRect(0,0,CW,CH);drawSpeedFx(dt);if(ov.mode)drawSplit(dt);drawCutIns(dt);cutDirty=true}
   else if(cutDirty){cg.setTransform(1,0,0,1,0,0);cg.clearRect(0,0,cut.width,cut.height);cutDirty=false}
 }
-function sayZh(text){try{const u=new SpeechSynthesisUtterance(text+'！');u.lang='zh-TW';u.rate=1.15;u.pitch=1.35;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+function sayZh(text){}/* 必殺語音已關閉 */
 
 /* ---------- creator (捏臉) ---------- */
 let crOpen=false,crKey='gender',crPose='stand',crT=0;
