@@ -441,7 +441,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.29.4</div>
+  <div class="ver">v1.30.0</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -493,30 +493,30 @@ function T_(id,name,tier,series,type,glyph,color,accent,st,blades,style,motif,ti
   Object.assign(d,x||{});d.bolts=[accent].concat(SERIES_BOLTS[series]||[]);return d}
 const TOPS=[
  // ===== 宇宙：星神（最高等級：雙耐久條、覺醒、二段必殺、專屬被動） =====
- T_('u_nova','超新星','cos','cosmos','atk','新',0x1a0630,0xff7a3d,[10,6,7,6],3,'claw','rune','flat','超新星爆裂','star6','恆星爆炸的衝擊。被動「新星」：必殺氣累積 ×1.3',{pas:'nova'}),
- T_('u_comet','彗星王','cos','cosmos','atk','彗',0x06142e,0x5fe0ff,[10,5,8,5],3,'arrow','thunder','flat','彗星衝擊','bolt7','拖著長尾的彗星。被動「彗尾」：衝刺與最高速度更快',{pas:'comet'}),
- T_('u_saber','銀河劍','cos','cosmos','atk','劍',0x0a0a22,0xc8b6ff,[10,6,8,5],2,'katana','rune','flat','銀河一閃','slash3','斬開銀河的光劍。被動「吸能」：撞擊時吸回轉速',{pas:'leech'}),
- T_('u_neutron','中子星','cos','cosmos','def','中',0x101626,0x9fe8ff,[6,10,7,9],6,'bump','hex','ball','中子壓縮','fx:quake','密度極高的星核。被動「重質」：更重、更難被撞開',{pas:'mass'}),
- T_('u_halo','星環盾','cos','cosmos','def','環',0x14102a,0xffd23d,[6,9,8,8],5,'gear','rune','ball','星環結界','fx:barrier','行星環化成的盾。被動「反震」：被撞時反扣對手轉速',{pas:'reflect'}),
- T_('u_bastion','隕石堡','cos','cosmos','def','堡',0x221a14,0xff8a5a,[7,9,7,8],6,'scale','hex','ball','隕石壁壘','fx:flame','隕石堆成的堡壘。被動「再生」：耐久會慢慢回復',{pas:'regen'}),
- T_('u_nebula','星雲','cos','cosmos','bal','雲',0x1c0a34,0xff8fe0,[8,7,6,6],5,'petal','swirl','semi','星雲漩渦','spiral','流動的彩色星雲。被動「環繞」：操控更靈活',{pas:'orbit'}),
- T_('u_aurora','極光','cos','cosmos','bal','極',0x061e24,0x5dffb0,[7,7,7,6],4,'wing','swirl','semi','極光之舞','star5','夜空的光之帶。被動「日蝕」：覺醒時必殺氣大量回復並張開護盾',{pas:'eclipse'}),
- T_('u_sirius','天狼','cos','cosmos','bal','狼',0x0c1430,0xe8f1ff,[8,7,6,6],4,'shuriken','gem','semi','天狼星陣','star6','夜空最亮的星。被動「虛化」：有機率完全閃過耐久傷害',{pas:'phase'}),
- T_('u_hole','黑洞','cos','cosmos','sta','洞',0x050308,0xb24bff,[4,4,8,6],2,'crescent','eye','sharp','事件視界','fx:eye','連光都逃不出去。被動「引力」：把附近的對手吸過來',{pas:'gravity'}),
- T_('u_pulsar','脈衝星','cos','cosmos','sta','脈',0x0a1028,0x4fd8ff,[4,4,7,6],4,'star','bolt','sharp','脈衝波','fx:swirl','規律閃爍的中子星。被動「脈衝」：每 6 秒放出震波推開對手',{pas:'pulse'}),
- T_('u_eternal','永恆星','cos','cosmos','sta','恆',0x1a1406,0xfff2a0,[5,4,7,5],4,'zodiac','gem','sharp','永恆之光','fx:moon','永遠不會熄滅的星。被動「星盾」：每局第一次重擊完全擋下',{pas:'shield'}),
- T_('u_quasar','類星體','cos','cosmos','atk','類',0x14061e,0xff4bd8,[10,6,7,6],3,'saw','rune','flat','類星噴流','cross','宇宙最亮的光源。被動「脈衝」：每 6 秒放出震波推開對手',{pas:'pulse'}),
- T_('u_gamma','伽瑪射線','cos','cosmos','atk','伽',0x061a10,0x7dff5a,[10,5,8,6],3,'arrow','thunder','flat','伽瑪爆發','weave4','一瞬間的高能閃光。被動「新星」：必殺氣累積 ×1.3',{pas:'nova'}),
- T_('u_mars','火星','cos','cosmos','atk','火',0x3a0a04,0xff6a1a,[10,6,7,7],3,'claw','stripe','flat','戰神火球','katana','紅色的戰鬥之星。被動「再生」：耐久會慢慢回復',{pas:'regen'}),
- T_('u_saturn','土星','cos','cosmos','def','土',0x2a2010,0xffd27a,[6,10,7,9],6,'bump','hex','ball','土星光環','fx:shell','戴著光環的巨星。被動「環繞」：操控更靈活',{pas:'orbit'}),
- T_('u_jupiter','木星','cos','cosmos','def','木',0x2a160a,0xff9a5a,[7,9,7,10],6,'scale','swirl','ball','大紅斑','fx:quake','最大的行星。被動「引力」：把附近的對手吸過來',{pas:'gravity'}),
- T_('u_dwarf','白矮星','cos','cosmos','def','矮',0xe8ecf4,0x7be0ff,[6,10,8,8],5,'gear','gem','ball','白矮守護','fx:holy','小而堅硬的星核。被動「星盾」：每局第一次重擊完全擋下',{pas:'shield'}),
- T_('u_moon','月神','cos','cosmos','bal','月',0x101830,0xcfe3ff,[8,7,6,6],2,'crescent','eye','semi','滿月之輪','tri','守護夜空的月。被動「吸能」：撞擊時吸回轉速',{pas:'leech'}),
- T_('u_andromeda','仙女星系','cos','cosmos','bal','仙',0x180a2a,0xc78bff,[7,8,6,7],5,'petal','swirl','semi','星系迴旋','star5','旋轉的鄰居星系。被動「重質」：更重、更難被撞開',{pas:'mass'}),
- T_('u_string','宇宙弦','cos','cosmos','bal','弦',0x0a0a14,0x39e6ff,[8,6,7,6],4,'shuriken','bolt','semi','弦振斬','slash2','貫穿宇宙的能量之弦。被動「彗尾」：衝刺與最高速度更快',{pas:'comet'}),
- T_('u_sun','太陽','cos','cosmos','sta','陽',0x3a1a00,0xffd23d,[5,4,7,6],4,'star','rune','sharp','日冕烈焰','fx:dragon','燃燒不息的恆星。被動「日蝕」：覺醒時必殺氣大量回復並張開護盾',{pas:'eclipse'}),
- T_('u_dark','暗物質','cos','cosmos','sta','暗',0x08060c,0x8a5cf0,[4,5,8,5],3,'crescent','eye','sharp','暗影吞噬','fx:eye','看不見的神秘質量。被動「虛化」：有機率完全閃過耐久傷害',{pas:'phase'}),
- T_('u_dust','星塵','cos','cosmos','sta','塵',0x1a1626,0xffb7d5,[4,4,8,6],5,'petal','gem','sharp','星塵風暴','fx:swirl','閃閃發光的星屑。被動「反震」：被撞時反扣對手轉速',{pas:'reflect'}),
+ T_('u_nova','超新星','cos','cosmos','atk','新',0x1a0630,0xff7a3d,[10,6,7,6],3,'claw','rune','flat','恆星坍縮爆發','cxnova','恆星爆炸的衝擊。被動「新星」：必殺氣累積 ×1.3',{pas:'nova'}),
+ T_('u_comet','彗星王','cos','cosmos','atk','彗',0x06142e,0x5fe0ff,[10,5,8,5],3,'arrow','thunder','flat','彗尾環軌','cxcomet','拖著長尾的彗星。被動「彗尾」：衝刺與最高速度更快',{pas:'comet'}),
+ T_('u_saber','銀河劍','cos','cosmos','atk','劍',0x0a0a22,0xc8b6ff,[10,6,8,5],2,'katana','rune','flat','銀河十字斬','cxgalx','斬開銀河的光劍。被動「吸能」：撞擊時吸回轉速',{pas:'leech'}),
+ T_('u_neutron','中子星','cos','cosmos','def','中',0x101626,0x9fe8ff,[6,10,7,9],6,'bump','hex','ball','重力塌縮','fx:gravity','密度極高的星核。被動「重質」：更重、更難被撞開',{pas:'mass'}),
+ T_('u_halo','星環盾','cos','cosmos','def','環',0x14102a,0xffd23d,[6,9,8,8],5,'gear','rune','ball','多重星環','fx:rings','行星環化成的盾。被動「反震」：被撞時反扣對手轉速',{pas:'reflect'}),
+ T_('u_bastion','隕石堡','cos','cosmos','def','堡',0x221a14,0xff8a5a,[7,9,7,8],6,'scale','hex','ball','流星雨','fx:meteors','隕石堆成的堡壘。被動「再生」：耐久會慢慢回復',{pas:'regen'}),
+ T_('u_nebula','星雲','cos','cosmos','bal','雲',0x1c0a34,0xff8fe0,[8,7,6,6],5,'petal','swirl','semi','星雲潮汐','cxtide','流動的彩色星雲。被動「環繞」：操控更靈活',{pas:'orbit'}),
+ T_('u_aurora','極光','cos','cosmos','bal','極',0x061e24,0x5dffb0,[7,7,7,6],4,'wing','swirl','semi','極光帷幕','cxcurtain','夜空的光之帶。被動「日蝕」：覺醒時必殺氣大量回復並張開護盾',{pas:'eclipse'}),
+ T_('u_sirius','天狼','cos','cosmos','bal','狼',0x0c1430,0xe8f1ff,[8,7,6,6],4,'shuriken','gem','semi','天狼雙星','cxbinary','夜空最亮的星。被動「虛化」：有機率完全閃過耐久傷害',{pas:'phase'}),
+ T_('u_hole','黑洞','cos','cosmos','sta','洞',0x050308,0xb24bff,[4,4,8,6],2,'crescent','eye','sharp','事件視界','fx:horizon','連光都逃不出去。被動「引力」：把附近的對手吸過來',{pas:'gravity'}),
+ T_('u_pulsar','脈衝星','cos','cosmos','sta','脈',0x0a1028,0x4fd8ff,[4,4,7,6],4,'star','bolt','sharp','脈衝掃描','fx:pulsescan','規律閃爍的中子星。被動「脈衝」：每 6 秒放出震波推開對手',{pas:'pulse'}),
+ T_('u_eternal','永恆星','cos','cosmos','sta','恆',0x1a1406,0xfff2a0,[5,4,7,5],4,'zodiac','gem','sharp','永恆之光','fx:eternal','永遠不會熄滅的星。被動「星盾」：每局第一次重擊完全擋下',{pas:'shield'}),
+ T_('u_quasar','類星體','cos','cosmos','atk','類',0x14061e,0xff4bd8,[10,6,7,6],3,'saw','rune','flat','雙極噴流','cxjets','宇宙最亮的光源。被動「脈衝」：每 6 秒放出震波推開對手',{pas:'pulse'}),
+ T_('u_gamma','伽瑪射線','cos','cosmos','atk','伽',0x061a10,0x7dff5a,[10,5,8,6],3,'arrow','thunder','flat','高能光束','cxbeams','一瞬間的高能閃光。被動「新星」：必殺氣累積 ×1.3',{pas:'nova'}),
+ T_('u_mars','火星','cos','cosmos','atk','火',0x3a0a04,0xff6a1a,[10,6,7,7],3,'claw','stripe','flat','戰神火球','cxball','紅色的戰鬥之星。被動「再生」：耐久會慢慢回復',{pas:'regen'}),
+ T_('u_saturn','土星','cos','cosmos','def','土',0x2a2010,0xffd27a,[6,10,7,9],6,'bump','hex','ball','土星環刃','fx:blades','戴著光環的巨星。被動「環繞」：操控更靈活',{pas:'orbit'}),
+ T_('u_jupiter','木星','cos','cosmos','def','木',0x2a160a,0xff9a5a,[7,9,7,10],6,'scale','swirl','ball','大紅斑風暴','fx:redspot','最大的行星。被動「引力」：把附近的對手吸過來',{pas:'gravity'}),
+ T_('u_dwarf','白矮星','cos','cosmos','def','矮',0xe8ecf4,0x7be0ff,[6,10,8,8],5,'gear','gem','ball','白矮守護','fx:whitepulse','小而堅硬的星核。被動「星盾」：每局第一次重擊完全擋下',{pas:'shield'}),
+ T_('u_moon','月神','cos','cosmos','bal','月',0x101830,0xcfe3ff,[8,7,6,6],2,'crescent','eye','semi','滿月之輪','cxlunar','守護夜空的月。被動「吸能」：撞擊時吸回轉速',{pas:'leech'}),
+ T_('u_andromeda','仙女星系','cos','cosmos','bal','仙',0x180a2a,0xc78bff,[7,8,6,7],5,'petal','swirl','semi','星系旋臂','cxarms','旋轉的鄰居星系。被動「重質」：更重、更難被撞開',{pas:'mass'}),
+ T_('u_string','宇宙弦','cos','cosmos','bal','弦',0x0a0a14,0x39e6ff,[8,6,7,6],4,'shuriken','bolt','semi','弦振','cxstring','貫穿宇宙的能量之弦。被動「彗尾」：衝刺與最高速度更快',{pas:'comet'}),
+ T_('u_sun','太陽','cos','cosmos','sta','陽',0x3a1a00,0xffd23d,[5,4,7,6],4,'star','rune','sharp','日冕烈焰','fx:corona','燃燒不息的恆星。被動「日蝕」：覺醒時必殺氣大量回復並張開護盾',{pas:'eclipse'}),
+ T_('u_dark','暗物質','cos','cosmos','sta','暗',0x08060c,0x8a5cf0,[4,5,8,5],3,'crescent','eye','sharp','暗影吞噬','fx:darkmatter','看不見的神秘質量。被動「虛化」：有機率完全閃過耐久傷害',{pas:'phase'}),
+ T_('u_dust','星塵','cos','cosmos','sta','塵',0x1a1626,0xffb7d5,[4,4,8,6],5,'petal','gem','sharp','星塵龍捲','fx:dusttornado','閃閃發光的星屑。被動「反震」：被撞時反扣對手轉速',{pas:'reflect'}),
  // ===== 神聖：機甲 =====
  T_('m_ares','戰神機甲','div','mecha','atk','戰',0x1a0a12,0xff3b3b,[10,5,6,6],3,'mecha','thunder','flat','戰神十字斬','cross','紅色機甲，十字斬貫穿全場'),
  T_('m_titan','泰坦機甲','div','mecha','def','泰',0x1b2230,0xffb02e,[5,10,6,9],4,'arrow','hex','ball','泰坦震地','fx:quake','超重裝甲，震波彈開對手'),
@@ -608,6 +608,12 @@ function hasPart(pid){return ownedTops.has(pid.split(':')[0])||ownedParts.has(pi
 function partTop(pid){return TOP_BY[pid.split(':')[0]]}
 function partTxt(pid){const [id,c]=pid.split(':'),d=TOP_BY[id];
   return c==='ring'?`攻 ${d.atk}・必殺「${d.special}」`:c==='disc'?`防 ${d.def}・重 ${d.wt}`:c==='tip'?`久 ${d.sta}・${TIPN[d.tip]}軸`:`紋章・${d.name}的顏色`}
+/* ---- 宇宙級專屬必殺配色（每顆三色，不再是單調白色） ---- */
+const CXP={u_nova:[0xff5a1f,0xffc23d,0xff2d55],u_comet:[0x00b7ff,0x5a5cff,0x37ffe0],u_saber:[0xa78bff,0xff7be5,0x5ad7ff],u_quasar:[0xff3fd0,0x4d7bff,0xffd23d],u_gamma:[0x4dff5a,0xc8ff2e,0x00ffd0],u_mars:[0xff3b1f,0xff8a1f,0xffd23d],
+ u_nebula:[0xff6ad5,0x8f5bff,0x3fd8ff],u_aurora:[0x3dffa0,0x3fd8ff,0xb36bff],u_sirius:[0x4d9bff,0x7df9ff,0xffe08a],u_moon:[0xa9bcff,0xffe08a,0x8a7bff],u_andromeda:[0xff8fd0,0x7a8bff,0xffc890],u_string:[0xffe14a,0xff5a8a,0x4dffb0],
+ u_neutron:[0x5a7bff,0x9b5bff,0x35e0ff],u_jupiter:[0xff7a3d,0xd94a3a,0xffc08a],u_halo:[0x4dd8ff,0x7aa0ff,0xffe08a],u_bastion:[0xff5a1f,0xb04a2a,0xffb02e],u_saturn:[0xffcf6a,0xd9a441,0x9ad7ff],u_dwarf:[0xa8d8ff,0x6ac0ff,0xfff0b0],
+ u_hole:[0x8a3dff,0xff7a1a,0x4a2bd0],u_dark:[0x6a2dd0,0xb04bff,0x3a1a8a],u_pulsar:[0x3dffe0,0x3d8bff,0xe03dff],u_dust:[0xffc86a,0xff7bd0,0x7bd8ff],u_eternal:[0xffe56a,0xffd23d,0xffb02e],u_sun:[0xff7a1a,0xffc83d,0xff3b2f]};
+for(const d of TOPS)if(CXP[d.id])d.cx=CXP[d.id];
 function buildDef(sp){
   const R=partTop(sp.ring),D=partTop(sp.disc),T=partTop(sp.tip),M=partTop(sp.emb);
   let atk=Math.min(8,R.atk),def=Math.min(8,D.def),sta=Math.min(8,T.sta);
@@ -619,7 +625,7 @@ function buildDef(sp){
   const [flow,fric]=TIPP[T.tip];
   return {id:'c'+sp.sid,name:nm,tier,series:R.series,type,typeName:TYPE_NAME[type],glyph:nm.charAt(0),color:D.color,accent:M.accent,atk,def,sta,wt:D.wt,blades:R.blades,style:R.style,motif:M.motif,tip:T.tip,
     flow:flow*(type==='atk'?1.1:1),fric,special:R.special,desc:'自組：'+[R,D,T,M].map((q,i)=>q.name+PCAT[CATS[i]]).join('＋'),edgy:R.edgy,mv:R.mv,fx:R.fx,spk:R.fx?(R.type==='def'?'def':'sta'):null,
-    metal:D.metal,bolts:[M.accent].concat(SERIES_BOLTS[R.series]||[]),reborn:R.reborn,custom:true,left:!!sp.left,sp,pat:sp.pat||null,patC:sp.patC||'#ff6a1a',pat2:sp.pat2||null,patC2:sp.patC2||'#ffffff',price:0}}
+    cx:R.cx||null,metal:D.metal,bolts:[M.accent].concat(SERIES_BOLTS[R.series]||[]),reborn:R.reborn,custom:true,left:!!sp.left,sp,pat:sp.pat||null,patC:sp.patC||'#ff6a1a',pat2:sp.pat2||null,patC2:sp.patC2||'#ffffff',price:0}}
 function loadCustoms(){for(let i=TOPS.length-1;i>=0;i--)if(TOPS[i].custom)TOPS.splice(i,1);customs=customs.filter(sp=>CATS.every(c=>sp[c]&&TOP_BY[sp[c].split(':')[0]]));for(const sp of customs)TOPS.push(buildDef(sp))}
 loadCustoms();
 let freeAll=false;/* 自由練習：全部陀螺開放試用 */
@@ -638,7 +644,7 @@ function bowlH(r){return 0.03*r*r}
 /* 星魄爆發：宇宙級攻擊型必殺中——減傷、打出耐久傷害加成、命中回耐久 */
 const AX={bx:1.6,guard:0.4,heal:0.012};const isKi=T=>T.def.tier==='cos'&&(T.awoke||T.bar2),isCA=T=>isKi(T)&&T.def.type==='atk';let BXS=4.5,BALDEF=1;const BX={atk:7.5,bal:1,sta:4,def:1};
 const SPD={atk:1,bal:1.2,sta:1.35,def:1},INIT={atk:1.1,bal:1,sta:1.02,def:0.8};
-const TUNE={"p_red":0.91,"p_blue":1.125,"p_yellow":0.771,"p_green":0.79,"p_white":0.738,"p_black":0.893,"s_lyra":0.9,"s_aquila":1.067,"s_cassio":0.844,"s_orion":0.931,"s_ursa":1.418,"s_cygnus":0.88,"n_kage":1.094,"n_kaze":0.917,"n_hi":0.958,"n_mizu":0.895,"n_tsuchi":1.019,"n_rai":0.811,"phoenix":0.926,"tri_arrow":0.945,"b_seiryu":0.793,"b_byakko":0.921,"b_suzaku":0.914,"b_genbu":0.958,"m_ares":1.034,"m_titan":0.839,"m_raven":0.792,"m_raijin":1.219,"m_aegis":0.913,"m_zero":0.881,"g_aries":0.987,"g_taurus":0.793,"g_gemini":0.837,"g_leo":0.896,"g_scorpio":1.138,"g_sagitt":0.903,"d_red":1.041,"d_azure":0.765,"d_gold":0.802,"d_black":0.908,"d_white":0.88,"d_king":0.703,"k_masamune":0.808,"k_muramasa":1.229,"k_kiku":1.151,"k_onimaru":0.893,"k_monohoshi":0.923,"k_douji":0.909,"u_nova":1.222,"u_comet":2.5,"u_saber":1.383,"u_neutron":1.9,"u_halo":1.947,"u_bastion":1.12,"u_nebula":0.941,"u_aurora":0.582,"u_sirius":0.585,"u_hole":0.695,"u_pulsar":0.893,"u_eternal":0.498,"u_quasar":1.615,"u_gamma":0.776,"u_mars":2.3,"u_saturn":1.979,"u_jupiter":1.746,"u_dwarf":0.845,"u_moon":0.918,"u_andromeda":0.64,"u_string":0.9,"u_sun":0.944,"u_dark":0.563,"u_dust":0.615};
+const TUNE={"p_red":0.91,"p_blue":1.125,"p_yellow":0.771,"p_green":0.79,"p_white":0.738,"p_black":0.893,"s_lyra":0.9,"s_aquila":1.067,"s_cassio":0.844,"s_orion":0.931,"s_ursa":1.418,"s_cygnus":0.88,"n_kage":1.094,"n_kaze":0.917,"n_hi":0.958,"n_mizu":0.895,"n_tsuchi":1.019,"n_rai":0.811,"phoenix":0.926,"tri_arrow":0.945,"b_seiryu":0.793,"b_byakko":0.921,"b_suzaku":0.914,"b_genbu":0.958,"m_ares":1.034,"m_titan":0.839,"m_raven":0.792,"m_raijin":1.219,"m_aegis":0.913,"m_zero":0.881,"g_aries":0.987,"g_taurus":0.793,"g_gemini":0.837,"g_leo":0.896,"g_scorpio":1.138,"g_sagitt":0.903,"d_red":1.041,"d_azure":0.765,"d_gold":0.802,"d_black":0.908,"d_white":0.88,"d_king":0.703,"k_masamune":0.808,"k_muramasa":1.229,"k_kiku":1.151,"k_onimaru":0.893,"k_monohoshi":0.923,"k_douji":0.909,"u_nova":1.222,"u_comet":2.3,"u_saber":1.383,"u_neutron":2.5,"u_halo":2.5,"u_bastion":2.0,"u_nebula":0.85,"u_aurora":0.582,"u_sirius":0.585,"u_hole":0.695,"u_pulsar":0.893,"u_eternal":0.38,"u_quasar":1.615,"u_gamma":1.6,"u_mars":2.3,"u_saturn":2.5,"u_jupiter":2.3,"u_dwarf":0.845,"u_moon":0.918,"u_andromeda":0.64,"u_string":1.5,"u_sun":0.944,"u_dark":0.563,"u_dust":0.5};
 const SPCAP=0.4;/* 單次必殺（含連擊）最多打掉防禦/耐久型這麼多耐久，開場必殺不會直接爆 */
 function spCap(V,X,l){if(V.sp||V.chain||V.capT>0){const id='s'+(V.spId||0);if(V.selfId!==id){V.selfId=id;V.selfTaken=0}const r=Math.max(0,Math.min(l,SPCAP-V.selfTaken));V.selfTaken+=r;l=r}
   if(!((X.sp||X.chain||X.capT>0)&&(V.def.type==='def'||V.def.type==='sta')))return l;const id=X.side+':'+(X.spId||0);if(V.capId!==id){V.capId=id;V.capTaken=0}const r=Math.max(0,Math.min(l,SPCAP-V.capTaken));V.capTaken+=r;return r}
@@ -650,7 +656,7 @@ const chgMul=T=>(CHG[T.def.type]||1)*(T.side==='E'?npcChgX:1)*duelX*(T.def.pas==
 function newTop(def,side){return {def,side,sp:null,storm:0,buff:null,buffT:0,boostCD:0,onTrack:0,x:0,z:0,vx:0,vz:0,s:0,burst:1,charge:0,state:'idle',m:(0.6+def.wt*0.15)*(def.pas==='mass'?1.25:1),rad:(def.wt>=8?1.18:1.12)*TOPSCALE,dash:0,shell:0,moon:0,sx:0,sz:0,y:0,vy:0}}
 function launchTop(T,pull,aim,perfect){
   const dir=T.side==='P'?-1:1;
-  T.state='spin';T.s=Math.min(1.2,(0.5+0.42*pull+(perfect?0.2:0))*(INIT[T.def.type]||1)*(1-0.012*(T.def.wt-5))*(1-0.01*(T.def.sta-5)));T.burst=1;T.charge=0;T.buff=null;T.buffT=0;T.boostCD=0;T.onTrack=0;T.sp=null;T.storm=0;T.awoke=false;T.bar2=false;T.stage2=0;T.pT=0;T.shieldUsed=false;T.chain=null;
+  T.state='spin';T.s=Math.min(1.2,(0.5+0.42*pull+(perfect?0.2:0))*(INIT[T.def.type]||1)*(1-0.012*(T.def.wt-5))*(1-0.01*(T.def.sta-5)));T.burst=1;T.charge=0;T.buff=null;T.buffT=0;T.boostCD=0;T.onTrack=0;T.sp=null;T.kx=null;T.storm=0;T.awoke=false;T.bar2=false;T.stage2=0;T.pT=0;T.shieldUsed=false;T.chain=null;
   const L0=Math.min(R*0.65,rhoAt(dir<0?0:Math.PI)-1.6);T.x=aim*1.5;T.z=-dir*L0;T.vx=aim*5;T.vz=dir*(2+3*pull);T.dash=T.shell=T.moon=0;T.y=0;T.vy=0;T.sx=T.sz=0;
 }
 function startStrike(T){const O=T.sp.O,dx=(O.state==='spin'?O.x:0)-T.x,dz=(O.state==='spin'?O.z:0)-T.z,d=Math.hypot(dx,dz)||1;
@@ -663,6 +669,21 @@ function spPoints(T,O,mv){
   const slashLine=(ang,r)=>{const A=[Math.sin(ang)*r,Math.cos(ang)*r],B=[-A[0],-A[1]];return Math.hypot(A[0]-T.x,A[1]-T.z)<Math.hypot(B[0]-T.x,B[1]-T.z)?[A,B]:[B,A]};
   if(pat==='ring'){const r=Math.min(0.8*m0,6.4)/Math.cos(Math.PI/12),N=n===2?18:12;for(let k=0;k<=N;k++)pts.push(at(a0+dir*k*Math.PI/6,r,25))}
   else if(pat==='tri'||pat==='tribolt'){const r=Math.min(0.74*m0,6.2);for(let k=0;k<=3;k++)pts.push(at(a0+dir*k*Math.PI*2/3,r,pat==='tribolt'?30:26,pat==='tribolt'?'zap':null))}
+  else if(pat==='cxnova'){const r=Math.min(0.8*m0,6.6);for(let k=0;k<6;k++)pts.push(at(a0+dir*k*1.15,r*(0.9-0.14*k),24+k,'cn'));pts.push([0,0,34,'cboom']);for(const a of [0.8,3.94])pts.push(at(a0+a,r*1.02,36,'cn'),[0,0,34,'cboom'])}
+  else if(pat==='cxcomet'){const r=Math.min(0.82*m0,6.8);for(let k=0;k<9;k++){const a=a0+dir*k*(Math.PI*2.1/8),rr=r*(1-0.12*Math.sin(k*0.9));pts.push(at(a,rr,26+k*1.2,'ct'))}}
+  else if(pat==='cxgalx'){const r=Math.min(0.86*m0,7),b0=Math.atan2(ox-T.x,oz-T.z)+Math.PI/2;let L;for(let k=0;k<2;k++){let [A,B]=slashLine(b0+k*Math.PI/2,r);if(L&&Math.hypot(A[0]-L[0],A[1]-L[1])>Math.hypot(B[0]-L[0],B[1]-L[1])){const q=A;A=B;B=q}pts.push([A[0],A[1],34,'slash'],[B[0],B[1],34,'slash']);L=B}
+    for(let k=0;k<7;k++)pts.push(at(b0+dir*(k*Math.PI/3.4),r*0.62,28,'cg'))}
+  else if(pat==='cxjets'){const dx=ox-T.x,dz=oz-T.z,d=Math.hypot(dx,dz)||1,ux=dx/d,uz=dz/d,L=Math.min(0.82*m0,6.6);
+    pts.push([ox-ux*L,oz-uz*L,36,'cj'],[ox+ux*L,oz+uz*L,40,'cj'],[ox-uz*L*0.9,oz+ux*L*0.9,38,'cj'],[ox+uz*L*0.9,oz-ux*L*0.9,40,'cj'])}
+  else if(pat==='cxbeams'){const R4=Math.min(4.4,0.7*m0);for(const k of [0,2,1,3])pts.push([ox+Math.sin(a0+k*Math.PI/2)*R4,oz+Math.cos(a0+k*Math.PI/2)*R4,0,'tp','cb'])}
+  else if(pat==='cxball'){const dx=ox-T.x,dz=oz-T.z,d=Math.hypot(dx,dz)||1,ux=dx/d,uz=dz/d;
+    pts.push([ox,oz,30,'cfb'],[ox+uz*4.2*dir,oz-ux*4.2*dir,24,'cfb0'],[ox,oz,32,'cfb'],[ox-uz*4.6*dir,oz+ux*4.6*dir,26,'cfb0'],[ox,oz,36,'cfb'])}
+  else if(pat==='cxtide'){const r=Math.min(0.84*m0,7);for(let k=0;k<5;k++){pts.push(at(a0+dir*k*0.7,r*(0.92-0.1*k),25,'cw'),at(a0+Math.PI+dir*k*0.7,r*(0.92-0.1*k),25,'cw'))}}
+  else if(pat==='cxcurtain'){const cx=ox*0.5,cz=oz*0.5,ax=Math.cos(a0),az=-Math.sin(a0),px=Math.sin(a0),pz=Math.cos(a0),L=Math.min(0.8*m0,6.6)*(dir>0?1:-1);for(let k=0;k<=8;k++){const f=k/8*2-1,w=Math.sin(f*Math.PI*2)*2.8;pts.push([cx+ax*f*L+px*w,cz+az*f*L+pz*w,27,'ca'])}}
+  else if(pat==='cxbinary'){let ang=Math.atan2(T.x-ox,T.z-oz);for(let k=0;k<13;k++){const rr=4.2-0.17*k;pts.push([ox+Math.sin(ang+dir*k*0.62)*rr,oz+Math.cos(ang+dir*k*0.62)*rr,27,'cs'])}}
+  else if(pat==='cxlunar'){const r=Math.min(0.8*m0,6.6);for(let k=0;k<=9;k++)pts.push(at(a0+dir*k*0.64,r,27,'cm'));for(let k=0;k<=5;k++)pts.push(at(a0+dir*(5.76-k*0.9),r*0.5,24,'cm'));pts.push([0,0,30,'cboom'])}
+  else if(pat==='cxarms'){const r=Math.min(0.84*m0,7);for(let j=0;j<4;j++){const aj=a0+j*Math.PI/2*dir,seq=j%2?[3,2,1]:[1,2,3];for(const q of seq)pts.push(at(aj+q*0.5*dir,r*q/3.4,28,'cy'))}}
+  else if(pat==='cxstring'){const dx=ox-T.x,dz=oz-T.z,d=Math.hypot(dx,dz)||1,ux=dx/d,uz=dz/d,px=-uz,pz=ux;for(let k=0;k<7;k++){const amp=(5.2-k*0.7)*(k%2?-1:1);pts.push([ox+px*amp+ux*(k-3)*0.4,oz+pz*amp+uz*(k-3)*0.4,38,'cst'])}}
   else if(pat==='star5'){const r=Math.min(0.8*m0,6.6);for(const k of [0,2,4,1,3,0])pts.push(at(a0+dir*k*Math.PI*2/5,r,27))}
   else if(pat==='star6'){const r=Math.min(0.74*m0,6.2);for(const k of [0,2,4,0,1,3,5,1])pts.push(at(a0+dir*k*Math.PI/3,r,29))}
   else if(pat==='cross'){const r=Math.min(0.8*m0,6.6);for(const a of [0,Math.PI,Math.PI*1.5,Math.PI*0.5])pts.push(at(a0+a,r,28))}
@@ -707,6 +728,24 @@ function fieldStep(A,B,h){if(!FIELD)return;fieldT+=h;
     for(const m of meteors){if(m.hit){m.age+=h;continue}m.t-=h;if(m.t<=0){m.hit=true;emit('meteor',{x:m.x,z:m.z});
       for(const T of [A,B])if(T.state==='spin'){const dx=T.x-m.x,dz=T.z-m.z,dd=Math.hypot(dx,dz);if(dd<2.6){const f=1-dd/2.6,n=dd||1;T.vx+=dx/n*16*f;T.vz+=dz/n*16*f;T.s-=0.07*f;T.burst=Math.max(0.02,T.burst-0.05*f);T.dash=Math.max(T.dash,0.2)}}}}
     meteors=meteors.filter(m=>!m.hit||m.age<1)}}
+
+/* ---- 宇宙級 防禦／耐久 專屬必殺（場地效果） ---- */
+const KXD={gravity:1.4,redspot:2.0,rings:4.5,meteors:2.0,blades:3.0,whitepulse:1.6,horizon:2.6,darkmatter:2.4,pulsescan:2.7,dusttornado:2.8,eternal:1.0,corona:1.8};
+function kxStart(T,O,fx){if(KXD[fx])T.kx={fx,t:0,dur:KXD[fx],O,n:0,x:T.x,z:T.z,p:0}}
+function stepKx(T,O,h){const K=T.kx;if(!K)return;K.t+=h;if(K.t>=K.dur||T.state!=='spin'){T.kx=null;return}
+  const ok=O.state==='spin',dx=O.x-T.x,dz=O.z-T.z,d=Math.hypot(dx,dz)||1,hf=(O.def.type==='atk'?0.5:1),fx=K.fx;
+  const knock=(f,px,pz)=>{const q=Math.hypot(O.x-px,O.z-pz)||1;O.vx+=(O.x-px)/q*f;O.vz+=(O.z-pz)/q*f};
+  if(fx==='gravity'){if(ok&&K.t<1&&d<8){O.vx-=dx/d*14*h;O.vz-=dz/d*14*h}if(!K.p&&K.t>=1){K.p=1;if(ok&&d<6.4){knock(18,T.x,T.z);O.s-=0.04*hf}emit('cxe',{T,k:'gravpop'})}}
+  else if(fx==='redspot'){if(ok&&d<6.5){O.vx+=dx/d*9*h;O.vz+=dz/d*9*h;O.s-=0.03*h*hf}}
+  else if(fx==='meteors'){const at=[0.35,0.75,1.15,1.55];while(K.n<4&&K.t>=at[K.n]){K.n++;const a=Math.random()*6.283,mx=O.x+Math.sin(a)*1.4,mz=O.z+Math.cos(a)*1.4;emit('cxe',{T,k:'meteor',x:mx,z:mz});if(ok){const q=Math.hypot(O.x-mx,O.z-mz);if(q<2.8){knock(12*(1-q/2.8)+3,mx,mz);O.s-=0.05*hf}}}}
+  else if(fx==='blades'){if(ok&&d<2.9)O.s-=0.07*h*hf}
+  else if(fx==='whitepulse'){const at=[0.3,0.8];while(K.n<2&&K.t>=at[K.n]){K.n++;T.s=Math.min(1.05,T.s+0.04);if(ok&&d<4.2){knock(8,T.x,T.z);O.s-=0.02*hf}emit('cxe',{T,k:'pulse'})}}
+  else if(fx==='horizon'){if(ok&&d<6.5){O.vx-=dx/d*10*h;O.vz-=dz/d*10*h;O.s-=0.03*h*hf}}
+  else if(fx==='darkmatter'){if(ok&&d<4.8){const dr=0.045*h*hf;O.s-=dr;T.s=Math.min(1.1,T.s+dr*0.6)}}
+  else if(fx==='pulsescan'){while(K.t>=0.45*(K.n+1)){K.n++;if(ok&&d<5.2){knock(6,T.x,T.z);O.s-=0.015*hf}emit('cxe',{T,k:'scan',n:K.n})}}
+  else if(fx==='dusttornado'){const q=Math.hypot(O.x-K.x,O.z-K.z)||1;if(ok){K.x+=(O.x-K.x)/q*5*h;K.z+=(O.z-K.z)/q*5*h;if(q<2){O.s-=0.08*h*hf;O.vx-=(O.x-K.x)/q*3*h;O.vz-=(O.z-K.z)/q*3*h}}}
+  else if(fx==='eternal'){T.shell=Math.max(T.shell,0.2);if(!K.p&&K.t>=0.15){K.p=1;if(ok&&d<4)knock(12,T.x,T.z);emit('cxe',{T,k:'pillar'})}}
+  else if(fx==='corona'){const at=[0.5,0.9,1.3];while(K.n<3&&K.t>=at[K.n]){K.n++;const mx=ok?O.x:T.x,mz=ok?O.z:T.z;emit('cxe',{T,k:'erupt',x:mx,z:mz});if(ok&&Math.hypot(O.x-mx,O.z-mz)<2.4){O.s-=0.05*hf;knock(8,mx,mz)}}}}
 function stepSpecial(T,h){
   if(!T.sp&&!T.chain&&T.stage2>0){T.stage2-=h;if(T.stage2<=0){T.stage2=0;const O=T.stage2O;if(T.state==='spin'&&O&&O.state==='spin'){T.sp={kind:'strike',t:0,O};startStrike(T);emit('stage2',{T})}}}
   if(!T.sp&&T.chain){const c=T.chain;if(T.state!=='spin'||c.O.state!=='spin'||c.left<=0){T.chain=null}
@@ -717,9 +756,9 @@ function stepSpecial(T,h){
     if(S.wait>0){S.wait-=h;T.vx*=0.5;T.vz*=0.5;T.dash=0.2;return true}
     if(S.t>5||!S.pts[S.i]){startStrike(T);return true}
     const p=S.pts[S.i];
-    if(p[3]==='tp'){emit('blink',{T,smoke:true});T.x=p[0];T.z=p[1];T.vx=T.vz=0;emit('blink',{T,smoke:true});S.hist.push([p[0],p[1]]);S.i++;S.wait=0.18;return true}
+    if(p[3]==='tp'){if(p[4])emit('cxp',{T,x:p[0],z:p[1],k:p[4],O:S.O});emit('blink',{T,smoke:true});T.x=p[0];T.z=p[1];T.vx=T.vz=0;emit('blink',{T,smoke:true});S.hist.push([p[0],p[1]]);S.i++;S.wait=0.18;return true}
     let dx=p[0]-T.x,dz=p[1]-T.z,d=Math.hypot(dx,dz)||1e-6;
-    if(d<1.2){if(p[3]==='slash'){const q=S.pts[S.i+1];if(q)emit('slash',{T,x0:p[0],z0:p[1],x1:q[0],z1:q[1]})}
+    if(d<1.2){if(T.def.cx)emit('cxp',{T,x:p[0],z:p[1],k:p[3]||p[4],i:S.i,O:S.O});if(p[3]==='slash'){const q=S.pts[S.i+1];if(q)emit('slash',{T,x0:p[0],z0:p[1],x1:q[0],z1:q[1]})}
       if(p[3]==='zap')emit('blink',{T,zap:true});if(p[3]==='star')emit('blink',{T,star:true});if(p[3]==='fire')emit('blink',{T,fire:true});S.hist.push([p[0],p[1]]);S.i++;if(!S.pts[S.i]){startStrike(T);return true}}
     const q=S.pts[S.i];dx=q[0]-T.x;dz=q[1]-T.z;d=Math.hypot(dx,dz)||1e-6;T.vx=dx/d*q[2];T.vz=dz/d*q[2];T.dash=0.2;return true}
   if(S.kind==='veer'){const O=S.O,dx=(O.state==='spin'?O.x:0)-T.x,dz=(O.state==='spin'?O.z:0)-T.z,d=Math.hypot(dx,dz)||1,a=S.dir*1.25,c=Math.cos(a),sn=Math.sin(a);
@@ -735,23 +774,25 @@ function useSpecial(T,O){
     if(mv.startsWith('weave')){T.chain={left:parseInt(mv.slice(5))-1,O,dir:Math.random()<.5?1:-1};T.sp={kind:'veer',t:0,O,dir:T.chain.dir}}
     else{const pts=spPoints(T,O,mv);T.sp={kind:'path',t:0,i:0,pts,hist:[[T.x,T.z]],O};T.hist=T.sp.hist;T.histT=1}
   }else if((T.def.spk||ty)==='def'){
-    const fx=T.def.fx,dx=O.x-T.x,dz=O.z-T.z,d=Math.hypot(dx,dz)||1;T.shell=fx==='barrier'?5:fx==='holy'?1.5:3;
-    const near=O.state==='spin'&&d<(fx==='quake'?6.4:4.8);
+    const fx=T.def.fx,dx=O.x-T.x,dz=O.z-T.z,d=Math.hypot(dx,dz)||1;T.shell=fx==='barrier'||fx==='rings'?5:fx==='holy'||fx==='whitepulse'?1.5:3;const big=fx==='quake'||fx==='gravity'||fx==='redspot';
+    const near=O.state==='spin'&&d<(big?6.4:4.8);
     if(fx==='roll'){T.sp={kind:'strike',t:0,O};startStrike(T)}
     else if(near){
-      const f=(fx==='quake'?21:15)*(1-d/(fx==='quake'?8:6));
-      if(fx==='pinch'){O.vx-=dx/d*8;O.vz-=dz/d*8;O.s-=0.07*(T.def.type==='atk'?0.5:1)}
+      const f=(big?21:15)*(1-d/(big?8:6));
+      if(fx==='gravity'){O.vx-=dx/d*f;O.vz-=dz/d*f;O.s-=0.05*(T.def.type==='atk'?0.5:1)}
+      else if(fx==='pinch'){O.vx-=dx/d*8;O.vz-=dz/d*8;O.s-=0.07*(T.def.type==='atk'?0.5:1)}
       else{O.vx+=dx/d*f;O.vz+=dz/d*f;O.s-=0.05*(T.def.type==='atk'?0.5:1)}
       if(fx==='ice'){O.vx*=0.35;O.vz*=0.35;O.s-=0.05*(T.def.type==='atk'?0.5:1)}
       if(fx==='flame')O.s-=0.1*(T.def.type==='atk'?0.5:1);
       emit('repel',{T,O})}
-    if(fx==='holy'){T.s=Math.min(1.05,T.s+0.12);T.burst=Math.min(1,T.burst+0.06)}
+    if(fx==='holy'||fx==='whitepulse'){T.s=Math.min(1.05,T.s+0.12);T.burst=Math.min(1,T.burst+0.06)}
+    kxStart(T,O,fx);
   }else{
-    const fx=T.def.fx;T.s=Math.min(1.05,T.s+(fx==='dragon'?0.2:0.28));T.moon=4;T.storm=fx==='eye'||fx==='swirl'?5:4;
+    const fx=T.def.fx;T.s=Math.min(1.05,T.s+(fx==='dragon'||fx==='corona'?0.2:fx==='eternal'?0.14:0.28));T.moon=fx==='eternal'?2:4;T.storm=fx==='eternal'?2:fx==='eye'||fx==='swirl'||fx==='horizon'||fx==='darkmatter'||fx==='pulsescan'||fx==='dusttornado'?5:4;kxStart(T,O,fx);
     if(fx==='hover'||fx==='petal')T.shell=fx==='hover'?3:1.5;
     if(fx==='song'&&O.state==='spin')O.s-=0.05*(T.def.type==='atk'?0.5:1);
     if(fx==='snow'&&O.state==='spin'){O.vx*=0.5;O.vz*=0.5}
-    if(fx==='dragon'&&O.state==='spin'){T.sp={kind:'strike',t:0,O};startStrike(T)}
+    if((fx==='dragon'||fx==='corona')&&O.state==='spin'){T.sp={kind:'strike',t:0,O};startStrike(T)}
   }
   if(T.def.tier==='cos'){T.stage2=0.45;T.stage2O=O}
   emit('special',{T,O});return true;
@@ -826,6 +867,7 @@ function stepPhysics(A,B,h){
     if(T.s<=0.05){T.s=0.05;T.state='down';emit('down',{T})}
   }
   for(const [T,O] of [[A,B],[B,A]])if(T.storm>0&&T.state==='spin'&&O.state==='spin'&&Math.hypot(O.x-T.x,O.z-T.z)<3.6)O.s-=0.05*h*(T.def.type==='atk'?0.5:1);
+  for(const [T,O] of [[A,B],[B,A]])stepKx(T,O,h);
   collide(A,B,h);
 }
 function collide(A,B,h){
@@ -857,7 +899,7 @@ function collide(A,B,h){
     A.burst-=pasBurst(A,spCap(A,B,(impact-9)*0.012*atkB*advB/defA*(1.4-Math.min(1,A.s)*0.6)*(A.shell>0?0.3:1)*bB.br*bA.brIn*gA*(BRK[A.def.type]||1)*DURM*((A.sp||A.chain)?0.5:1)*(BX[B.def.type]||1)*(isCA(B)&&spB?AX.bx:1)*(stB?BXS:1)*durMod(A.def)*(B.def.type==='atk'&&A.def.type==='sta'?1.25:1)*(B.def.type==='sta'&&(A.def.type==='atk'||A.def.type==='def')?1/0.7:1)));
     B.burst-=pasBurst(B,spCap(B,A,(impact-9)*0.012*atkA*advA/defB*(1.4-Math.min(1,B.s)*0.6)*(B.shell>0?0.3:1)*bA.br*bB.brIn*gB*(BRK[B.def.type]||1)*DURM*((B.sp||B.chain)?0.5:1)*(BX[A.def.type]||1)*(isCA(A)&&spA?AX.bx:1)*(stA?BXS:1)*durMod(B.def)*(A.def.type==='atk'&&B.def.type==='sta'?1.25:1)*(A.def.type==='sta'&&(B.def.type==='atk'||B.def.type==='def')?1/0.7:1)));
   }
-  {const rf=impact*0.0012,lc=impact*0.0011;if(B.def.pas==='reflect')A.s-=rf;if(A.def.pas==='reflect')B.s-=rf;if(A.def.pas==='leech')A.s=Math.min(1.1,A.s+lc);if(B.def.pas==='leech')B.s=Math.min(1.1,B.s+lc)}
+  {const rf=impact*0.0012,lc=impact*0.0011;if(B.def.pas==='reflect'||(B.kx&&B.kx.fx==='rings'))A.s-=rf*(B.kx&&B.kx.fx==='rings'?1.4:1);if(A.def.pas==='reflect'||(A.kx&&A.kx.fx==='rings'))B.s-=rf*(A.kx&&A.kx.fx==='rings'?1.4:1);if(A.def.pas==='leech')A.s=Math.min(1.1,A.s+lc);if(B.def.pas==='leech')B.s=Math.min(1.1,B.s+lc)}
   if(bA.k==='thunder')B.s-=0.04*(A.def.type==='atk'?0.5:1);if(bB.k==='thunder')A.s-=0.04*(B.def.type==='atk'?0.5:1);if(bA.k==='ice')B.s-=impact*0.003;if(bB.k==='ice')A.s-=impact*0.003;
   A.charge=Math.min(1,A.charge+impact*0.009*chgMul(A));B.charge=Math.min(1,B.charge+impact*0.009*chgMul(B));
   {const dr=Math.min(0.08,0.02+impact*0.003);if(A.def.type==='bal'&&B.state==='spin')B.charge=Math.max(0,B.charge-dr);if(B.def.type==='bal'&&A.state==='spin')A.charge=Math.max(0,A.charge-dr)}
@@ -1715,7 +1757,7 @@ function updateSparks(dt){
   spGeo.attributes.position.needsUpdate=true;spGeo.attributes.color.needsUpdate=true;
 }
 /* 星魄爆發：粉紅氣焰（獨立粒子池，不佔用火花池） */
-const KP=900,kPos=new Float32Array(KP*3),kCol=new Float32Array(KP*3),kVel=new Float32Array(KP*3),kLife=new Float32Array(KP),kMax=new Float32Array(KP),kBase=new Float32Array(KP*3);let kI=0;
+const KP=2200,kPos=new Float32Array(KP*3),kCol=new Float32Array(KP*3),kVel=new Float32Array(KP*3),kLife=new Float32Array(KP),kMax=new Float32Array(KP),kBase=new Float32Array(KP*3);let kI=0;
 const kGeo=new THREE.BufferGeometry();kGeo.setAttribute('position',new THREE.BufferAttribute(kPos,3));kGeo.setAttribute('color',new THREE.BufferAttribute(kCol,3));
 {const kp=new THREE.Points(kGeo,new THREE.PointsMaterial({size:0.55,map:glowTex,vertexColors:true,transparent:true,opacity:0.85,blending:THREE.AdditiveBlending,depthWrite:false}));kp.frustumCulled=false;scene.add(kp)}
 const KI_SET={atk:[[1.0,0.2,0.15],[1.0,0.5,0.25],[0.9,0.1,0.2],[1.0,0.8,0.7]],sta:[[1.0,0.85,0.2],[1.0,0.95,0.5],[0.95,0.7,0.1],[1,1,0.85]],bal:[[0.25,1,0.4],[0.55,1,0.6],[0.15,0.85,0.35],[0.85,1,0.85]],def:[[0.25,0.5,1],[0.45,0.7,1],[0.2,0.4,0.95],[0.85,0.92,1]]};
@@ -1725,6 +1767,58 @@ function updateKi(dt){for(let i=0;i<KP;i++){if(kLife[i]<=0){kCol[i*3]=kCol[i*3+1
   kLife[i]-=dt;const d=Math.max(0,1-1.6*dt);kVel[i*3]*=d;kVel[i*3+2]*=d;kPos[i*3]+=kVel[i*3]*dt;kPos[i*3+1]+=kVel[i*3+1]*dt;kPos[i*3+2]+=kVel[i*3+2]*dt;
   const f=Math.max(0,Math.min(1,kLife[i]/kMax[i]*1.6));kCol[i*3]=kBase[i*3]*f;kCol[i*3+1]=kBase[i*3+1]*f;kCol[i*3+2]=kBase[i*3+2]*f}
   kGeo.attributes.position.needsUpdate=true;kGeo.attributes.color.needsUpdate=true}
+/* ---- 宇宙級專屬必殺：視覺 ---- */
+const cxRGB=(c,k=1.35)=>[((c>>16)&255)/255*k,((c>>8)&255)/255*k,(c&255)/255*k];
+const cxCols=T=>T&&T.def&&T.def.cx?T.def.cx.map(c=>cxRGB(c)):null;
+const cxW=(T,def)=>cxCols(T)||def;
+const cxHexOf=T=>T&&T.def&&T.def.cx?hex(T.def.cx[0]):hex(T.def.accent);
+const rnd=()=>Math.random(),pk=a=>a[(rnd()*a.length)|0];
+function cxBurst(x,y,z,pal,n,sp,vy,life){for(let i=0;i<n;i++){const a=rnd()*6.283,s=sp*(0.4+rnd()*0.8);kiP(x,y,z,Math.cos(a)*s,vy*(0.3+rnd()),Math.sin(a)*s,life*(0.6+rnd()*0.6),pk(pal))}}
+function cxLine(x0,z0,x1,z1,pal,n,life,h){for(let i=0;i<=n;i++){const f=i/n,x=x0+(x1-x0)*f,z=z0+(z1-z0)*f;kiP(x,groundHc(x,z)+h,z,(rnd()-.5)*0.8,0.3+rnd()*1.2,(rnd()-.5)*0.8,life*(0.7+rnd()*0.5),pk(pal))}}
+function cxColumn(x,z,pal,n,hgt,life){const y=groundHc(x,z);for(let i=0;i<n;i++)kiP(x+(rnd()-.5)*0.7,y+0.1,z+(rnd()-.5)*0.7,(rnd()-.5)*0.8,hgt*(0.5+rnd()*0.6),(rnd()-.5)*0.8,life*(0.7+rnd()*0.5),pk(pal))}
+function cxStart(T,O){const pal=cxCols(T),y=groundHc(T.x,T.z);if(!pal)return;const k=T.def.mv||T.def.fx;
+  cxBurst(T.x,y+0.6,T.z,pal,70,9,6,0.7);cxBurst(T.x,y+0.3,T.z,pal,40,14,1.5,0.5);
+  shock(T.x,y+0.3,T.z,2.2);shock(T.x,y+0.6,T.z,3.2);
+  if(k==='cxnova')for(let i=0;i<50;i++){const a=rnd()*6.283,r=3.2+rnd()*1.5;kiP(T.x+Math.sin(a)*r,y+0.5,T.z+Math.cos(a)*r,-Math.sin(a)*r*2.3,0.5,-Math.cos(a)*r*2.3,0.6,pk(pal))}
+  speedFx=Math.max(speedFx,0.35);speedCol=cxHexOf(T);flashFx=Math.max(flashFx,0.2)}
+function cxTick(T,y,now){const pal=cxCols(T);if(!pal)return;const k=T.def.mv||T.def.fx,K=T.kx,sp=Math.hypot(T.vx,T.vz);
+  if(T.sp){for(let i=0;i<3;i++)kiP(T.x+(rnd()-.5)*0.6,y+0.25+rnd()*0.4,T.z+(rnd()-.5)*0.6,(rnd()-.5)*0.6,0.8+rnd()*1.6,(rnd()-.5)*0.6,0.7+rnd()*0.4,pk(pal));
+    if(k==='cxcomet')for(let i=0;i<3;i++)kiP(T.x-T.vx*0.05*i,y+0.3,T.z-T.vz*0.05*i,0,0.4,0,1.3,pal[i%2]);
+    else if(k==='cxball')for(let i=0;i<3;i++)kiP(T.x+(rnd()-.5)*0.5,y+0.3,T.z+(rnd()-.5)*0.5,(rnd()-.5)*1.2,3.5+rnd()*3,(rnd()-.5)*1.2,0.55,pk(pal));
+    else if(k==='cxtide'||k==='cxbinary'||k==='cxarms')for(let j=0;j<2;j++){const a=now*9+j*3.14;kiP(T.x+Math.sin(a)*1.0,y+0.5,T.z+Math.cos(a)*1.0,Math.cos(a)*2,1,-Math.sin(a)*2,0.5,pal[j])}
+    else if(k==='cxcurtain')for(let i=0;i<4;i++)kiP(T.x+(rnd()-.5),y+0.2,T.z+(rnd()-.5),0,5+rnd()*4,0,0.9,pal[i%3]);
+    else if(k==='cxlunar')kiP(T.x,y+0.4,T.z,0,0.6,0,1.2,pal[1]);
+    else if(k==='cxnova')for(let i=0;i<2;i++){const a=rnd()*6.283;kiP(T.x,y+0.5,T.z,Math.cos(a)*6,1,Math.sin(a)*6,0.4,pk(pal))}}
+  if(K){const t=K.t;
+    if(K.fx==='gravity'&&t<1)for(let i=0;i<5;i++){const a=rnd()*6.283,r=4+rnd()*1.5;kiP(T.x+Math.sin(a)*r,y+0.4,T.z+Math.cos(a)*r,-Math.sin(a)*r*2.2,0.3,-Math.cos(a)*r*2.2,0.55,pk(pal))}
+    else if(K.fx==='redspot')for(let i=0;i<6;i++){const a=now*5+i*1.05,r=1.4+rnd()*2.2;kiP(T.x+Math.sin(a)*r,y+0.3,T.z+Math.cos(a)*r,Math.cos(a)*3.2,0.8,-Math.sin(a)*3.2,0.6,pk(pal))}
+    else if(K.fx==='rings')for(let j=0;j<3;j++)for(let i=0;i<3;i++){const a=now*(3+j*2.2)*(j%2?-1:1)+i*2.09,r=1.1+j*0.55;kiP(T.x+Math.sin(a)*r,y+0.5+j*0.12,T.z+Math.cos(a)*r,0,0.3,0,0.3,pal[j])}
+    else if(K.fx==='blades')for(let j=0;j<3;j++){const a=now*10+j*2.09;for(let i=0;i<5;i++){const r=0.9+i*0.4;kiP(T.x+Math.sin(a+i*0.12)*r,y+0.5,T.z+Math.cos(a+i*0.12)*r,0,0.2,0,0.22,pal[(i+j)%3])}}
+    else if(K.fx==='horizon')for(let i=0;i<8;i++){const a=now*7+i*0.8,r=1.8+rnd()*2.6;kiP(T.x+Math.sin(a)*r,y+0.2+rnd()*0.4,T.z+Math.cos(a)*r,Math.cos(a)*3-Math.sin(a)*r*0.5,0.3,-Math.sin(a)*3-Math.cos(a)*r*0.5,0.5,pal[r<3?1:0])}
+    else if(K.fx==='darkmatter'&&K.O&&K.O.state==='spin')for(let i=0;i<4;i++){const O=K.O;kiP(O.x+(rnd()-.5),y+0.5,O.z+(rnd()-.5),(T.x-O.x)*2.2,0.5,(T.z-O.z)*2.2,0.45,pk(pal))}
+    else if(K.fx==='dusttornado')for(let i=0;i<7;i++){const h=rnd()*3.2,a=now*8+h*3,r=0.3+h*0.32;kiP(K.x+Math.sin(a)*r,groundHc(K.x,K.z)+h,K.z+Math.cos(a)*r,Math.cos(a)*2,1,-Math.sin(a)*2,0.45,pk(pal))}
+    else if(K.fx==='eternal')for(let i=0;i<5;i++)kiP(T.x+(rnd()-.5)*0.8,y+0.1,T.z+(rnd()-.5)*0.8,0,10+rnd()*5,0,0.5,pk(pal))}}
+function cxEvent(type,d){const T=d.T,pal=cxCols(T);if(!pal)return;
+  if(type==='cxp'){const k=d.k,y=groundHc(d.x,d.z);const L=T.cxLast;
+    if(k==='cboom'){cxBurst(d.x,y+0.6,d.z,pal,90,10,8,0.8);shock(d.x,y+0.3,d.z,2.6);shock(d.x,y+0.6,d.z,3.6);zap(d.x,y+0.9,d.z,5,3);shake=Math.max(shake,0.9);flashFx=Math.max(flashFx,0.25);speedCol=cxHexOf(T)}
+    else if(k==='cj'){if(L)cxLine(L[0],L[1],d.x,d.z,pal,34,0.9,0.5);cxBurst(d.x,y+0.6,d.z,pal,36,8,5,0.6);shock(d.x,y+0.4,d.z,2.2);zap(d.x,y+0.9,d.z,3,3)}
+    else if(k==='cb'){if(L)cxLine(L[0],L[1],d.x,d.z,pal,26,0.7,0.8);if(d.O)cxLine(d.x,d.z,d.O.x,d.O.z,pal,22,0.55,0.8);cxBurst(d.x,y+0.8,d.z,pal,40,8,4,0.6);shock(d.x,y+0.5,d.z,2);zap(d.x,y+1,d.z,4,3)}
+    else if(k==='cfb'){cxBurst(d.x,y+0.5,d.z,pal,100,12,9,0.9);cxColumn(d.x,d.z,pal,36,12,0.8);shock(d.x,y+0.2,d.z,2.4);shock(d.x,y+0.5,d.z,3.2);shock(d.x,y+0.8,d.z,4);shake=Math.max(shake,1.1);flashFx=Math.max(flashFx,0.2);speedCol=cxHexOf(T)}
+    else if(k==='cfb0'){cxBurst(d.x,y+0.4,d.z,pal,34,7,3,0.5)}
+    else if(k==='ca'){cxColumn(d.x,d.z,pal,16,9,1.0);cxBurst(d.x,y+0.5,d.z,pal,10,3,2,0.6)}
+    else if(k==='cm'){cxBurst(d.x,y+0.6,d.z,pal,18,4,2.5,1.0);if(d.i%3===0)shock(d.x,y+0.3,d.z,1.2)}
+    else if(k==='cst'){if(L)cxLine(L[0],L[1],d.x,d.z,pal,28,0.7,0.5);cxBurst(d.x,y+0.5,d.z,pal,22,6,3,0.5);shock(d.x,y+0.3,d.z,1.4+0.1*(d.i||0))}
+    else if(k==='cg'||k==='slash'){cxBurst(d.x,y+0.6,d.z,pal,22,6,4,0.5)}
+    else{cxBurst(d.x,y+0.6,d.z,pal,22,6,4,0.55);if(k==='cs'&&d.i%4===0)shock(d.x,y+0.3,d.z,1.6);if(k==='cy'&&d.i%3===0)shock(d.x,y+0.3,d.z,1.4)}
+    T.cxLast=[d.x,d.z]}
+  else if(type==='cxe'){const k=d.k;
+    if(k==='gravpop'){const y=groundHc(T.x,T.z);cxBurst(T.x,y+0.5,T.z,pal,80,12,3,0.7);shock(T.x,y+0.3,T.z,3.6);shock(T.x,y+0.6,T.z,2.4);shake=Math.max(shake,1.2)}
+    else if(k==='meteor'){const y=groundHc(d.x,d.z);for(let i=0;i<14;i++)kiP(d.x+i*0.25,y+9-i*0.1,d.z+i*0.1,-5,-20,-2,0.45,pk(pal));
+      setTimeout(()=>{const yy=groundHc(d.x,d.z);cxBurst(d.x,yy+0.5,d.z,pal,70,10,7,0.8);shock(d.x,yy+0.2,d.z,2.6);shock(d.x,yy+0.5,d.z,1.6);shake=Math.max(shake,0.9)},260)}
+    else if(k==='pulse'){const y=groundHc(T.x,T.z);for(let i=0;i<40;i++){const a=i/40*6.283;kiP(T.x+Math.sin(a)*0.8,y+0.4,T.z+Math.cos(a)*0.8,Math.sin(a)*8,0.3,Math.cos(a)*8,0.55,pk(pal))}shock(T.x,y+0.3,T.z,3);shock(T.x,y+0.5,T.z,2)}
+    else if(k==='scan'){const y=groundHc(T.x,T.z),a=d.n*1.3+rnd();for(let i=0;i<24;i++){const r=0.8+i*0.22;kiP(T.x+Math.sin(a)*r,y+0.5,T.z+Math.cos(a)*r,Math.sin(a)*1.5,0.5,Math.cos(a)*1.5,0.4,pal[i%3])}shock(T.x,y+0.4,T.z,1.8)}
+    else if(k==='pillar'){cxColumn(T.x,T.z,pal,70,16,0.9);const y=groundHc(T.x,T.z);shock(T.x,y+0.3,T.z,3);shock(T.x,y+0.7,T.z,2);shake=Math.max(shake,0.8)}
+    else if(k==='erupt'){cxColumn(d.x,d.z,pal,60,13,0.8);const y=groundHc(d.x,d.z);shock(d.x,y+0.3,d.z,2.4);cxBurst(d.x,y+0.5,d.z,pal,40,8,6,0.6);shake=Math.max(shake,0.8)}}}
 const waves=[];for(let i=0;i<6;i++){const m=new THREE.Mesh(new THREE.RingGeometry(0.8,1,48),new THREE.MeshBasicMaterial({color:0xffe08a,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));m.rotation.x=-Math.PI/2;scene.add(m);waves.push({m,t:9})}
 let fxC=null;function fxPick(){return fxC?fxC[Math.floor(Math.random()*fxC.length)]:null}
 let waveI=0;function shock(x,y,z,s){const w=waves[waveI++%waves.length];w.m.position.set(x,y,z);w.t=0;w.s=s;const c=fxPick();w.m.material.color.setHex(c==null?0xffe08a:c)}
@@ -1913,7 +2007,8 @@ function rebuild(T){disposeModel(T.model);T.model=makeModel(T.def)}
 
 const NOSFX=new Proxy({},{get:()=>()=>{}});
 emit=(type,d)=>{
-  fxC=d&&d.A&&d.B?[d.A.def.accent,d.B.def.accent,d.A.def.color,d.B.def.color]:d&&d.T&&d.T.def?[d.T.def.accent,d.T.def.color]:null;
+  fxC=d&&d.A&&d.B?[d.A.def.accent,d.B.def.accent,d.A.def.color,d.B.def.color]:d&&d.T&&d.T.def?(d.T.def.cx||[d.T.def.accent,d.T.def.color]):null;
+  if((type==='cxp'||type==='cxe')){if(d.T&&d.T.def.cx)cxEvent(type,d);return}
   if(REC&&!rpOn&&phase!=='menu'&&REC.fr.length)REC.ev.push({f:REC.fr.length-1,type,d});
   const sf=phase==='menu'?NOSFX:sfx;
   const vis=phase!=='menu';
@@ -1937,21 +2032,21 @@ emit=(type,d)=>{
   }else if(type==='wall'){if(vis)sf.wall(d.v);const T=d.T;sparks(T.x,groundHc(T.x,T.z)+0.8,T.z,8,[[1.4,1.2,0.6]])}
   else if(type==='burst'){explode(d.T);if(vis){sf.boom();shake=1.6;if(!reduce)slowT=0.6}sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,90,[[1.6,1.2,0.5],[1.6,1.6,1.6]]);shock(d.T.x,groundHc(d.T.x,d.T.z)+0.4,d.T.z,2.2)}
   else if(type==='out'){if(vis){sf.out();shake=Math.max(shake,0.7)}}
-  else if(type==='strike'){const T=d.T;if(vis){sf.boost();shake=Math.max(shake,0.6);speedFx=0.7;speedCol=hex(T.def.accent)}}
-  else if(type==='blink'){const T=d.T;sparks(T.x,groundHc(T.x,T.z)+0.7,T.z,18,[[1.6,1.6,1.8],topRGB(T)]);if(d.zap)zap(T.x,groundHc(T.x,T.z)+0.9,T.z,3,2.8);if(d.smoke)sparks(T.x,groundHc(T.x,T.z)+0.7,T.z,30,[[0.5,0.5,0.6],[0.3,0.3,0.4],topRGB(T)]);if(d.star){sparks(T.x,groundHc(T.x,T.z)+1,T.z,26,[[1.8,1.8,1.6],[1.8,1.5,0.6]]);shock(T.x,groundHc(T.x,T.z)+0.3,T.z,0.9)}if(d.fire)sparks(T.x,groundHc(T.x,T.z)+0.8,T.z,30,[[1.8,0.7,0.15],[1.8,1.3,0.3]]);if(vis)sf.zap(0.6)}
-  else if(type==='slash'){const T=d.T,c=topRGB(T);for(let i=0;i<=24;i++){const f=i/24,x=d.x0+(d.x1-d.x0)*f,z=d.z0+(d.z1-d.z0)*f;sparks(x,groundHc(x,z)+0.8,z,5,[[1.8,1.8,1.8],c])}
-    shock((d.x0+d.x1)/2,groundHc(0,0)+0.5,(d.z0+d.z1)/2,2.8);if(vis){sf.boom();sf.zap(1);shake=Math.max(shake,1.0);flashFx=0.4;speedFx=0.5;speedCol=hex(T.def.accent);popText('一閃！','把戰場切成兩半')}}
-  else if(type==='strikeHit'){const y=groundHc(d.x,d.z)+0.8,c=topRGB(d.T);sparks(d.x,y,d.z,70,[c,bodyRGB(d.T)]);shock(d.x,y-0.3,d.z,2.4);shock(d.x,y,d.z,1.4);zap(d.x,y,d.z,6,3);
+  else if(type==='strike'){const T=d.T;if(vis){sf.boost();shake=Math.max(shake,0.6);speedFx=0.7;speedCol=cxHexOf(T)}}
+  else if(type==='blink'){const T=d.T;sparks(T.x,groundHc(T.x,T.z)+0.7,T.z,18,cxW(T,[[1.6,1.6,1.8],topRGB(T)]));if(d.zap)zap(T.x,groundHc(T.x,T.z)+0.9,T.z,3,2.8);if(d.smoke)sparks(T.x,groundHc(T.x,T.z)+0.7,T.z,30,[[0.5,0.5,0.6],[0.3,0.3,0.4],topRGB(T)]);if(d.star){sparks(T.x,groundHc(T.x,T.z)+1,T.z,26,cxW(T,[[1.8,1.8,1.6],[1.8,1.5,0.6]]));shock(T.x,groundHc(T.x,T.z)+0.3,T.z,0.9)}if(d.fire)sparks(T.x,groundHc(T.x,T.z)+0.8,T.z,30,[[1.8,0.7,0.15],[1.8,1.3,0.3]]);if(vis)sf.zap(0.6)}
+  else if(type==='slash'){const T=d.T,c=topRGB(T);for(let i=0;i<=24;i++){const f=i/24,x=d.x0+(d.x1-d.x0)*f,z=d.z0+(d.z1-d.z0)*f;sparks(x,groundHc(x,z)+0.8,z,5,cxW(T,[[1.8,1.8,1.8],c]))}
+    shock((d.x0+d.x1)/2,groundHc(0,0)+0.5,(d.z0+d.z1)/2,2.8);if(vis){sf.boom();sf.zap(1);shake=Math.max(shake,1.0);flashFx=0.4;speedFx=0.5;speedCol=cxHexOf(T);popText('一閃！','把戰場切成兩半')}}
+  else if(type==='strikeHit'){const y=groundHc(d.x,d.z)+0.8,c=topRGB(d.T);sparks(d.x,y,d.z,70,cxW(d.T,[c,bodyRGB(d.T)]));shock(d.x,y-0.3,d.z,2.4);shock(d.x,y,d.z,1.4);zap(d.x,y,d.z,6,3);
     if(vis){sf.boom();shake=1.5;camPunch=Math.min(5,camPunch+3);if(!reduce)slowT=Math.max(slowT,0.45);flashFx=0.35;popText('爆擊！')}}
   else if(type==='repel'){const T=d.T,y=groundHc(T.x,T.z)+0.4;shock(T.x,y,T.z,2.6);shock(T.x,y+0.4,T.z,1.8);sparks(T.x,y+0.4,T.z,50,[[0.6,1.2,1.8],[1.6,1.6,1.6]]);if(vis){sf.boom();shake=Math.max(shake,0.8)}}
   else if(type==='awaken'){const T=d.T,y=groundHc(T.x,T.z);sparks(T.x,y+0.9,T.z,120,[topRGB(T),[1.8,1.8,1.8],[1.2,0.9,1.9]]);shock(T.x,y+0.3,T.z,3);shock(T.x,y+0.8,T.z,2);zap(T.x,y+1,T.z,6,3);
     if(vis){sf.special();shake=Math.max(shake,1.2);flashFx=0.5;speedFx=0.6;speedCol='#c78bff';if(!reduce)slowT=Math.max(slowT,0.7);popText('覺醒！',(T===P?'你的「':'對手的「')+T.def.name+(T.bar2&&T.burst>0.95?'」第一條耐久破裂，力量覺醒':'」轉速告急，力量覺醒'))}}
   else if(type==='bar2'){const T=d.T,y=groundHc(T.x,T.z);sparks(T.x,y+0.8,T.z,80,[[1.2,0.9,1.9],[0.6,1.6,1.9],[1.8,1.8,1.8]]);shock(T.x,y+0.4,T.z,2.4);if(vis){sf.boom();shake=Math.max(shake,1.0);if(T.awoke)popText('耐久條破裂！','第二條耐久啟動')}}
-  else if(type==='stage2'){if(vis){popText('二段追擊！');speedFx=0.5;speedCol=hex(d.T.def.accent)}}
+  else if(type==='stage2'){if(vis){popText('二段追擊！');speedFx=0.5;speedCol=cxHexOf(d.T)}}
   else if(type==='shield'){const T=d.T,y=groundHc(T.x,T.z);shock(T.x,y+0.6,T.z,2.2);sparks(T.x,y+0.8,T.z,50,[[1.8,1.7,1.0],[1.8,1.8,1.8]]);if(vis)popText('星盾！','擋下了這次重擊')}
   else if(type==='meteor'){const y=groundHc(d.x,d.z);sparks(d.x,y+0.6,d.z,110,[[1.9,0.8,0.2],[1.8,1.4,0.5],[0.6,0.5,0.5]]);shock(d.x,y+0.2,d.z,2.8);shock(d.x,y+0.5,d.z,1.6);if(vis){sf.boom();shake=Math.max(shake,1.0)}}
-  else if(type==='special'){sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,50,[topRGB(d.T),bodyRGB(d.T)]);shock(d.T.x,groundHc(d.T.x,d.T.z)+0.4,d.T.z,1.8);
-    {const fx=d.T.def.fx;if(fx==='quake'){shock(d.T.x,groundHc(d.T.x,d.T.z)+0.2,d.T.z,3.4);if(vis)shake=Math.max(shake,1.2)}if(fx==='holy'||fx==='moon'||fx==='song')shock(d.T.x,groundHc(d.T.x,d.T.z)+0.9,d.T.z,2.6);if(fx==='flame'||fx==='dragon')sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,60,[[1.8,0.7,0.15],[1.8,1.3,0.3]]);if(fx==='ice'||fx==='snow')sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,60,[[1.2,1.6,1.8],[1.6,1.6,1.6]])}
+  else if(type==='special'){sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,50,cxW(d.T,[topRGB(d.T),bodyRGB(d.T)]));cxStart(d.T,d.O);d.T.cxLast=null;shock(d.T.x,groundHc(d.T.x,d.T.z)+0.4,d.T.z,1.8);
+    {const fx=d.T.def.fx;if(fx==='quake'||fx==='gravity'){shock(d.T.x,groundHc(d.T.x,d.T.z)+0.2,d.T.z,3.4);if(vis)shake=Math.max(shake,1.2)}if(fx==='holy'||fx==='moon'||fx==='song'||fx==='whitepulse'||fx==='eternal')shock(d.T.x,groundHc(d.T.x,d.T.z)+0.9,d.T.z,2.6);if((fx==='flame'||fx==='dragon')&&!d.T.def.cx)sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,60,[[1.8,0.7,0.15],[1.8,1.3,0.3]]);if(fx==='ice'||fx==='snow')sparks(d.T.x,groundHc(d.T.x,d.T.z)+0.8,d.T.z,60,[[1.2,1.6,1.8],[1.6,1.6,1.6]])}
     if(vis){sf.special();if(!rpOn){if(d.T===P)stats.sp++;cutIn(d.T);if(!reduce)slowT=Math.max(slowT,0.9)}}}
 };
 
@@ -2728,7 +2823,7 @@ function updatePLine(T){const arr=PL[T.side],hist=T.hist,on=hist&&T.histT>0;
     const pts=hist.slice(-46),n=pts.length+(T.sp&&T.sp.kind==='path'?1:0);let v=0;
     for(let i=0;i<n;i++){const q=i<pts.length?pts[i]:[T.x,T.z];o.pos[v++]=q[0]+o.ox;o.pos[v++]=groundHc(q[0],q[1])+0.28;o.pos[v++]=q[1]+o.oz}
     o.g.attributes.position.needsUpdate=true;o.g.setDrawRange(0,n);
-    o.m.color.setHex(T.def.accent);o.m.opacity=Math.min(1,T.histT*1.4)*(o.core?0.95:0.6)}}
+    const cp=T.def.cx;o.m.color.setHex(cp?cp[o.core?0:(o.ox>0?1:o.oz>0?2:1)]:T.def.accent);o.m.opacity=Math.min(1,T.histT*1.4)*(o.core?0.95:0.6)}}
 function updateModel(T,dt,rdt){
   const M=T.model;if(!M)return;
   const r=Math.hypot(T.x,T.z),gy=groundHc(T.x,T.z);
@@ -2759,8 +2854,9 @@ function updateModel(T,dt,rdt){
   if(bk==='ice'){M.fx.ice.rotation.y-=rdt*0.8;if(Math.random()<rdt*6)ember(T.x+(Math.random()-.5)*2.4,y+0.9,T.z+(Math.random()-.5)*2.4,[1.2,1.6,1.8])}
   if(bk==='light'){M.fx.light.rotation.y+=rdt*0.9;M.fx.light.material.opacity=0.45+0.3*Math.sin(now*6)}
   if(M.edge)M.edge.material.opacity=live?0.18+0.12*Math.sin(now*7):0;
-  if(live&&T.sp){const c=topRGB(T),n=T.sp.kind==='strike'?6:T.sp.kind==='path'?9:4;for(let i=0;i<n;i++)trailP(T.x+(Math.random()-.5)*0.5,y+0.5+Math.random()*0.4,T.z+(Math.random()-.5)*0.5,Math.random()<0.3?bodyRGB(T):c);
-    M.aura.material.color.setHex(T.def.accent);M.aura.material.opacity=0.06}
+  if(live&&T.sp){const pc=cxCols(T),c=pc?pc[0]:topRGB(T),n=T.sp.kind==='strike'?6:T.sp.kind==='path'?9:4;for(let i=0;i<n;i++)trailP(T.x+(Math.random()-.5)*0.5,y+0.5+Math.random()*0.4,T.z+(Math.random()-.5)*0.5,Math.random()<0.3?(pc?pc[1]:bodyRGB(T)):c);
+    M.aura.material.color.setHex(T.def.cx?T.def.cx[0]:T.def.accent);M.aura.material.opacity=0.06}
+  if(live&&T.def.cx&&(T.sp||T.chain||T.kx||T.spGlow>0))cxTick(T,y,now);
   if(live&&isKi(T)&&(T.sp||T.chain||T.spGlow>0)){const KI_COL=KI_SET[T.def.type]||KI_SET.atk;
     /* 轉動中的環形粉紅氣焰＋沿軌跡留下的殘火 */
     const N=reduce?2:5,w=now*9,sp=Math.hypot(T.vx,T.vz);
