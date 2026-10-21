@@ -441,7 +441,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.30.3</div>
+  <div class="ver">v1.30.4</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2712,7 +2712,7 @@ function drawCutIns(dt){
   const g=cg,W=CW,H=CH;
   for(let i=cutIns.length-1;i>=0;i--){
     const c=cutIns[i];c.t+=dt;if(c.t>(c.mini?1.2:1.45)){cutIns.splice(i,1);continue}
-    const M=c.mini,bh=M?Math.min(H*0.09,76):Math.min(H*0.26,230),cy=M?(c.isP?H*0.665:H*0.305):c.isP?H*0.6:H*0.34,sk=bh*0.35,y0=cy-bh/2,y1=cy+bh/2,xa=M&&!c.isP?W*0.42:-30,xb=M&&c.isP?W*0.58:W+30;
+    const M=c.mini,LS=W>H*1.15,bh=M?(LS?Math.min(H*0.18,84):Math.min(H*0.09,76)):Math.min(H*0.26,230),cw=LS?Math.min(W*0.27,300):W*0.58,cy=M?(LS?H*0.44:c.isP?H*0.665:H*0.305):c.isP?H*0.6:H*0.34,sk=bh*0.35,y0=cy-bh/2,y1=cy+bh/2,xa=M?(c.isP?-30:W-cw):-30,xb=M?(c.isP?cw:W+30):W+30;
     const tin=Math.min(1,c.t/0.16),tout=Math.max(0,(c.t-1.2)/0.25);
     const ox=c.isP?(-(1-easeOut(tin))*W+easeIn(tout)*W):((1-easeOut(tin))*W-easeIn(tout)*W);
     g.save();g.translate(ox,0);
@@ -2721,10 +2721,10 @@ function drawCutIns(dt){
     const gr=g.createLinearGradient(0,y0,0,y1);gr.addColorStop(0,c.isP?'#123a9a':'#8a1020');gr.addColorStop(1,c.isP?'#2f8bff':'#ff4b3a');g.fillStyle=gr;g.fillRect(-30,y0-sk,W+60,bh+2*sk);
     g.strokeStyle='rgba(255,255,255,.35)';g.lineCap='round';const r=rng(9);
     for(let k=0;k<26;k++){const yy=y0-sk*0.3+r()*(bh+sk*0.6),len=40+r()*160,x=((r()*W+(c.isP?1:-1)*c.t*W*2.2)%(W+400)+W+400)%(W+400)-200;g.lineWidth=1+r()*4;g.beginPath();g.moveTo(x,yy);g.lineTo(x+len,yy);g.stroke()}
-    const bx=M?(c.isP?W*0.09:W*0.91):c.isP?W*0.16:W*0.84,u=bh*0.58,shk=c.t<0.7?(Math.random()-.5)*6:0;
-    g.save();g.translate(bx+shk,cy-bh*0.02+2.12*u+shk);g.scale(c.isP?u:-u,u);drawChar(g,c.av,{pose:'shout',t:c.t});g.restore();
+    const bx=M?(c.isP?cw*0.17:W-cw*0.17):c.isP?W*0.16:W*0.84,u=bh*(M?0.8:0.58),shk=c.t<0.7?(Math.random()-.5)*6:0;
+    g.save();g.translate(bx+shk,cy-bh*0.02+2.12*u+(M?-bh*0.2:0)+shk);g.scale(c.isP?u:-u,u);drawChar(g,c.av,{pose:'shout',t:c.t});g.restore();
     g.restore();
-    const fs=M?Math.min(bh*0.34,W*0.058):Math.min(bh*0.3,W*0.09),pop=1+0.35*(1-easeOut(tin)),tx=M?(c.isP?W*0.2:W*0.8):c.isP?W*0.42:W*0.58,al=c.isP?'left':'right';
+    const fs=M?Math.min(bh*0.34,cw*0.085):Math.min(bh*0.3,W*0.09),pop=1+0.35*(1-easeOut(tin)),tx=M?(c.isP?cw*0.36:W-cw*0.36):c.isP?W*0.42:W*0.58,al=c.isP?'left':'right';
     g.save();g.translate(tx,cy+fs*0.35);g.scale(pop,pop);g.transform(1,0,-0.18,1,0,0);
     label(g,c.name+'！',0,0,fs,al,'#fff3a0');if(c.ki)label(g,'星魄爆發',0,fs*0.62,fs*0.5,al,KI_HEX[c.ki]||'#ff8fe0');label(g,c.who+' 吶喊',0,-fs*1.05,fs*0.42,al,'#ffffff');g.restore();
     g.restore();
