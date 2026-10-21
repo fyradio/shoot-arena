@@ -441,7 +441,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.30.2</div>
+  <div class="ver">v1.30.3</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2712,7 +2712,7 @@ function drawCutIns(dt){
   const g=cg,W=CW,H=CH;
   for(let i=cutIns.length-1;i>=0;i--){
     const c=cutIns[i];c.t+=dt;if(c.t>(c.mini?1.2:1.45)){cutIns.splice(i,1);continue}
-    const M=c.mini,bh=M?Math.min(H*0.12,100):Math.min(H*0.26,230),cy=M?(c.isP?H*0.82:H*0.17):c.isP?H*0.6:H*0.34,sk=bh*0.35,y0=cy-bh/2,y1=cy+bh/2,xa=M&&!c.isP?W*0.36:-30,xb=M&&c.isP?W*0.64:W+30;
+    const M=c.mini,bh=M?Math.min(H*0.09,76):Math.min(H*0.26,230),cy=M?(c.isP?H*0.665:H*0.305):c.isP?H*0.6:H*0.34,sk=bh*0.35,y0=cy-bh/2,y1=cy+bh/2,xa=M&&!c.isP?W*0.42:-30,xb=M&&c.isP?W*0.58:W+30;
     const tin=Math.min(1,c.t/0.16),tout=Math.max(0,(c.t-1.2)/0.25);
     const ox=c.isP?(-(1-easeOut(tin))*W+easeIn(tout)*W):((1-easeOut(tin))*W-easeIn(tout)*W);
     g.save();g.translate(ox,0);
