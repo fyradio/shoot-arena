@@ -275,7 +275,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   </section>
   <section id="menu" class="sheet gut" hidden>
     <div class="inner">
-      <div class="eyebrow" style="display:flex;align-items:center">選擇賽制<span id="coinLbl" style="margin-left:12px;color:var(--ink)">商店幣 0</span><button class="mini" id="musicBtn" type="button" aria-pressed="true">音樂：開</button></div>
+      <div class="eyebrow" style="display:flex;align-items:center">選擇賽制<span id="coinLbl" style="margin-left:12px;color:var(--ink)">商店幣 0</span><button class="mini" id="musicBtn" type="button" aria-pressed="true">音樂：開</button><button class="mini" id="cutBtn" type="button" aria-pressed="false" style="margin-left:6px">全動畫：關</button></div>
       <p class="lead">往下拉發射。對戰時手指在畫面上拖可以推著陀螺跑，必殺氣滿了會自動放必殺，點必殺鈕可以集氣更快。戰鬥盤會浮出特殊軌道，還會出現道具；四周的牆會慢慢降下。先拿 4 分贏。</p>
       <div class="cycle"><b>攻擊</b> 剋 耐久　<b>耐久</b> 剋 防禦　<b>防禦</b> 剋 攻擊　<b>平衡</b> 不剋也不被剋<br>
         轉停 <b>+1</b>　撞出場 <b>+2</b>（牆壁會慢慢降下，從降下的地方最容易）　撞爆 <b>+3</b></div>
@@ -441,7 +441,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.30.1</div>
+  <div class="ver">v1.30.2</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2705,7 +2705,7 @@ function drawSplit(dt){
   }else if(ov.mode==='open'&&t>=0.5){ov.mode=null}
 }
 function cutIn(T){
-  const isP=T===P;cutIns.push({isP,t:0,mini:Math.random()<0.5,name:T.def.special,ki:isKi(T)?T.def.type:null,who:isP?pName:eName,av:isP?pAv:eAv});
+  const isP=T===P;cutIns.push({isP,t:0,mini:!(bigCut&&Math.random()<0.2),name:T.def.special,ki:isKi(T)?T.def.type:null,who:isP?pName:eName,av:isP?pAv:eAv});
   sayZh(T.def.special);
 }
 function drawCutIns(dt){
@@ -2791,7 +2791,7 @@ $('arenaRand').onclick=()=>{audioInit();arenaRandMode=!arenaRandMode;save('arena
 
 /* ---------- music: 開場=片段1、結算=片段6、戰鬥=其餘16段隨機；每次從隨機位置開始 ---------- */
 const MUSIC={"battle": [{"url": "music/b02.mp3", "ls": 0.5, "le": 29.68465, "seg": 2}, {"url": "music/b03.mp3", "ls": 0.5, "le": 29.73476, "seg": 3}, {"url": "music/b04.mp3", "ls": 0.5, "le": 29.71531, "seg": 4}, {"url": "music/b05.mp3", "ls": 0.5, "le": 29.71499, "seg": 5}, {"url": "music/b07.mp3", "ls": 0.5, "le": 27.56238, "seg": 7}, {"url": "music/b08.mp3", "ls": 0.5, "le": 27.6041, "seg": 8}, {"url": "music/b09.mp3", "ls": 0.5, "le": 27.5881, "seg": 9}, {"url": "music/b10.mp3", "ls": 0.5, "le": 27.5471, "seg": 10}, {"url": "music/b11.mp3", "ls": 0.5, "le": 27.549, "seg": 11}, {"url": "music/b12.mp3", "ls": 0.5, "le": 27.55898, "seg": 12}, {"url": "music/b13.mp3", "ls": 0.5, "le": 29.11492, "seg": 13}, {"url": "music/b14.mp3", "ls": 0.5, "le": 29.09311, "seg": 14}, {"url": "music/b15.mp3", "ls": 0.5, "le": 29.1366, "seg": 15}, {"url": "music/b16.mp3", "ls": 0.5, "le": 29.1, "seg": 16}, {"url": "music/b17.mp3", "ls": 0.5, "le": 29.12308, "seg": 17}, {"url": "music/b18.mp3", "ls": 0.5, "le": 29.0942, "seg": 18}], "intro": {"url": "music/intro.mp3", "ls": 0.5, "le": 29.71195, "seg": 1}, "result": {"url": "music/result.mp3", "ls": 0.5, "le": 29.73036, "seg": 6}};
-let musicOn=load('music')!==false,battleIdx=Math.floor(Math.random()*MUSIC.battle.length);
+let bigCut=load('bigcut')===true,musicOn=load('music')!==false,battleIdx=Math.floor(Math.random()*MUSIC.battle.length);
 const mus={buf:{},pending:{},cur:null,node:null,want:null,g:null};
 function trackOf(k){return k==='intro'||k==='result'?MUSIC[k]:MUSIC.battle[+k.slice(1)]}
 function loadTrack(k){if(!AC||mus.buf[k]||mus.pending[k])return;const tr=trackOf(k);if(!tr)return;mus.pending[k]=1;
@@ -2807,6 +2807,8 @@ function setMusic(k){mus.want=k;if(!AC||!mus.g||mus.cur===k)return;if(!mus.buf[k
 function musicForPhase(){return phase==='battle'||phase==='ending'||phase==='watch'||phase==='replay'?'b'+battleIdx:phase==='round'||phase==='over'?'result':'intro'}
 function musicBtnLabel(){const b=$('musicBtn');if(b){b.textContent=musicOn?'音樂：開':'音樂：關';b.setAttribute('aria-pressed',musicOn)}}
 $('musicBtn').onclick=()=>{audioInit();musicOn=!musicOn;save('music',musicOn);musicBtnLabel();if(mus.g)mus.g.gain.setTargetAtTime(musicOn?0.55:0,AC.currentTime,0.1)};musicBtnLabel();
+function cutBtnLabel(){const b=$('cutBtn');b.textContent=bigCut?'全動畫：開':'全動畫：關';b.setAttribute('aria-pressed',bigCut)}
+$('cutBtn').onclick=()=>{bigCut=!bigCut;save('bigcut',bigCut);cutBtnLabel()};cutBtnLabel();
 /* ---------- loop ---------- */
 function fit(){
   const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;
