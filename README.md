@@ -17,3 +17,6 @@
 
 ## 發佈
 `python3 tools/gamerelease.py release.json "更新說明" [patch|minor|major|none]`：語法檢查 → 版本號 +1 → `sw.js` 版本 +1 → 產生 `index.html`／`sw.js` → commit/push。原始碼 `spin.html` 在開發環境，不在這個儲存庫。
+
+## 版權
+© 2026 CW Studio. All rights reserved. 詳見 `LICENSE`。歡迎遊玩與分享連結，未經同意不得複製、修改或商用。遊戲網址：https://shoot-arena.cw-studio.workers.dev
