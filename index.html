@@ -284,6 +284,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
       <button class="btn ghost" id="shopBtn" type="button">工坊　商店・組裝・強化</button>
       <button class="btn ghost" id="go" type="button">自由練習</button>
       <button class="btn ghost" id="helpBtn" type="button">遊戲說明　規則・道具・四種陀螺</button>
+      <button class="btn ghost" id="instBtn" type="button">安裝成手機 App　加入主畫面</button>
       <button class="btn ghost" id="menuBack" type="button">回標題</button>
     </div>
   </section>
@@ -421,6 +422,16 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
       <button class="btn ghost" id="tSkip" type="button" hidden>觀看決賽</button>
     </div>
   </section>
+  <section id="install" class="sheet gut" hidden>
+    <div class="inner">
+      <div class="eyebrow">安裝成手機 App</div>
+      <div class="cycle">iPhone・Safari・4 個步驟</div>
+      <div style="display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 14px;margin:8px 0"><div style="flex:none;width:34px;height:34px;border-radius:50%;background:#ffc83d;color:#1a1200;font-weight:900;font-size:19px;display:flex;align-items:center;justify-content:center">1</div><div><b style="font-size:16px">用 Safari 打開網址</b><div style="opacity:.8;font-size:14px;margin-top:3px">要用 Safari 瀏覽器，不要在 LINE 或 Facebook 裡直接開。等遊戲載入完成再往下做。</div></div></div><div style="display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 14px;margin:8px 0"><div style="flex:none;width:34px;height:34px;border-radius:50%;background:#ffc83d;color:#1a1200;font-weight:900;font-size:19px;display:flex;align-items:center;justify-content:center">2</div><div><b style="font-size:16px">點下方中間的「分享」</b><div style="opacity:.8;font-size:14px;margin-top:3px">方形加向上箭頭的圖示。</div></div></div><div style="display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 14px;margin:8px 0"><div style="flex:none;width:34px;height:34px;border-radius:50%;background:#ffc83d;color:#1a1200;font-weight:900;font-size:19px;display:flex;align-items:center;justify-content:center">3</div><div><b style="font-size:16px">點「加入主畫面」</b><div style="opacity:.8;font-size:14px;margin-top:3px">需要往下滑才會看到；再按右上角的「加入」。</div></div></div><div style="display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 14px;margin:8px 0"><div style="flex:none;width:34px;height:34px;border-radius:50%;background:#ffc83d;color:#1a1200;font-weight:900;font-size:19px;display:flex;align-items:center;justify-content:center">4</div><div><b style="font-size:16px">回主畫面點新圖示</b><div style="opacity:.8;font-size:14px;margin-top:3px">會全螢幕開啟，就像一般 App。</div></div></div>
+      <div class="cycle" style="margin-top:10px">・第一次要<b>連網</b>開啟，載入完整之後沒網路也能玩<br>・要更新：把 App 從多工畫面<b>完全關掉</b>再重開<br>・存檔在這支手機裡，不會跟別人同步<br>・Android：用 Chrome 開啟，點右上角「⋮」→「加到主畫面／安裝應用程式」</div>
+      <button class="btn ghost" id="instBack" type="button">返回</button>
+    </div>
+  </section>
+
   <section id="help" class="sheet gut" hidden>
     <div class="inner">
       <div class="eyebrow">遊戲說明</div>
@@ -441,7 +452,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.30.4</div>
+  <div class="ver">v1.31.0</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2961,6 +2972,8 @@ let hpTab='rule';
 function hpRender(){[...$('hpTabs').children].forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===hpTab));$('hpBody').innerHTML=HELP[hpTab]}
 $('hpTabs').onclick=e=>{const b=e.target.closest('[data-t]');if(b){hpTab=b.dataset.t;hpRender();window.scrollTo(0,0)}};
 $('helpBtn').onclick=()=>{$('menu').hidden=true;$('help').hidden=false;hpTab='rule';hpRender();sfx.ding&&sfx.ding()};
+$('instBtn').onclick=()=>{$('menu').hidden=true;$('install').hidden=false;$('install').scrollTop=0};
+$('instBack').onclick=()=>{$('install').hidden=true;$('menu').hidden=false};
 $('hpBack').onclick=()=>{$('help').hidden=true;$('menu').hidden=false};
 $('shopBtn').onclick=shOpen;$('shBack').onclick=shClose;
 $('shTabs').onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;if(shTab==='style'&&b.dataset.t!=='style')wz.step=0;shTab=b.dataset.t;shMsg='';shRender()};
