@@ -435,7 +435,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="help" class="sheet gut" hidden>
     <div class="inner">
       <div class="eyebrow">遊戲說明</div>
-      <div class="filters" id="hpTabs"><button type="button" data-t="rule" aria-pressed="true">戰鬥規則</button><button type="button" data-t="item" aria-pressed="false">道具說明</button><button type="button" data-t="type" aria-pressed="false">四種陀螺</button><button type="button" data-t="grow" aria-pressed="false">成長・工坊</button></div>
+      <div class="filters" id="hpTabs"><button type="button" data-t="type" aria-pressed="true">四種陀螺</button><button type="button" data-t="rule" aria-pressed="false">戰鬥規則</button><button type="button" data-t="item" aria-pressed="false">道具說明</button><button type="button" data-t="grow" aria-pressed="false">成長・工坊</button></div>
       <div id="hpBody"></div>
       <button class="btn ghost" id="hpBack" type="button">返回</button>
     </div>
@@ -452,7 +452,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.31.0</div>
+  <div class="ver">v1.31.1</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2968,10 +2968,10 @@ grow:`<div class="hcard"><h4>商店幣與等級</h4>打比賽會得到商店幣�
 <div class="hcard"><h4>工坊</h4><b>陀螺</b>：用商店幣買新陀螺。<br><b>盲盒・道具</b>：抽零件盲盒、買能力增幅道具、全能力強化券。<br><b>組裝</b>：用零件自己組一顆陀螺（外環、重量盤、軸心、紋章）。<br><b>造型</b>：一步一步改花紋、外環邊緣、內圈、貼紙。貼紙那一步可以按「畫一個新的」自己畫：有對稱畫筆、形狀圖章、描線底圖、填色，畫完還能按「魔法潤飾」自動修整。<br><b>強化</b>：用增幅道具替單顆陀螺加點（攻、防、耐、重）。</div>
 <div class="hcard"><h4>必殺雷電</h4>放必殺時陀螺身邊的雷電顏色每場隨機搭配，不用購買：一般陀螺 1 種顏色（7 道）、神聖級 2 種（11 道）、宇宙級 3 種（15 道）。</div>
 <div class="hcard"><h4>捏臉</h4>在選單點「捏臉」可以改你的鬥士外觀；對戰時必殺吶喊的畫面會用到。</div>`};
-let hpTab='rule';
+let hpTab='type';
 function hpRender(){[...$('hpTabs').children].forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===hpTab));$('hpBody').innerHTML=HELP[hpTab]}
 $('hpTabs').onclick=e=>{const b=e.target.closest('[data-t]');if(b){hpTab=b.dataset.t;hpRender();window.scrollTo(0,0)}};
-$('helpBtn').onclick=()=>{$('menu').hidden=true;$('help').hidden=false;hpTab='rule';hpRender();sfx.ding&&sfx.ding()};
+$('helpBtn').onclick=()=>{$('menu').hidden=true;$('help').hidden=false;hpTab='type';hpRender();sfx.ding&&sfx.ding()};
 $('instBtn').onclick=()=>{$('menu').hidden=true;$('install').hidden=false;$('install').scrollTop=0};
 $('instBack').onclick=()=>{$('install').hidden=true;$('menu').hidden=false};
 $('hpBack').onclick=()=>{$('help').hidden=true;$('menu').hidden=false};
