@@ -453,7 +453,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.32.1</div>
+  <div class="ver">v1.32.2</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2529,8 +2529,13 @@ function hairBack(g,av,t){
   if(h===11){const sw=Math.sin(t*3)*0.07;g.beginPath();g.moveTo(0,-0.62);g.bezierCurveTo(0.9+sw,-1.05,1.15+sw,0.1,0.8+sw,1.0);g.bezierCurveTo(0.7,0.25,0.45,-0.35,0,-0.48);g.closePath();fo(g,hc);ell(g,0.05,-0.58,0.08,0.06,'#e0303a',0.025)}
   if(h===7){g.beginPath();g.moveTo(-0.6,-0.1);g.lineTo(-0.62,0.42);g.quadraticCurveTo(-0.5,0.56,-0.3,0.5);g.lineTo(0.3,0.5);g.quadraticCurveTo(0.5,0.56,0.62,0.42);g.lineTo(0.6,-0.1);g.closePath();fo(g,hc)}
   const sw=Math.sin(t*2.6)*0.05;
-  if(h===12){g.beginPath();const n=6;for(let i=0;i<=n*2;i++){const an=-Math.PI-0.3+(Math.PI+0.6)*i/(n*2),top=Math.max(0,Math.sin(-an)),r=i%2?0.66:0.98+0.72*top;g.lineTo(Math.cos(an)*r,-0.1+Math.sin(an)*r*1.0)}g.closePath();fo(g,hc);
-    g.lineCap='round';g.lineWidth=0.04;g.strokeStyle=shade(hc,0.5);for(const k of [-0.9,-0.3,0.3,0.9]){g.beginPath();g.moveTo(k*0.42,-0.62);g.lineTo(k*0.62,-1.2-0.15*(1-Math.abs(k)));g.stroke()}}
+  if(h===12){const lock=(a,L,bend,wd)=>{const bx=Math.sin(a)*0.5,by=-0.06-Math.cos(a)*0.5,dx=Math.sin(a),dy=-Math.cos(a),px=Math.cos(a),py=Math.sin(a),tx=bx+dx*L+px*bend*0.6,ty=by+dy*L+py*bend*0.6;
+      const p1=[bx-px*wd,by-py*wd],p2=[bx+px*wd,by+py*wd],c1=[(p1[0]+tx)/2+px*(bend+0.05),(p1[1]+ty)/2+py*(bend+0.05)],c2=[(p2[0]+tx)/2+px*(bend-0.06),(p2[1]+ty)/2+py*(bend-0.06)];
+      g.beginPath();g.moveTo(p1[0],p1[1]);g.quadraticCurveTo(c1[0],c1[1],tx,ty);g.quadraticCurveTo(c2[0],c2[1],p2[0],p2[1]);g.closePath();fo(g,hc);
+      g.lineCap='round';g.lineWidth=0.022;g.strokeStyle=shade(hc,0.45);g.beginPath();g.moveTo(bx,by-0.02);g.quadraticCurveTo((bx+tx)/2+px*bend*0.7,(by+ty)/2+py*bend*0.7,bx+(tx-bx)*0.8,by+(ty-by)*0.8);g.stroke()};
+    const A=[-1.45,-1.08,-0.7,-0.32,0.0,0.32,0.7,1.08,1.45];
+    for(const a of A.slice(0,-1))lock(a+0.2,(0.26+0.3*Math.cos(a+0.2))*0.9,0.1,0.16);
+    for(const a of A)lock(a,0.3+0.38*Math.cos(a),0.11,0.2)}
   if(h===13){for(const sg of [-1,1]){g.beginPath();g.moveTo(sg*0.6,-0.1);g.quadraticCurveTo(sg*0.78,0.3,sg*0.66,0.62);g.lineTo(sg*0.46,0.5);g.lineTo(sg*0.45,0);g.closePath();fo(g,hc)}}
   if(h===14){g.beginPath();const P=[-0.6,0.1,-0.5,0.62,-0.36,0.34,-0.26,0.82,-0.1,0.42,0,0.95,0.1,0.42,0.26,0.82,0.36,0.34,0.5,0.62,0.6,0.1];g.moveTo(P[0],P[1]);for(let i=2;i<P.length;i+=2)g.lineTo(P[i],P[i+1]);g.closePath();fo(g,hc)}
   if(h===15){g.beginPath();g.moveTo(-0.6,-0.1);g.bezierCurveTo(-0.86,0.4,-0.78+sw,0.9,-0.64+sw,1.5);g.quadraticCurveTo(0,1.64,0.64+sw,1.5);g.bezierCurveTo(0.78+sw,0.9,0.86,0.4,0.6,-0.1);g.closePath();fo(g,hc);
@@ -2567,6 +2572,7 @@ function hairFront(g,av,t){
   g.beginPath();const ry=av.hair===2?0.54:0.58;g.ellipse(0,-0.04,av.hair===2?0.52:0.56,ry,0,Math.PI,Math.PI*2);
   for(let i=0;i<b.length;i+=2)g.lineTo(b[i],b[i+1]);g.closePath();fo(g,hc);
   g.lineCap='round';g.lineWidth=0.04;g.strokeStyle=shade(hc,0.45);g.beginPath();g.ellipse(0,-0.04,0.42,0.44,0,Math.PI*1.25,Math.PI*1.45);g.stroke();
+  if(av.hair===12){g.lineCap='round';g.lineWidth=0.022;g.strokeStyle=shade(hc,-0.22);for(const k of [-0.42,-0.16,0.16,0.42]){g.beginPath();g.moveTo(k*0.9,-0.58);g.quadraticCurveTo(k*1.25,-0.4,k*1.45,-0.2);g.stroke()}}
   if(av.hair===18){const sw=Math.sin((t||0)*3)*0.03;g.lineCap='round';g.lineJoin='round';g.beginPath();g.moveTo(0.02,-0.58);g.bezierCurveTo(-0.1,-0.9,0.1+sw,-1.0,0.16+sw,-0.86);g.bezierCurveTo(0.2+sw,-0.76,0.06,-0.76,0.08,-0.88);
     g.lineWidth=0.11;g.strokeStyle=OL;g.stroke();g.lineWidth=0.07;g.strokeStyle=hc;g.stroke()}
 }
