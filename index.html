@@ -453,7 +453,7 @@ button,.tops,.arenas{touch-action:manipulation}#app,#launch,#hud,#sp,#sp2{touch-
   <section id="tourEnd" class="result" hidden>
     <div class="rcard"><div class="big" id="teBig">—</div><div class="note" id="teNote">—</div><div class="note">點一下，回主選單</div></div>
   </section>
-  <div class="ver">v1.32.3</div>
+  <div class="ver">v1.32.4</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
@@ -2513,21 +2513,25 @@ function faceMark(g,av,ex){
   if(ex==='shout')burst(g,0.36,-0.42);
 }
 /* hair */
+function hairLock(g,hc,a,L,bend,wd,line){const bx=Math.sin(a)*0.5,by=-0.06-Math.cos(a)*0.5,dx=Math.sin(a),dy=-Math.cos(a),px=Math.cos(a),py=Math.sin(a),tx=bx+dx*L+px*bend*0.6,ty=by+dy*L+py*bend*0.6;
+  const p1=[bx-px*wd,by-py*wd],p2=[bx+px*wd,by+py*wd],c1=[(p1[0]+tx)/2+px*(bend+0.05),(p1[1]+ty)/2+py*(bend+0.05)],c2=[(p2[0]+tx)/2+px*(bend-0.06),(p2[1]+ty)/2+py*(bend-0.06)];
+  g.beginPath();g.moveTo(p1[0],p1[1]);g.quadraticCurveTo(c1[0],c1[1],tx,ty);g.quadraticCurveTo(c2[0],c2[1],p2[0],p2[1]);g.closePath();fo(g,hc);
+  if(line!==false){g.lineCap='round';g.lineWidth=0.022;g.strokeStyle=shade(hc,0.45);g.beginPath();g.moveTo(bx,by-0.02);g.quadraticCurveTo((bx+tx)/2+px*bend*0.7,(by+ty)/2+py*bend*0.7,bx+(tx-bx)*0.8,by+(ty-by)*0.8);g.stroke()}}
 function hairBack(g,av,t){
   const hc=HAIRC[av.hairC],h=av.hair;
   if(h===2)return;
-  if(h===0){g.beginPath();const n=13;for(let i=0;i<=n*2;i++){const a=-Math.PI-0.35+(Math.PI+0.7)*i/(n*2),r=i%2?0.6:0.95;g.lineTo(Math.cos(a)*r,-0.08+Math.sin(a)*r*0.92)}g.closePath();fo(g,hc);return}
+  if(h===0){ell(g,0,-0.06,0.58,0.58,hc);const A=[-1.3,-0.9,-0.5,-0.15,0.2,0.55,0.95,1.3];for(const a of A.slice(0,-1))hairLock(g,hc,a+0.2,0.16+0.24*Math.cos(a),0.06,0.17,false);for(const a of A)hairLock(g,hc,a,0.2+0.3*Math.cos(a),0.06,0.21);return}
   if(h===1){for(let i=0;i<9;i++){const a=-Math.PI-0.3+(Math.PI+0.6)*i/8;ell(g,Math.cos(a)*0.52,-0.06+Math.sin(a)*0.5,0.24,0.22,hc)}return}
   ell(g,0,-0.06,0.58,0.58,hc);
-  if(h===3){g.beginPath();g.moveTo(-0.6,-0.1);g.lineTo(-0.64,1.2);g.quadraticCurveTo(0,1.36,0.64,1.2);g.lineTo(0.6,-0.1);g.closePath();fo(g,hc)}
+  if(h===3){g.beginPath();g.moveTo(-0.6,-0.1);g.bezierCurveTo(-0.72,0.4,-0.68,0.9,-0.6,1.22);g.quadraticCurveTo(0,1.42,0.6,1.22);g.bezierCurveTo(0.68,0.9,0.72,0.4,0.6,-0.1);g.closePath();fo(g,hc);g.lineCap='round';g.lineWidth=0.022;g.strokeStyle=shade(hc,0.35);for(const k of [-0.38,-0.12,0.14,0.4]){g.beginPath();g.moveTo(k,0.5);g.quadraticCurveTo(k*1.15,0.9,k*1.1,1.3);g.stroke()}}
   if(h===4)for(const s of [-1,1]){const sw=Math.sin(t*3+s)*0.05;g.beginPath();g.moveTo(s*0.45,-0.35);g.bezierCurveTo(s*1.15,-0.3,s*(1.05+sw),0.5,s*(0.9+sw),1.05);g.bezierCurveTo(s*0.8,0.6,s*0.65,0.3,s*0.48,-0.05);g.closePath();fo(g,hc);ell(g,s*0.5,-0.28,0.07,0.07,'#ff4b6a',0.025)}
   if(h===5){const sw=Math.sin(t*3)*0.06;g.beginPath();g.moveTo(0.2,-0.55);g.bezierCurveTo(1.0,-0.6,0.95+sw,0.3,0.85+sw,0.95);g.bezierCurveTo(0.7,0.5,0.6,0.1,0.4,-0.3);g.closePath();fo(g,hc);ell(g,0.33,-0.48,0.07,0.07,'#ff4b6a',0.025)}
   if(h===6){ell(g,0,-0.66,0.22,0.2,hc)}
   if(h===8){ell(g,0,-0.74,0.11,0.17,hc);g.lineWidth=0.05;g.strokeStyle='#e0303a';g.beginPath();g.moveTo(-0.11,-0.62);g.lineTo(0.11,-0.62);g.stroke()}
   if(h===9){g.beginPath();g.moveTo(-0.6,-0.1);g.bezierCurveTo(-0.92,0.3,-0.66,0.7,-0.88,1.1);g.bezierCurveTo(-0.5,1.28,-0.2,1.0,0,1.22);g.bezierCurveTo(0.2,1.0,0.5,1.28,0.88,1.1);g.bezierCurveTo(0.66,0.7,0.92,0.3,0.6,-0.1);g.closePath();fo(g,hc)}
-  if(h===10){g.beginPath();const n=7;for(let i=0;i<=n*2;i++){const a=-Math.PI-0.15+(Math.PI+0.3)*i/(n*2),r=i%2?0.62:1.32;g.lineTo(Math.cos(a)*r,-0.1+Math.sin(a)*r*0.95)}g.closePath();fo(g,hc)}
+  if(h===10){const A=[-1.4,-1.05,-0.7,-0.35,0,0.35,0.7,1.05,1.4];for(const a of A.slice(0,-1))hairLock(g,hc,a+0.17,(0.24+0.34*Math.cos(a+0.17))*0.9,0.2,0.2,false);for(const a of A)hairLock(g,hc,a,0.3+0.34*Math.cos(a),0.22,0.25)}
   if(h===11){const sw=Math.sin(t*3)*0.07;g.beginPath();g.moveTo(0,-0.62);g.bezierCurveTo(0.9+sw,-1.05,1.15+sw,0.1,0.8+sw,1.0);g.bezierCurveTo(0.7,0.25,0.45,-0.35,0,-0.48);g.closePath();fo(g,hc);ell(g,0.05,-0.58,0.08,0.06,'#e0303a',0.025)}
-  if(h===7){g.beginPath();g.moveTo(-0.6,-0.1);g.lineTo(-0.62,0.42);g.quadraticCurveTo(-0.5,0.56,-0.3,0.5);g.lineTo(0.3,0.5);g.quadraticCurveTo(0.5,0.56,0.62,0.42);g.lineTo(0.6,-0.1);g.closePath();fo(g,hc)}
+  if(h===7){g.beginPath();g.moveTo(-0.6,-0.1);g.bezierCurveTo(-0.72,0.15,-0.7,0.4,-0.58,0.54);g.quadraticCurveTo(0,0.64,0.58,0.54);g.bezierCurveTo(0.7,0.4,0.72,0.15,0.6,-0.1);g.closePath();fo(g,hc)}
   const sw=Math.sin(t*2.6)*0.05;
   if(h===12){const lock=(a,L,bend,wd)=>{const bx=Math.sin(a)*0.5,by=-0.06-Math.cos(a)*0.5,dx=Math.sin(a),dy=-Math.cos(a),px=Math.cos(a),py=Math.sin(a),tx=bx+dx*L+px*bend*0.6,ty=by+dy*L+py*bend*0.6;
       const p1=[bx-px*wd,by-py*wd],p2=[bx+px*wd,by+py*wd],c1=[(p1[0]+tx)/2+px*(bend+0.05),(p1[1]+ty)/2+py*(bend+0.05)],c2=[(p2[0]+tx)/2+px*(bend-0.06),(p2[1]+ty)/2+py*(bend-0.06)];
@@ -2540,7 +2544,7 @@ function hairBack(g,av,t){
   if(h===14){g.beginPath();const P=[-0.6,0.1,-0.5,0.62,-0.36,0.34,-0.26,0.82,-0.1,0.42,0,0.95,0.1,0.42,0.26,0.82,0.36,0.34,0.5,0.62,0.6,0.1];g.moveTo(P[0],P[1]);for(let i=2;i<P.length;i+=2)g.lineTo(P[i],P[i+1]);g.closePath();fo(g,hc)}
   if(h===15){g.beginPath();g.moveTo(-0.6,-0.1);g.bezierCurveTo(-0.86,0.4,-0.78+sw,0.9,-0.64+sw,1.5);g.quadraticCurveTo(0,1.64,0.64+sw,1.5);g.bezierCurveTo(0.78+sw,0.9,0.86,0.4,0.6,-0.1);g.closePath();fo(g,hc);
     g.lineCap='round';g.lineWidth=0.035;g.strokeStyle=shade(hc,0.35);for(const k of [-0.4,0,0.4]){g.beginPath();g.moveTo(k*0.9,0.7);g.quadraticCurveTo(k*1.1+sw,1.1,k*1.0+sw,1.5);g.stroke()}}
-  if(h===16){g.beginPath();g.moveTo(-0.6,-0.1);g.lineTo(-0.66,1.25);g.quadraticCurveTo(0,1.4,0.66,1.25);g.lineTo(0.6,-0.1);g.closePath();fo(g,hc)}
+  if(h===16){g.beginPath();g.moveTo(-0.6,-0.1);g.bezierCurveTo(-0.74,0.4,-0.7,0.9,-0.64,1.25);g.quadraticCurveTo(0,1.45,0.64,1.25);g.bezierCurveTo(0.7,0.9,0.74,0.4,0.6,-0.1);g.closePath();fo(g,hc);g.lineCap='round';g.lineWidth=0.022;g.strokeStyle=shade(hc,0.35);for(const k of [-0.38,-0.12,0.14,0.4]){g.beginPath();g.moveTo(k,0.5);g.quadraticCurveTo(k*1.15,0.9,k*1.1,1.3);g.stroke()}}
   if(h===17){for(const sg of [-1,1]){g.beginPath();g.moveTo(sg*0.46,-0.55);g.bezierCurveTo(sg*1.0,-0.2,sg*(0.98+sw),0.8,sg*(0.82+sw),1.72);g.bezierCurveTo(sg*0.68,1.0,sg*0.62,0.3,sg*0.44,-0.38);g.closePath();fo(g,hc);
       ell(g,sg*0.42,-0.7,0.2,0.19,hc);ell(g,sg*0.42,-0.7,0.08,0.07,shade(hc,0.35),0.02);ell(g,sg*0.5,-0.5,0.045,0.045,'#ff4b6a',0.02)}}
   if(h===18){ell(g,0,-0.04,0.6,0.56,hc)}
@@ -2573,8 +2577,9 @@ BANGS[18]=[0.52,0.1,0.4,-0.14,0.24,-0.04,0.1,-0.2,-0.06,-0.06,-0.2,-0.2,-0.34,-0
 function hairFront(g,av,t){
   const hc=HAIRC[av.hairC],b=BANGS[av.hair];
   g.beginPath();const ry=av.hair===2?0.54:0.58;g.ellipse(0,-0.04,av.hair===2?0.52:0.56,ry,0,Math.PI,Math.PI*2);
-  for(let i=0;i<b.length;i+=2)g.lineTo(b[i],b[i+1]);g.closePath();fo(g,hc);
+  {const n=b.length/2;g.lineTo(b[0],b[1]);for(let i=1;i<n-1;i++){g.quadraticCurveTo(b[i*2],b[i*2+1],(b[i*2]+b[i*2+2])/2,(b[i*2+1]+b[i*2+3])/2)}g.lineTo(b[(n-1)*2],b[(n-1)*2+1])}g.closePath();fo(g,hc);
   g.lineCap='round';g.lineWidth=0.04;g.strokeStyle=shade(hc,0.45);g.beginPath();g.ellipse(0,-0.04,0.42,0.44,0,Math.PI*1.25,Math.PI*1.45);g.stroke();
+  if(![2,12,19].includes(av.hair)){g.lineCap='round';g.lineWidth=0.02;g.strokeStyle=shade(hc,-0.2);for(const k of [-0.28,-0.09,0.1,0.29]){g.beginPath();g.moveTo(k*0.9,-0.58);g.quadraticCurveTo(k*1.15,-0.42,k*1.3,-0.24);g.stroke()}}
   if(av.hair===19){g.lineCap='round';g.lineWidth=0.022;g.strokeStyle=shade(hc,-0.22);for(const k of [0.0,0.2,-0.22]){g.beginPath();g.moveTo(k,-0.58);g.quadraticCurveTo(k*1.2+0.08,-0.4,k*1.3+0.16,-0.24);g.stroke()}}
   if(av.hair===12){g.lineCap='round';g.lineWidth=0.022;g.strokeStyle=shade(hc,-0.22);for(const k of [-0.42,-0.16,0.16,0.42]){g.beginPath();g.moveTo(k*0.9,-0.58);g.quadraticCurveTo(k*1.25,-0.4,k*1.45,-0.2);g.stroke()}}
   if(av.hair===18){const sw=Math.sin((t||0)*3)*0.03;g.lineCap='round';g.lineJoin='round';g.beginPath();g.moveTo(0.02,-0.58);g.bezierCurveTo(-0.1,-0.9,0.1+sw,-1.0,0.16+sw,-0.86);g.bezierCurveTo(0.2+sw,-0.76,0.06,-0.76,0.08,-0.88);
